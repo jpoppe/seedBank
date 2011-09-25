@@ -1,0 +1,7 @@
+Name: squeeze-backports
+Method: ftp://ftp.be.debian.org/debian-backports
+Architectures: amd64 source
+Suite: squeeze-backports
+Components: main contrib non-free
+UDebComponents: main
+VerifyRelease: AED4B06F473041FA

@@ -1,0 +1,4 @@
+DEFAULT localhost
+
+LABEL localhost
+  LOCALBOOT 0

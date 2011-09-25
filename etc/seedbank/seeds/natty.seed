@@ -1,0 +1,94 @@
+###############################################################################
+#
+# seedBank Ubuntu Natty preseed file 0.1 
+# created by Jasper Poppe <jpoppe@ebay.com>
+#
+# This seed file does a minimal Ubuntu Lucy Lucid installation, 
+# feel free to customize ;)
+#
+# For much more options and explanation and documentation see: 
+#  http://help.ubuntu.com/10.10/installation-guide/example-preseed.txt
+#  https://help.ubuntu.com/10.10/installation-guide/i386/preseed-using.html
+#  https://help.ubuntu.com/10.10/installation-guide/i386/preseed-contents.html
+#
+# To get a list of every possible question that could be asked during an 
+# install, do an installation and run these commands:
+#  debconf-get-selections --installer > file
+#  debconf-get-selections >> file
+#
+###############################################################################
+
+### - Settings loaded by kernel parameters
+d-i netcfg/get_hostname string *hostname
+d-i console-setup/layout select USA
+d-i debian-installer/locale string en_US
+d-i console-setup/layoutcode string us
+d-i console-setup/variantcode string euro
+
+### - Localization, Keyboard
+d-i console-setup/ask_detect boolean false
+d-i console-setup/modelcode string pc105
+d-i console-setup/variantcode string euro
+
+### - Network
+d-i netcfg/choose_interface select auto
+d-i netcfg/wireless_wep string
+d-i netcfg/get_domain string *domainname
+
+### - Mirror
+d-i mirror/country string manual
+d-i mirror/http/hostname string *ubuntu_mirrorhostname
+d-i mirror/http/directory string *ubuntu_mirrordirectory
+d-i mirror/http/proxy string
+
+### - Skip automatic updates configuration
+pkgsel  pkgsel/update-policy    select  none
+
+### - Suite to install.
+d-i mirror/suite string natty
+
+### - Date and Time
+d-i clock-setup/utc boolean true
+d-i time/zone string Europe/Amsterdam
+d-i clock-setup/ntp boolean true
+d-i clock-setup/ntp-server ntp.xs4all.nl
+
+### - Partitioning
+d-i user-setup/encrypt-home boolean false
+d-i partman/confirm_write_new_label boolean true
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman/choose_partition select finish
+
+### - Accounts
+d-i user-setup/allow-password-weak boolean true
+d-i passwd/root-login boolean false
+d-i passwd/make-user boolean true
+d-i passwd/user-fullname string *userfullname
+d-i passwd/username string *user
+d-i passwd/user-password password *userpassword
+d-i passwd/user-password-again password *userpassword
+
+### - Apt
+d-i apt-setup/restricted boolean true
+d-i apt-setup/universe boolean true
+d-i apt-setup/backports boolean true
+d-i apt-setup/partner boolean true
+d-i apt-setup/extras boolean true
+
+### - Package selection
+tasksel tasksel/first multiselect ubuntu-minimal
+d-i pkgsel/include string *ubuntu_packages
+
+### - Grub
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+
+### - Finish
+d-i finish-install/reboot_in_progress note
+d-i cdrom-detect/eject boolean true
+
+### - Custom commands
+d-i preseed/early_command string *earlycommand
+d-i preseed/late_command string *latecommand
+#d-i preseed/late_command string mv /target/etc/puppet/puppet.conf /target/etc/puppet/puppet.conf.dist; wget http://192.168.0.1/preseed/puppet.conf -O /target/etc/puppet/puppet.conf; touch /target/etc/puppet/firstrun; wget http://192.168.0.1/preseed/tty1 -O /target/etc/event.d/tty1; wget http://192.168.0.1/preseed/profile -O /target/root/.profile; wget http://192.168.0.1/preseed/puppet -O /target/etc/default/puppet; rm /target/etc/rc2.d/S21puppet;

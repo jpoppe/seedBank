@@ -1,0 +1,12 @@
+<pool type='dir'>
+  <name>${name}</name>
+  <target>
+    <path>${storage_dir}/${storage_pool}</path>
+    <permissions>
+	  <mode>${storage_mode}</mode>
+	  <owner>${storage_owner_uid}</owner>
+	  <group>${storage_owner_gid}</group>
+    </permissions>
+  </target>
+</pool>
+

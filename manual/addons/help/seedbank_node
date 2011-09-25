@@ -1,0 +1,9 @@
+Usage: seedbank_node -h | [-H] <fqdn>
+
+seedbank_node - get node information for seedbank (c) 2009-2010 Jasper Poppe
+<jpoppe@ebay.com>
+
+Options:
+  --version   show program's version number and exit
+  -h, --help  show this help message and exit
+  -H          human readable output instead of yaml

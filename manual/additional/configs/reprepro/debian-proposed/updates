@@ -1,0 +1,5 @@
+Name: debian-squeeze-proposed-updates
+Method: ftp://ftp.nl.debian.org/debian
+Architectures: amd64 source
+Suite: /squeeze-proposed-updates
+VerifyRelease: AED4B06F473041FA

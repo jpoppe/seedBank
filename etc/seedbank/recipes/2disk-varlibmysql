@@ -1,0 +1,77 @@
+d-i partman-auto/disk string /dev/sda /dev/sdb
+d-i partman-auto/method string lvm
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean false
+
+d-i partman-auto/expert_recipe string \
+2disk-varlibmysql ::                  \
+    128 128 128 ext4                  \
+        $primary{ }                   \
+        $bootable{ }                  \
+        method{ format }              \
+        format{ }                     \
+        use_filesystem{ }             \
+        filesystem{ ext4 }            \
+        mountpoint{ /boot }           \
+    .                                 \
+    50 5000 500000000 ext4            \
+        $defaultignore{ }             \
+        $primary{ }                   \
+        method{ lvm }                 \
+        device{ /dev/sda }            \
+        vg_name{ vgsystem }           \
+    .                                 \
+    50 5000 500000000 ext4            \
+        $defaultignore{ }             \
+        $primary{ }                   \
+        device{ /dev/sdb }            \
+        method{ lvm }                 \
+        vg_name{ vgdata }             \
+    .                                 \
+    8192 8192 8192 ext4               \
+        $lvmok{ }                     \
+        in_vg{ vgsystem }             \
+        lv_name{ root }               \
+        method{ format }              \
+        format{ }                     \
+        use_filesystem{ }             \
+        filesystem{ ext4 }            \
+        mountpoint{ / }               \
+    .                                 \
+    8192 8192 8192 ext4               \
+        $lvmok{ }                     \
+        in_vg{ vgsystem }             \
+        lv_name{ tmp }                \
+        method{ format }              \
+        format{ }                     \
+        use_filesystem{ }             \
+        filesystem{ ext4 }            \
+        mountpoint{ /tmp }            \
+    .                                 \
+    4096 4096 4096 linux-swap         \
+        $lvmok{ }                     \
+        in_vg{ vgsystem }             \
+        lv_name{ swap }               \
+        method{ swap }                \
+        format{ }                     \
+    .                                 \
+    24576 24576 5000000000 ext4       \
+        $lvmok{ }                     \
+        in_vg{ vgsystem }             \
+        lv_name{ var }                \
+        method{ format }              \
+        format{ }                     \
+        use_filesystem{ }             \
+        filesystem{ ext4 }            \
+        mountpoint{ /var }            \
+    .                                 \
+    8192 8192 5000000000 ext4         \
+        $lvmok{ }                     \
+        in_vg{ vgdata }               \
+        lv_name{ var_lib_mysql }      \
+        method{ format }              \
+        format{ }                     \
+        use_filesystem{ }             \
+        filesystem{ ext4 }            \
+        mountpoint{ /var/lib/mysql }  \
+    . 

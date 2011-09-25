@@ -1,0 +1,21 @@
+Name: debian-squeeze
+Method: ftp://ftp.nl.debian.org/debian
+Components: main contrib non-free
+UDebComponents: main
+Architectures: amd64 source
+VerifyRelease: AED4B06F473041FA
+
+Name: debian-squeeze-updates
+Method: ftp://ftp.nl.debian.org/debian
+Suite: squeeze-updates
+Components: main contrib non-free
+UDebComponents: main
+Architectures: amd64 source
+VerifyRelease: AED4B06F473041FA
+
+Name: debian-squeeze-security
+Method: ftp://ftp.nl.debian.org/debian-security
+Suite: squeeze/updates
+Components: main contrib non-free
+Architectures: amd64 source
+VerifyRelease: AED4B06F473041FA

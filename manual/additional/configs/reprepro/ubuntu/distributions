@@ -1,0 +1,40 @@
+Origin: Ubuntu
+Codename: natty
+Description: Ubuntu Maverick mirror
+Architectures: amd64 source
+Components: main multiverse restricted universe
+UDebComponents: main
+Contents: .gz
+Update: - ubuntu-natty
+Log: /opt/repositories/ubuntu/mirror/logs/mirror.log
+#SignWith: 2CA546B9
+
+Origin: Ubuntu
+Codename: natty-proposed
+Description: Ubuntu Maverick proposed
+Architectures: amd64 source
+Components: main multiverse restricted universe
+Contents: .gz
+Update: - ubuntu-natty-proposed
+Log: /opt/repositories/ubuntu/mirror/logs/mirror.log
+#SignWith: 2CA546B9
+
+Origin: Ubuntu
+Codename: natty-updates
+Description: Ubuntu Maverick updates
+Architectures: amd64 source
+Components: main multiverse restricted universe
+Contents: .gz
+Update: - ubuntu-natty-updates
+Log: /opt/repositories/ubuntu/mirror/logs/mirror.log
+#SignWith: 2CA546B9
+
+Origin: Ubuntu
+Codename: natty-security
+Description: Ubuntu Maverick security
+Architectures: amd64 source
+Components: main multiverse restricted universe
+Contents: .gz
+Update: - ubuntu-natty-security
+Log: /opt/repositories/ubuntu/mirror/logs/mirror.log
+#SignWith: 2CA546B9

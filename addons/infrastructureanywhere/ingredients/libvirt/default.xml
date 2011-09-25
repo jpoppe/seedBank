@@ -1,0 +1,13 @@
+<network>
+  <name>default</name>
+  <uuid>b9b54d97-7489-fb81-66f5-01223f1e8637</uuid>
+  <forward mode='nat'/>
+  <bridge name='virbr0' stp='on' delay='0' />
+  <mac address='52:54:00:39:52:A5'/>
+  <ip address='192.168.122.1' netmask='255.255.255.0'>
+    <dhcp>
+      <host mac='52:54:c0:a8:7a:02' name='overlord001.a.c.m.e' ip='192.168.122.2' />
+      <host mac='52:54:c0:a8:7a:03' name='overlord002.a.c.m.e' ip='192.168.122.3' />
+    </dhcp>
+  </ip>
+</network>

@@ -1,0 +1,32 @@
+# seedbank Ubuntu PXE template 
+#
+# NOTE: 
+# The 2.4 kernel accepts a maximum of 8 command line options and 8 environment
+# options (including any options added by default for the installer). With kernel 
+# 2.6.9 or newer, you can use 32 command line options and 32 environment options. 
+#
+# For more info and options see: 
+# http://www.debian.org/releases/stable/i386/apbs02.html.en
+# https://help.ubuntu.com/9.04/installation-guide/amd64/boot-parms.html
+#
+# TIP: 
+# You can easily add custom variables by adding those to the settings_pxe section in 
+# the settings.py file 
+
+# This section is used by the seedbank daemon, don't touch it 
+# if you don't know what you are doing!
+#
+# seedbank_udebs = ${udebs}
+# seedbank_manifests = ${manifests}
+# seedbank_overlay = ${overlay}
+# seedbank_partitioner = ${partitioner}
+
+default seedbank
+label seedbank
+
+kernel ${kernel}
+# For pre Natty add the following options to append:
+# countrychooser/shortlist=${countrychooser} console-setup/layoutcode=us console-setup/charmap=UTF-8 
+append initrd=${initrd} quiet preseed/url=http://${seed_host}:${seed_port}/seed?${query} hostname=${hostname} domain=${domainname} locale=en_US.UTF-8 text interface=${interface} theme=${theme} BOOT_DEBUG=${debug_level} ${extra} keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false
+
+#interface=${interface}

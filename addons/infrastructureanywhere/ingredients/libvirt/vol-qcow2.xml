@@ -1,0 +1,16 @@
+<volume>
+  <name>${name}.img</name>
+  <source>
+  </source>
+  <capacity>${disk_size}</capacity>
+  <target>
+	<path>${storage_dir}/${storage_pool}/${name}.img</path>
+    <format type='qcow2'/>
+    <permissions>
+      <mode>${storage_mode}</mode>
+      <owner>${storage_owner_uid}</owner>
+      <group>${storage_owner_gid}</group>
+    </permissions>
+  </target>
+</volume>
+

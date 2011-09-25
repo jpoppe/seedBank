@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+
+from seedbank import seedbank_daemon
+
+seedbank_daemon.main()

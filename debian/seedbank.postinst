@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+
+if which update-python-modules > /dev/null 2>&1; then
+	update-python-modules seedbank.public
+fi
+
+#FIXME
+# Debian tries to start the init script before the Python
+# modules are registered, then it fails :( no clue
+# how to solve this properly....
+
+#export PYTHONPATH=/usr/lib/python2.6:/usr/lib/python2.6/dist-packages
+
+#if [ -x "/etc/init.d/seedbank" ]; then
+#        update-rc.d seedbank defaults >/dev/null
+#        invoke-rc.d seedbank start || exit $?

@@ -1,0 +1,16 @@
+Source: seedbank
+Section: admin
+Priority: optional
+Maintainer: Jasper Poppe <jpoppe@ebay.com>
+Build-Depends: debhelper (>= 7), python-support (>= 0.6), cdbs (>= 0.4.49), python-all-dev
+Standards-Version: 3.8.4
+
+Package: seedbank
+Architecture: all
+Homepage: http://www.infrastructureanywhere.com
+Depends: wget, python (>= 2.6) | python2.6, python-yaml, python-support
+Suggests: dhcp3-server, tftpd-hpa, dnsmasq
+Description: The cleanest way of Debian/Ubuntu netboot installations
+ seedBank consists of several small tools which manage Debian/Ubuntu
+ seed files on the fly so you can easily do unattended Debian/Ubuntu
+ network installations.

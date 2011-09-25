@@ -1,0 +1,96 @@
+##############################################################################
+#
+# seedbank Debian Squeeze preseed file (c) Jasper Poppe <jpoppe@ebay,com>
+#
+# This is seed file will do a fully automated Debian Squeeze installation
+# IT WILL ALSO WIPE ANY DATA!!!
+#
+# Add nameserver
+###############################################################################
+
+### - Localization, Keyboard
+d-i debian-installer/locale string en_US
+d-i console-keymaps-at/keymap select us
+d-i console-data/keymap/policy select us
+
+### - Network
+d-i netcfg/choose_interface select auto
+d-i netcfg/get_hostname string ${host_name}
+d-i netcfg/get_domain string ${dns_domain}
+d-i netcfg/wireless_wep string
+d-i hw-detect/load_firmware boolean true
+d-i netcfg/get_nameservers string 192.168.20.1
+
+### - Mirror 
+d-i mirror/country string manual
+d-i mirror/http/hostname string ${repository}
+d-i mirror/http/directory string /debian/mirror
+#d-i mirror/http/hostname string mirrors.nl.kernel.org
+#d-i mirror/http/directory string /debian
+d-i mirror/http/proxy string
+d-i debian-installer/allow_unauthenticated boolean true
+
+### - Date and Time
+d-i clock-setup/utc boolean true
+d-i time/zone string Europe/Amsterdam
+d-i clock-setup/ntp boolean false
+#d-i clock-setup/ntp-server string ntp.xs4all.nl
+
+### - Accounts
+d-i passwd/root-login boolean false
+d-i passwd/user-fullname string seedbank User
+d-i passwd/username string seedbank
+d-i passwd/user-password password seed123
+d-i passwd/user-password-again password seed123
+
+### - Apt
+d-i apt-setup/non-free boolean true
+d-i apt-setup/contrib boolean true
+d-i apt-setup/services-select multiselect
+
+### - Add custom repository
+d-i apt-setup/local0/repository string deb http://${repository}/debian/sn squeeze main
+d-i apt-setup/local0/comment string Custom Squeeze Repository
+d-i apt-setup/local0/key string http://${repository}/debian/repository.key
+
+d-i apt-setup/local1/repository string deb http://${repository}/debian/mirror squeeze-updates main contrib non-free
+d-i apt-setup/local1/comment string Squeeze Updates
+# d-i apt-setup/local2/key string http://${repository}/debian/repository.key
+
+d-i apt-setup/local2/repository string deb http://${repository}/debian/mirror squeeze-security main contrib non-free
+d-i apt-setup/local2/comment string Debian Shared Squeeze Security
+# d-i apt-setup/local2/key string http://${repository}/debian/repository.key
+
+### - Disk recipe all files into one partition
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman-auto/purge_lvm_from_device boolean true
+d-i partman-auto/disk string
+d-i partman-auto/method string regular
+d-i partman/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm_nooverwrite boolean true
+d-i partman-auto/choose_recipe select atomic
+
+### - Package selection
+tasksel tasksel/first multiselect minimal
+d-i pkgsel/include string openssh-server puppet debconf-utils lsb-release vim less git netcat-traditional
+d-i pkgsel/upgrade select full-upgrade
+
+### - Popularity contest
+popularity-contest popularity-contest/participate boolean false
+
+### - Grub
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+# d-i preseed-grub preseed-grub/timeout string 0
+d-i grub-installer/timeout string 0
+
+### - Late command
+d-i preseed/late_command string cd /target; tar -xf ../cdrom/overlay.tar # ; chown -R root:root /target/root
+
+### - Finish 
+d-i finish-install/reboot_in_progress note

@@ -1,0 +1,30 @@
+Name: ubuntu-natty
+Method: http://nl.archive.ubuntu.com/ubuntu
+Components: main multiverse restricted universe
+UDebComponents: main
+Architectures: amd64 source
+#VerifyRelease: 9AA38DCD55BE302B
+
+Name: ubuntu-natty-proposed
+Method: http://nl.archive.ubuntu.com/ubuntu
+Components: main multiverse restricted universe
+Suite: /natty-proposed
+UDebComponents: main
+Architectures: amd64 source
+#VerifyRelease: 9AA38DCD55BE302B
+
+Name: ubuntu-natty-security
+Method: http://nl.archive.ubuntu.com/ubuntu
+Components: main multiverse restricted universe
+Suite: /natty-security
+UDebComponents: main
+Architectures: amd64 source
+#VerifyRelease: 9AA38DCD55BE302B
+
+Name: ubuntu-natty-updates
+Method: http://nl.archive.ubuntu.com/ubuntu
+Components: main multiverse restricted universe
+Suite: /natty-updates
+UDebComponents: main
+Architectures: amd64 source
+#VerifyRelease: 9AA38DCD55BE302B

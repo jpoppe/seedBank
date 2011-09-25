@@ -1,0 +1,7 @@
+*.pyc
+*.swp
+dist
+MANIFEST
+build
+debian/files
+debian/python-module-stampdir/

@@ -1,0 +1,9 @@
+origin: Debian
+Codename: squeeze
+Description: Official Debian Squeeze backports
+Architectures: amd64 source
+Components: main contrib non-free
+Contents: .gz
+Update: - squeeze-backports
+Log: /opt/repositories/debian/backports/logs/backports.log
+SignWith: <your GPG key here>

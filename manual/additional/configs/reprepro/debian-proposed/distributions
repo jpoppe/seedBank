@@ -1,0 +1,10 @@
+Origin: Debian
+Codename: squeeze
+Description: Debian Squeeze proposed updates mirror
+Architectures: amd64 source
+Components: main contrib non-free
+UDebComponents: main
+Update: - debian-squeeze-proposed-updates
+Contents: .gz
+Log: /opt/repositories/debian/proposed/logs/proposed-updates.log
+SignWith: <your public GPG key>

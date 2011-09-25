@@ -1,0 +1,6 @@
+<network>
+  <name>internal</name>
+  <uuid>d8b14576-e93c-06d9-90d2-0bd4c7ce72f0</uuid>
+  <bridge name='virbr1' stp='on' delay='0' />
+  <mac address='52:54:00:89:40:db'/>
+</network>
