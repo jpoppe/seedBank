@@ -1,6 +1,6 @@
 Usage: seedbank_setup [-h|-l|-i|-s] | [-r] <release>
 
-seedBank setup - (c) 2009-2011 Jasper Poppe <jpoppe@ebay.com>
+seedBank setup - (c) 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 
 Options:
   --version        show program's version number and exit

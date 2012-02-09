@@ -60,6 +60,7 @@ Install seedBank in Debian/Ubuntu without a repository
 .. code-block:: none
 
     sudo dpkg -i seedbank*.deb
+    sudo apt-get -f install
 
 Or install seedBank manually (this will need more manual steps which won't be covered here)
 

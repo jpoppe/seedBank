@@ -4,7 +4,7 @@
 
 seedBank library
 
-Copyright 2009-2011 Jasper Poppe <jpoppe@ebay.com>
+Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,10 +25,10 @@ the 'non free' firmware files into the Debian netboot initrd.
 """
 
 __author__ = 'Jasper Poppe <jpoppe@ebay.com>'
-__copyright__ = 'Copyright (c) 2009-2011 Jasper Poppe'
+__copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
 __credits__ = ''
 __license__ = 'Apache License, Version 2.0'
-__version__ = '1.0'
+__version__ = '1.1.0'
 __maintainer__ = 'Jasper Poppe'
 __email__ = 'jpoppe@ebay.com'
 __status__ = 'production'
@@ -195,7 +195,7 @@ class FormatListDir(object):
     def rstrip(self, item):
         """strip extension from entries"""
         if not self.error:
-            self.entries = [entry.rstrip(item) for entry in self.entries]
+            self.entries = [entry.replace(item, '') for entry in self.entries]
 
     def show(self):
         """if no errors, print the result"""

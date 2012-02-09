@@ -1,1 +1,5 @@
+PUPPET_SERVER=$(cat /etc/puppet/puppet.conf | egrep '^server' | cut -d "=" -f2)
+
+echo "info: running IA Puppet bootstrap scripts"
+while ! nc.traditional -w 1 -z ${PUPPET_SERVER} 8140; do echo -n "."; sleep 5; done
 puppet agent --test | tee -a /var/log/bootstrap_puppetlog

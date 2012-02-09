@@ -1,7 +1,7 @@
 Usage: seedbank [-e]|[-M macaddress] [-r recipe] [-o overlay] [-m manifest] [-s seed] [-c override] <fqdn> <release>|-l|-p
 
 seedbank - Debian/Ubuntu netboot installations the way it's meant to be
-(c) 2009-2011 Jasper Poppe <jpoppe@ebay.com>
+(c) 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 
 Options:
   --version             show program's version number and exit
@@ -22,7 +22,11 @@ Options:
                         choose custom udebs to use in the installer
   -s SEED, --seed=SEED  override default seed file (default: distribution
                         name)
+  -a SEED_ADDITIONAL, --seed-additional=SEED_ADDITIONAL
+                        append additional seed files to the default seed file
   -c CUSTOM, --custom=CUSTOM
                         override setting(s) from settings.py
                         (dict:key:'new_value')
   -p, --listpxefiles    list all pxe host configs
+  -v PXEVARIABLES, --variables=PXEVARIABLES
+                        specify additional pxe variables, (name value)

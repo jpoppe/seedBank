@@ -1,3 +1,4 @@
 usr/bin
 etc/seedbank
 usr/share/doc/seedbank
+var/lib/seedbank/status

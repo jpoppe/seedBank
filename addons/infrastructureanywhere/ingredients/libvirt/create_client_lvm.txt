@@ -1,1 +1,0 @@
-virt-install --connect ${connect} --name ${fqdn} --wait 0 --virt-type kvm --hvm --ram ${ram} --disk path=${disk} --vcpus=${vcpus} --network network:${int_net},mac=${mac} --pxe --os-type=${os_type} --os-variant=${os_variant}

@@ -10,11 +10,96 @@ After this section has been written Infrastructure Anywhere (:doc:`../addons/inf
 Prerequisites
 =============
 
-A working Virtual Box setup with 2 nodes.
+Two virtual machines
 
 One node will be used as the seedbank server called *seedbank001* with 2 network interfaces, eth0 shoud be configured as a bridged interface and eth1 as an internal network interface.
 
 The second node *seed001* should have one network interface for which the network interface should be configured as an internal network interface.
+
+VirtualBox on Ubuntu
+====================
+
+VirtualBox Installation
+-----------------------
+
+Add the VirtualBox repository to the "apt sources"
+
+.. code-block:: none
+
+    sudo sh -c "echo 'deb http://download.virtualbox.org/virtualbox/debian oneiric contrib' > /etc/apt/sources.list.d/virtualbox.list"
+
+Add the apt key to the keyring
+
+.. code-block:: none
+
+    wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+
+Update the package list and install VirtualBox
+
+.. code-block:: none
+
+    sudo apt-get update
+    sudo apt-get install virtualbox-4.1 dkms
+
+Install the VirtualBox extensions (Optional)
+--------------------------------------------
+
+Download and install the VirtualBox extensions
+
+.. code-block:: none
+
+    cd /tmp
+    wget http://download.virtualbox.org/virtualbox/4.1.8/Oracle_VM_VirtualBox_Extension_Pack-4.1.8-75467.vbox-extpack
+    sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.1.4-74291.vbox-extpack
+
+Configure the VirtualBox web server (Optional)
+----------------------------------------------
+
+The VirtualBox web server provides an API which can be used remotely
+
+Edit the VirtualBox defaults, be sure at least the following two lines are in place
+
+.. code-block:: none
+
+    sudo vi /etc/defaults/virtualbox
+
+.. code-block:: none
+    
+    VBOXUSER=vbox
+    VBOXWEB_HOST=localhost
+
+Start the VirtualBox web service
+
+.. code-block:: none
+
+    sudo /etc/init.d/vboxweb-service start
+
+Make the VirtualBox web server start automatically
+
+.. code-block:: none
+
+    sudo update-rc.d vboxweb-service defaults
+
+Download and install the VirtualBox SDK
+---------------------------------------
+
+Download the SDK zip archive and extract it
+
+.. code-block:: none
+
+    cd
+    wget http://download.virtualbox.org/virtualbox/4.1.8/VirtualBoxSDK-4.1.8-75467.zip
+    unzip VirtualBoxSDK-4.1.8-75467.zip
+
+Install the SDK
+
+.. code-block:: none
+
+    cd sdk/installer
+    sudo -s
+    export VBOX_INSTALL_PATH=/usr/lib/virtualbox
+    python vboxapisetup.py install
+    exit
 
 Share the network
 -----------------

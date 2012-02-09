@@ -28,6 +28,13 @@ Next, you need to fix the permissions of the images directory of libvirt, so you
     chown libvirt-qemu:kvm /var/lib/libvirt/images
     chmod g+w /var/lib/libvirt/images
 
+The above should probably corrected to this on Ubuntu
+
+.. code-block:: none
+
+    chown root:libvirtd /var/lib/libvirt/images
+    chmod g+w /var/lib/libvirt/images
+
 Since the fabric version that comes with Squeeze is quite old, it misses some needed features, so you'll need to either add the unstable repositories, or install fabric through setuptools.
 
 To install fabric through the unstable repositories, perform the following steps:

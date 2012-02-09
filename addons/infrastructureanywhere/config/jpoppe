@@ -1,6 +1,0 @@
-# this file contains overrides for fabfile.py
-dns_domain   = poppe.local
-storage_type = qcow2
-storage_pool = seedbank
-git_dir      = /home/jpoppe/git
-repository   = 192.168.0.1

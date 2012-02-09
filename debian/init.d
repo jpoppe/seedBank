@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# seedbank daemon init script (c) 2009-2011 Jasper Poppe <jpoppe@ebay.com>
+# seedbank daemon init script (c) 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 #
 
 ### BEGIN INIT INFO

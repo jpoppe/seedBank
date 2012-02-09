@@ -4,7 +4,7 @@
 
 seedBank setup tool
 
-Copyright 2009-2011 Jasper Poppe <jpoppe@ebay.com>
+Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,13 +25,13 @@ the 'non free' firmware files into the Debian netboot initrd.
 """
 
 __author__ = 'Jasper Poppe <jpoppe@ebay.com>'
-__copyright__ = 'Copyright (c) 2009-2011 Jasper Poppe'
+__copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
 __credits__ = ''
 __license__ = 'Apache License, Version 2.0'
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 __maintainer__ = 'Jasper Poppe'
 __email__ = 'jpoppe@ebay.com'
-__status__ = 'release candidate'
+__status__ = 'production'
 
 import fnmatch
 import optparse
@@ -211,7 +211,6 @@ class SetupNetboot(object):
                     print ('info: usb storage support is now disabled in '
                         'initrd image (fixes "root partition not found" error)')
                     return True
-        sys.exit()
 
     def syslinux(self, destination):
         """download syslinux and extract needed files"""
@@ -241,29 +240,29 @@ class SetupNetboot(object):
 
         if not self._download(url, destination):
             print ('error: failed to download "%s"' % url)
-            return
+            sys.exit(1)
         elif not self._untar_all(firmware, temp_firmware):
             print ('error: failed to extract "%s"' % firmware)
-            return
+            sys.exit(1)
         elif not self._extract_debs(temp_firmware):
             print ('error: failed to extract debs in "%s"' % temp_firmware)
-            return
+            sys.exit(1)
         elif not seedlib.makedirs(temp_initrd):
             print ('error: failed to create directory "%s"' % temp_initrd)
-            return
+            sys.exit(1)
         elif not self._extract_initrd(initrd, temp_initrd):
             print ('error: failed to extract "%s"' % temp_initrd)
-            return
+            sys.exit(1)
         elif not self._merge_directories(os.path.join(temp_firmware, 'temp'),
             temp_initrd):
             print ('error: failed to merge firmware files into initrd')
-            return
+            sys.exit(1)
         elif not self._disable_usb(temp_initrd):
             print ('error: failed to disable USB bug in "%s"' % temp_initrd)
-            return
+            sys.exit(1)
         elif not self._create_initrd(initrd, temp_initrd):
             print ('error: failed to build initrd "%s"' % initrd)
-            return
+            sys.exit(1)
         else:
             seedlib.rmtree(self.temp)
             return True
@@ -301,7 +300,7 @@ def main():
 
     parser = optparse.OptionParser(prog='seedbank_setup', version=__version__)
 
-    parser.set_description('seedBank setup - (c) 2009-2011 Jasper Poppe '
+    parser.set_description('seedBank setup - (c) 2009-2012 Jasper Poppe '
     '<jpoppe@ebay.com>')
 
     parser.set_usage('%prog [-h|-l|-i|-s] | [-r] <release>')

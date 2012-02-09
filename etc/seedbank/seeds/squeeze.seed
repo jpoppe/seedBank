@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# seedbank Debian Squeeze preseed file (c) Jasper Poppe <jpoppe@ebay.com>
+# seedBank Debian Squeeze preseed file created by Jasper Poppe <jpoppe@ebay.com>
 #
 # This is seed file does a minimal Debian Squeeze installation, 
 # feel free to customize ;)
@@ -17,8 +17,6 @@
 #  openssl passwd -1
 #
 ###############################################################################
-
-# tasksel
 
 ### - Localization, Keyboard
 d-i debian-installer/locale string en_US
@@ -49,11 +47,6 @@ d-i mirror/country string manual
 d-i mirror/http/hostname string *debian_mirrorhostname
 d-i mirror/http/directory string *debian_mirrordirectory
 d-i mirror/http/proxy string
-
-### - Add custom repository
-d-i apt-setup/local0/repository string deb http://192.168.122.1/debian/sn squeeze main
-d-i apt-setup/local0/comment string Custom Squeeze Repository
-d-i apt-setup/local0/key string http://192.168.122.1/debian/repository.key
 
 ### - Suite
 #d-i mirror/suite string testing

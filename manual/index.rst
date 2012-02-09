@@ -1,7 +1,4 @@
-.. seedBank documentation master file, created by
-   sphinx-quickstart on Sat Oct 30 09:08:19 2010.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. seedBank documentation master file
 
 seedBank Documentation
 ======================
@@ -30,13 +27,6 @@ Infrastructure Anywhere Documentation:
 
     addons/infrastructureanywhere/index.rst
 
-seedBank Addons Documentation:
-
-.. toctree::
-    :maxdepth: 2
-
-    addons/seedbank_node.rst
-
 Additional Documentation:
 
 .. toctree::
@@ -60,4 +50,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

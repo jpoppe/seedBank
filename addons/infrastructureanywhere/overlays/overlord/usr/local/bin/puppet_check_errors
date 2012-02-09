@@ -1,3 +1,0 @@
-#!/bin/bash
-
-cat /var/log/bootstrap_puppet.log | egrep '^warning: |^err: '

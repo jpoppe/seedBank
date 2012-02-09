@@ -1,14 +1,15 @@
 ###############################################################################
 #
-# seedBank Ubuntu Lucid Lynx preseed file 0.1 
+# seedBank Oneiric Ocelot preseed file 0.1 
 # created by Jasper Poppe <jpoppe@ebay.com>
 #
 # This seed file does a minimal Ubuntu Lucy Lucid installation, 
 # feel free to customize ;)
 #
 # For much more options and explanation and documentation see: 
-#  http://help.ubuntu.com/9.04/installation-guide/example-preseed.txt
-#  https://help.ubuntu.com/9.04/installation-guide/i386/preseed-using.html
+#  http://help.ubuntu.com/10.04/installation-guide/example-preseed.txt
+#  https://help.ubuntu.com/10.04/installation-guide/i386/preseed-using.html
+#  https://help.ubuntu.com/10.04/installation-guide/i386/preseed-contents.html
 #
 # To get a list of every possible question that could be asked during an 
 # install, do an installation and run these commands:
@@ -35,16 +36,16 @@ d-i netcfg/wireless_wep string
 d-i netcfg/get_domain string *domainname
 
 ### - Mirror
-d-i mirror/country string enter information manually
+d-i mirror/country string manual
 d-i mirror/http/hostname string *ubuntu_mirrorhostname
 d-i mirror/http/directory string *ubuntu_mirrordirectory
 d-i mirror/http/proxy string
 
 ### - Skip automatic updates configuration
-pkgsel  pkgsel/update-policy    select  none
+pkgsel pkgsel/update-policy select none
 
 ### - Suite to install.
-d-i mirror/suite string lucid
+d-i mirror/suite string oneiric
 
 ### - Date and Time
 d-i clock-setup/utc boolean true
@@ -54,10 +55,10 @@ d-i clock-setup/ntp-server *ntpserver
 
 ### - Partitioning
 d-i user-setup/encrypt-home boolean false
-#d-i partman-lvm/device_remove_lvm boolean true
 #d-i partman/confirm_write_new_label boolean true
 #d-i partman/confirm boolean true
-#d-i partman/choose_partition select Finish partitioning and write changes to disk
+#d-i partman/confirm_nooverwrite boolean true
+#d-i partman/choose_partition select finish
 
 ### - Accounts
 d-i user-setup/allow-password-weak boolean true
@@ -69,12 +70,15 @@ d-i passwd/user-password password *userpassword
 d-i passwd/user-password-again password *userpassword
 
 ### - Apt
+d-i apt-setup/services-select multiselect security
 d-i apt-setup/restricted boolean true
 d-i apt-setup/universe boolean true
 d-i apt-setup/backports boolean true
+d-i apt-setup/partner boolean true
+d-i apt-setup/extras boolean true
 
 ### - Package selection
-tasksel tasksel/first multiselect ubuntu-minimal
+tasksel tasksel/first multiselect standard
 d-i pkgsel/include string *ubuntu_packages
 
 ### - Grub

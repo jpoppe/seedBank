@@ -2,7 +2,7 @@
 
 """
 
-Copyright 2009-2011 Jasper Poppe <jpoppe@ebay.com>
+Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ todo
 ====
 
 enable the seedbank_partitioner script again
-better security, run as different user, daemon hardening
+improve security, run as different user, daemon hardening
 fix override option for daemon variables (-c) (requires quite some changes)
 more verbose try messages
 catch errors when wrong user permissions are used
@@ -37,17 +37,17 @@ better structured code
 future
 ======
 
-solaris jumpstart/RedHar kickstart support?
-add freeDOS support
+Solaris jumpstart/RedHat kickstart support?
+add freeDOS support?
 more?
 
 """
 
 __author__ = 'Jasper Poppe <jpoppe@ebay.com>'
-__copyright__ = 'Copyright (c) 2009-2011 Jasper Poppe'
+__copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
 __credits__ = ''
 __license__ = 'Apache License, Version 2.0'
-__version__ = '1.0'
+__version__ = '1.1.0'
 __maintainer__ = 'Jasper Poppe'
 __email__ = 'jpoppe@ebay.com'
 __status__ = 'production'
@@ -110,8 +110,35 @@ class ManagePxe(object):
 
         return urllib.urlencode(query)
 
-    def create(self, hostname, domainname, address, release, seed, recipes, manifests, overlay, udebs, external):
+    def create(self, opts, hostname, domainname, address, release, external):
         """generate the pxe boot file"""
+
+        seed = opts.seed
+        if opts.seed_additional:
+            seed_additional = ','.join(opts.seed_additional)
+        else:
+            seed_additional = []
+        recipes = opts.recipes
+        overlay = opts.overlay
+        udebs = opts.udebs
+        manifests = opts.manifests
+        pxevariables = opts.pxevariables
+
+        if not os.path.isdir(sp_paths['status']):
+            print ('error: seedBank status directory "%s" does not exist' % sp_paths['status'])
+            sys.exit(1)
+
+        file_prefix = '%s.%s_' % (hostname, domainname)
+        for file_name in os.listdir(sp_paths['status']):
+            if file_name.startswith(file_prefix) and file_name.endswith('.state'):
+                target = os.path.join(sp_paths['status'], file_name)
+                try:
+                    os.unlink(target)
+                except Exception:
+                    print ('error: failed to delete "%s"' % target)
+                    sys.exit(1)
+                else:
+                    print ('info: removed state file "%s"' % target)
 
         partitioner = ''
 
@@ -134,6 +161,12 @@ class ManagePxe(object):
         else:
             manifests = ''
 
+        variables = []
+        if pxevariables:
+            for values in pxevariables:
+                variables.append('# seedbank_%s = %s' % (values[0], values[1]))
+            variables = '\n'.join(variables)
+
         if recipes:
             for recipe in recipes:
                 filename = os.path.join(sp_paths['recipes'], recipe + '.extended')
@@ -141,14 +174,17 @@ class ManagePxe(object):
                     partitioner = recipe
 
         values = {
+            'seeds': seed_additional,
             'seed_host': server['address'],
             'seed_port': server['port'],
+            'address': address,
             'overlay': overlay,
             'manifests': manifests,
             'partitioner': partitioner,
             'udebs': udebs,
             'hostname': hostname,
             'domainname': domainname,
+            'fqdn': hostname + '.' + domainname,
             'query': self._construct_query(address, release, seed, recipes, hostname, domainname),
             'kernel': '%s/%s/%s' % ('seedbank', release, 'linux'),
             'initrd': '%s/%s/%s' % ('seedbank', release, 'initrd.gz')
@@ -162,7 +198,10 @@ class ManagePxe(object):
             contents = seedlib.read_file(filename)
             contents = string.Template(contents)
             if contents:
-                return contents.substitute(values)
+                contents = contents.substitute(values)
+                if variables:
+                    contents = contents + variables + '\n'
+                return contents
 
     def write(self, filename, contents):
         """write the pxe boot file"""
@@ -380,6 +419,11 @@ def list_releases():
     list = seedlib.FormatListDir('overlays')
     list.listdir(sp_paths['overlays'], 'dirs')
     list.show()
+    print ('')
+    list = seedlib.FormatListDir('seeds')
+    list.listdir(sp_paths['seeds'], 'files')
+    list.rstrip('.seed')
+    list.show()
 
 def list_pxe_files():
     '''list the seedbank managed file in pxelinux.cfg'''
@@ -415,29 +459,21 @@ def main():
     parser = optparse.OptionParser(prog='seedbank', version=__version__)
 
     parser.set_description('seedbank - Debian/Ubuntu netboot installations the way it\'s meant to be\
-                            (c) 2009-2011 Jasper Poppe <jpoppe@ebay.com>')
+                            (c) 2009-2012 Jasper Poppe <jpoppe@ebay.com>')
 
     parser.set_usage('%prog [-e]|[-M macaddress] [-r recipe] [-o overlay] [-m manifest] [-s seed] [-c override] <fqdn> <release>|-l|-p')
-
     parser.add_option('-M', '--macaddress', dest='macaddress', help='use mac address as pxe filename')
-
     parser.add_option('-e', '--externalhost', dest='externalhost', help='get the node information from an external source', action='store_true')
-
     parser.add_option('-l', '--list', dest='list', help='list available releases, (disk) recipes and manifests', action='store_true')
-
     parser.add_option('-r', '--recipe', dest='recipes', help='choose (disk) recipe(s)', action='append')
-
     parser.add_option('-m', '--manifest', dest='manifests', help='choose Puppet manifest(s) to apply after the installation', action='append')
-
     parser.add_option('-o', '--overlay', dest='overlay', help='choose an overlay from which files/templates should be copied')
-
     parser.add_option('-u', '--udeb', dest='udebs', help='choose custom udebs to use in the installer', action='append')
-
     parser.add_option('-s', '--seed', dest='seed', help='override default seed file (default: distribution name)')
-
+    parser.add_option('-a', '--seed-additional', dest='seed_additional', help='append additional seed files to the default seed file', action='append')
     parser.add_option('-c', '--custom', dest='custom', help='override setting(s) from settings.py (dict:key:\'new_value\')', action='append')
-
     parser.add_option('-p', '--listpxefiles', dest='pxefiles', help='list all pxe host configs', action='store_true')
+    parser.add_option('-v', '--variables', dest='pxevariables', help='specify additional pxe variables, (name value)', action='append', nargs=2)
 
     (opts, args) = parser.parse_args()
 
@@ -500,6 +536,11 @@ def main():
 
     pxe = ManagePxe()
 
+    if opts.seed_additional:
+        for additional in opts.seed_additional:
+            if not process.validate_seed(additional):
+                parser.error('seed file "%s/%s.seed" does not exist' % (sp_paths['seeds'], additional))
+
     if not process.validate_seed(opts.seed):
         parser.error('seed file "%s/%s.seed" does not exist' % (sp_paths['seeds'], opts.seed))
 
@@ -518,8 +559,7 @@ def main():
         overlay = process.validate_overlay(opts.overlay)
         parser.error('"%s" is an unknown overlay (use -l to list available overlays)' % (overlay))
 
-    contents = pxe.create(hostname, domainname, address, release, opts.seed,
-                            opts.recipes, opts.manifests, opts.overlay, opts.udebs, external_vars)
+    contents = pxe.create(opts, hostname, domainname, address, release, external_vars)
     if not contents:
         parser.error('failed to generate pxe file')
 

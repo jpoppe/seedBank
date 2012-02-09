@@ -1,4 +1,4 @@
-# seedbank Debian PXE template 
+# seedBank Debian PXE template 
 #
 # NOTE: 
 # The 2.4 kernel accepts a maximum of 8 command line options and 8 environment
@@ -8,7 +8,7 @@
 # For more info and options see: 
 # http://www.debian.org/releases/stable/i386/apbs02.html.en
 # http://www.debian.org/releases/stable/i386/ch05s03.html
-# https://help.ubuntu.com/9.04/installation-guide/amd64/boot-parms.html
+# https://help.ubuntu.com/11.10/installation-guide/amd64/boot-parms.html
 #
 # TIP: 
 # You can easily add custom variables by adding those to the settings_pxe section in 
@@ -17,10 +17,20 @@
 # This section is used by the seedbank daemon, don't touch it 
 # if you don't know what you are doing!
 #
+# The 'seedbank_' prefix will be stripped, so for example: seedbank_seedbank_server
+# will become seedbank_server, those variables could be used in overlay templates
+# which file names end with .sptemplate
+#
+# seedbank_seeds = ${seeds}
 # seedbank_udebs = ${udebs}
 # seedbank_manifests = ${manifests}
 # seedbank_overlay = ${overlay}
 # seedbank_partitioner = ${partitioner}
+# seedbank_domainname = ${domainname}
+# seedbank_fqdn = ${fqdn}
+# seedbank_seed_host = ${seed_host}
+# seedbank_seed_port = ${seed_port}
+# seedbank_address = ${address}
 
 default seedbank
 label seedbank

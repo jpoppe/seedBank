@@ -1,2 +1,36 @@
-v1.0.1 09-25-2011 -- Some minor changes here and there.
-v1.0.0 09-22-2011 -- Initial release.
+v1.1.0 02-09-2012 (Jasper Poppe)
+
+seedbank.py
+-- Added '-a', '--seed-additional' option, append additional seed files to the
+   default seed file
+-- Added '-v', '--variables'option: specify additional pxe variables which
+   could be used by templates in overlays
+-- Some minor changes
+
+seedbank_daemon.py
+-- Added status request which will write a file when requested
+-- Added more default variables to the PXE templates
+-- Some minor changes
+
+settings.py
+-- Added status path, default: /var/lib/seedbank/status
+-- added repository_0 and repository_0_key preseed variables for use with the
+   repository.seed example
+-- Some minor changes
+
+configuration/examples
+-- Added an Ubuntu Oneiric seed file
+-- Remove the Ubuntu Natty seed file (Natty itself is still supported)
+-- Moved the infrastructure anywhere scripts to a separate Git repository
+-- Added seedbank_seeds, seedbank_domainname, seedbank_fqdn,
+   seedbank_seed_host, seedbank_seed_port, seedbank_address variables to
+   the pxe templates
+-- Some minor changes
+
+v1.0.1 09-25-2011 (Jasper Poppe)
+
+-- Some minor changes here and there
+
+v1.0.0 09-22-2011 (Jasper Poppe)
+
+-- Initial release

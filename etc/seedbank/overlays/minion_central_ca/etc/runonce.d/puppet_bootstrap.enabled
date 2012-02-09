@@ -1,1 +1,0 @@
-puppet agent --test | tee -a /var/log/bootstrap_puppetlog

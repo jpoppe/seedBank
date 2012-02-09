@@ -1,1 +1,0 @@
-virt-install --connect ${connect} --name ${fqdn} --wait 0 --ram ${ram} --disk ${disk} --virt-type kvm --hvm --vcpus=${vcpus} --disk vol=${storage_pool}/${name} --network network:${ext_net},mac=${mac} --network network:${int_net} --cdrom ${storage_dir}/${cdrom} --noautoconsole --os-type=${os_type} --os-variant=${os_variant}

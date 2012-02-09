@@ -1,4 +1,22 @@
-"""seedBank Configuration (c) 2009-2011 - Jasper Poppe <jpoppe@ebay.com>"""
+"""
+
+Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+"""
+
+"""seedBank Configuration Example"""
 
 """
 daemon settings
@@ -19,7 +37,8 @@ setup_dists = {
                  'debian-sid-amd64', 'debian-sid-i386',
                  'ubuntu-lucid-i386', 'ubuntu-lucid-amd64',
                  'ubuntu-maverick-i386', 'ubuntu-maverick-amd64',
-                 'ubuntu-natty-i386', 'ubuntu-natty-amd64'),
+                 'ubuntu-natty-i386', 'ubuntu-natty-amd64',
+                 'ubuntu-oneiric-i386', 'ubuntu-oneiric-amd64'),
     'firmwares': ('debian-lenny-amd64', 'debian-lenny-i386',
                   'debian-squeeze-amd64', 'debian-squeeze-i386')
 }
@@ -46,6 +65,7 @@ sp_paths = {
     'manifests': '/etc/seedbank/manifests',
     'overlays': '/etc/seedbank/overlays',
     'files': '/etc/seedbank/www',
+    'status': '/var/lib/seedbank/status',
     'udebs': '/etc/seedbank/udebs'
 }
 
@@ -108,6 +128,8 @@ settings_seedfile = {
     'ubuntu_mirrordirectory': '/ubuntu',
     'timezone': 'Europe/Amsterdam',
     'ntpserver': 'ntp.xs4all.nl',
+    'repository_0': 'deb http://192.168.122.1/debian/sn squeeze main',
+    'repository_0_key': 'http://192.168.122.1/debian/repository.key',
     'earlycommand': 'wget -q -O - http://%s:%s/pimp?address=${address}' % (server['address'], server['port']),
     'latecommand': ';'.join(late_commands),
     'bootstrapcommand': ';'.join(bootstrap_commands),

@@ -4,7 +4,7 @@
 
 seedBank daemon
 
-Copyright 2009-2011 Jasper Poppe <jpoppe@ebay.com>
+Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,14 +27,15 @@ Testing URLs:
   wget 'http://192.168.0.1:7467/overlay.tgz?address=C0A80014' -O overlay.tgz
   wget 'http://192.168.0.1:7467/files?file=test'
   wget 'http://192.168.0.1:7467/disable?address=C0A80014' -q -O
+  wget 'http://192.168.0.1:7467/status?address=C0A80014&state=done' -q -O
 
 """
 
 __author__ = 'Jasper Poppe <jpoppe@ebay.com>'
-__copyright__ = 'Copyright (c) 2009-2011 Jasper Poppe'
+__copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
 __credits__ = ''
 __license__ = 'Apache License, Version 2.0'
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 __maintainer__ = 'Jasper Poppe'
 __email__ = 'jpoppe@ebay.com'
 __status__ = 'production'
@@ -95,16 +96,20 @@ class MyTemplate(string.Template):
 class SeedConstruct(object):
     """generate the seedfile"""
 
-    def generate(self, query):
+    def generate(self, query, pxe_vars):
         """generate the seedfile"""
         files = [os.path.join(sp_paths['seeds'], query['seed'][0] + '.seed')]
+
         if query.has_key('recipe'):
             files += [os.path.join(sp_paths['recipes'], recipe) for recipe in query['recipe']]
+
+        if pxe_vars.has_key('seedbank_seeds'):
+            files += [os.path.join(sp_paths['seeds'], seed + '.seed') for seed in pxe_vars['seedbank_seeds'].split(',')]
 
         contents = ''
         for filename in files:
             if not os.path.isfile(filename):
-                log.error('can not open file "%s"' % filename)
+                log.error('could not open file "%s"' % filename)
                 return
             else:
                 contents += seedlib.read_file(filename)
@@ -209,6 +214,27 @@ class ProcessRequest(object):
 
         return (self.info, self.error, self.contents)
      
+    def add_log_entry(self, address, message):
+        """write a custom log entry"""
+        self.info = message
+        return (self.info, self.error, self.contents)
+
+    def write_status(self, address, state, pxe_vars):
+        """write a file with custom status"""
+        self.info = 'setting state to "%s"' % state
+        file_name = '%s_%s.state' % (pxe_vars['seedbank_fqdn'], state)
+        file_name = os.path.join(sp_paths['status'], file_name)
+
+        try:
+            data = open(file_name, 'w')
+        except Exception:
+            self.error = Exception
+        else:
+            data.close()
+            self.info = '"%s" has been written' % file_name
+
+        return (self.info, self.error, self.contents)
+
     def disable(self, pxe_file):
         """disable a pxe host"""
         destination = pxe_file + '.disabled'
@@ -229,7 +255,7 @@ class ProcessRequest(object):
                 return (self.info, self.error, self.contents)
 
         construct = SeedConstruct()
-        seedfile = construct.generate(query)
+        seedfile = construct.generate(query, pxe_vars)
 
         if seedfile:
             values = {'hostname': query['host'][0], 'domainname': query['domain'][0]}
@@ -281,14 +307,17 @@ class ProcessRequest(object):
         return (self.info, self.error, self.contents)
 
     def overlay(self, address, pxe_vars):
-        """create archive with files from selected overlay and apply templates"""
-        dir = os.path.join(sp_paths['overlays'], pxe_vars['seedbank_overlay'])
-        if not os.path.isdir(dir):
-            self.error = 'directory "%s" does not exist' % dir
+        """create archive with files from selected overlay and apply templates
+        to .sptemplate files, the variables will be read from the host related
+        pxe file, the "seedbank_" prefix will be stripped from the variables """
+        path = os.path.join(sp_paths['overlays'], pxe_vars['seedbank_overlay'])
+        if not os.path.isdir(path):
+            self.error = 'directory "%s" does not exist' % path
             return (self.info, self.error, self.contents)
 
+        template_values = dict((key.replace('seedbank_', ''), value) for key, value in pxe_vars.items())
+
         destination = os.path.join('/tmp', 'seedbank_' + address)
-        
         if os.path.isdir(destination):
             try:
                 shutil.rmtree(destination)
@@ -297,7 +326,7 @@ class ProcessRequest(object):
                 return (self.info, self.error, self.contents)
 
         try:
-            shutil.copytree(dir, destination)
+            shutil.copytree(path, destination)
         except (IOError, OSError):
             self.error = 'failed to copy overlay "%s"' % destination
             return (self.info, self.error, self.contents)
@@ -311,9 +340,9 @@ class ProcessRequest(object):
         for filename in templates_list:
             data = open(filename, 'r').read()
             try:
-                data = seedlib.apply_template(data, pxe_vars)
-            except:
-                self.error = 'failed to apply template on "%s", it seems some variables are missing in the pxe file' % filename
+                data = seedlib.apply_template(data, template_values)
+            except KeyError as error:
+                self.error = 'failed to apply template on "%s", variable "%s" has not been defined' % (filename, error)
                 return (self.info, self.error, self.contents)
 
             try:
@@ -362,6 +391,7 @@ class GetHandler(BaseHTTPRequestHandler):
 
     def log_message(self, format, *args):
         """add logging"""
+        print (args)
         sys.stderr.write("%s - - [%s] %s\n" % (self.address_string(),
                             self.log_date_time_string(), format%args))
         log.info("%s - %s" % (self.address_string(), format%args))
@@ -403,7 +433,7 @@ class GetHandler(BaseHTTPRequestHandler):
         selection = paths.pop(0)
         error = False
 
-        need_address = ['seed', 'overlay.tgz', 'bootstrapinit', 'disable', 'pimp']
+        need_address = ['seed', 'overlay.tgz', 'bootstrapinit', 'disable', 'pimp', 'status']
         if query.has_key('address'):
             address = query['address'][0]
             pxe_file = os.path.join(sp_paths['tftpboot'], 'pxelinux.cfg', address)
@@ -432,6 +462,10 @@ class GetHandler(BaseHTTPRequestHandler):
                 info, error, contents = process.bootstrapinit(address, pxe_vars)
             elif selection == 'disable':
                 info, error, contents = process.disable(pxe_file)
+            elif selection == 'log':
+                info, error, contents = process.add_log_entry(self.address_string(), query['message'][0])
+            elif selection == 'status':
+                info, error, contents = process.write_status(self.address_string(), query['state'][0], pxe_vars)
             elif selection == 'files' or selection == 'udebs':
                 info, error, contents = process.file(query, selection)
             else:
@@ -449,7 +483,7 @@ class GetHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
             self.wfile.write(contents)
-     
+
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """multithread webserver"""
@@ -464,7 +498,7 @@ def main():
             sp_paths[path] = os.path.join(base_dir, sp_paths[path])
 
     parser = optparse.OptionParser(prog='seedbank_daemon', version=__version__)
-    parser.set_description ('seedBank daemon (c) 2009-2011 Jasper Poppe <jpoppe@ebay.com>')
+    parser.set_description ('seedBank daemon (c) 2009-2012 Jasper Poppe <jpoppe@ebay.com>')
     parser.set_usage('%prog [-d]')
     parser.add_option('-d', '--daemon', dest='daemon', help='run in daemon mode', action='store_true')
     (opts, args) = parser.parse_args()
