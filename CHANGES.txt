@@ -1,4 +1,4 @@
-v2.0.0 03-??-2012 (Jasper Poppe)
+v2.0.0 03/??/2012 (Jasper Poppe)
 
 seedbank general
 -- almost everything has been rewritten
@@ -40,7 +40,7 @@ configuration/examples
 
 And much more ;)
 
-v1.1.0 02-09-2012 (Jasper Poppe)
+v1.1.0 02/09/2012 (Jasper Poppe)
 
 seedbank.py
 -- Added '-a', '--seed-additional' option, append additional seed files to the
@@ -69,10 +69,10 @@ configuration/examples
    the pxe templates
 -- Some minor changes
 
-v1.0.1 09-25-2011 (Jasper Poppe)
+v1.0.1 09/25/2011 (Jasper Poppe)
 
 -- Some minor changes here and there
 
-v1.0.0 09-22-2011 (Jasper Poppe)
+v1.0.0 09/22/2011 (Jasper Poppe)
 
 -- Initial release
