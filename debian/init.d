@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# seedbank daemon init script (c) 2009-2012 Jasper Poppe <jpoppe@ebay.com>
+# seedBank daemon init script (c) 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 #
 
 ### BEGIN INIT INFO
@@ -9,8 +9,8 @@
 # Required-Stop:     $network $local_fs $named $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: The seedbank daemon
-# Description:       seedbank daemon is used by seedbank installations 
+# Short-Description: The seedBank daemon
+# Description:       seedBank daemon is used by seedBank installations 
 #                    for supplying the needed files, templates, 
 #                    manifests, recipes, etc.. It is also used for 
 #                    disabling hosts after as successful installation.
@@ -18,17 +18,17 @@
 
 NAME=seedbank_daemon
 PIDFILE=/var/run/${NAME}.pid
-DAEMON=/usr/bin/seedbank_daemon
-DAEMON_OPTS="-d"
+DAEMON=/usr/bin/seedbank
+DAEMON_OPTS="daemon -s"
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 check_process () {
 	if [ -f $PIDFILE ]; then 
 		if ps -p `cat $PIDFILE` > /dev/null; then
-			echo "info: seedbank daemon is running"
+			echo "info: seedBank daemon is running"
 			retval=2
 		else
-			echo "error: $PIDFILE found but seedbank daemon is not running"
+			echo "error: $PIDFILE found but seedBank daemon is not running"
 			rm $PIDFILE
 			echo "info: $PIDFILE removed"
 			retval=3
@@ -46,17 +46,17 @@ case ${1} in
 			exit 0
 		fi
 
-		echo "starting seedbank daemon.."
+		echo "starting seedBank daemon.."
 		start-stop-daemon --background --start --make-pidfile --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_OPTS
 	;;
 
 	stop)
 		if [ -f $PIDFILE ]; then 
-			echo "stopping seedbank daemon.."
+			echo "stopping seedBank daemon.."
 			start-stop-daemon --stop --pidfile $PIDFILE
 			rm $PIDFILE
 		else
-			echo "info: $PIDFILE not found, it the seedbank daemon is not running"
+			echo "info: $PIDFILE not found, it the seedBank daemon is not running"
 		fi
 			
 	;;
@@ -65,11 +65,11 @@ case ${1} in
 		if [ -f $PIDFILE ]; then 
 			check_process
 			if [ $retval = 3 ]; then
-				echo "info: seedbank daemon is not running."
+				echo "info: seedBank daemon is not running."
 				exit 3
 			fi
 		else
-			echo "info: seedbank daemon is not running."
+			echo "info: seedBank daemon is not running."
 			exit 3
 		fi
 			

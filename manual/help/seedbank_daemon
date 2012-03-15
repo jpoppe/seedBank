@@ -1,0 +1,8 @@
+usage: seedbank daemon [-h] [-s] [-b]
+
+optional arguments:
+  -h, --help    show this help message and exit
+  -s, --start   start the seedBank daemon which provides dynamically resources
+                used by the installer, it also takes care of disabling the
+                pxelinux configuration files after a successfull installation
+  -b, --bottle  start the bottle

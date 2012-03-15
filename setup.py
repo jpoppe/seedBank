@@ -24,14 +24,14 @@ def get_docs(dir):
 
 setup(
     name='seedbank',
-    version='1.1.0',
+    version='2.0.0rc3',
     description='The cleanest way of Debian/Ubuntu netboot installations',
     author='Jasper Poppe',
     author_email='jpoppe@ebay.com',
     maintainer ='Jasper Poppe',
     maintainer_email='jpoppe@ebay.com',
     url='http://www.infrastructureanywhere.com',
-    packages=['seedbank'],
+    packages=['seedbank', 'seedbank.thirdparty'],
     scripts=get_scripts('bin'),
     data_files = get_data_files('etc') + get_docs('manual'),
     requires = 'yaml',

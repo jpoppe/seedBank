@@ -16,9 +16,7 @@ seedBank Core Documentation:
 .. toctree::
     :maxdepth: 2
 
-    core/seedbank_setup.rst
-    core/seedbank.rst
-    core/seedbank_daemon.rst
+    seedbank_core.rst
 
 Infrastructure Anywhere Documentation:
 
@@ -42,7 +40,7 @@ Developer Reference:
 .. toctree::
     :maxdepth: 2
 
-    developer/developerreference.rst
+    seedbank
 
 Indices and tables
 ==================

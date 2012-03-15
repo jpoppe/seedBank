@@ -1,13 +1,13 @@
-##############################################################################
+################################################################################
 #
-# seedBank Debian Squeeze preseed file created by Jasper Poppe <jpoppe@ebay.com>
+# seedBank repository preseed snippet created by Jasper Poppe <jpoppe@ebay.com>
 #
-# This is seed file does adds and configures an additional repository, 
+# This is seed file adds and configures an additional repository,
 # feel free to customize ;)
 #
-###############################################################################
+################################################################################
 
 ### - Add custom repository
-d-i apt-setup/local0/repository string deb *repository_0
+d-i apt-setup/local0/repository string ${repository_0}
 d-i apt-setup/local0/comment string Custom Repository
-d-i apt-setup/local0/key string *repository_0_key
+d-i apt-setup/local0/key string ${repository_0_key}

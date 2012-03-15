@@ -8,7 +8,7 @@ Standards-Version: 3.8.4
 Package: seedbank
 Architecture: all
 Homepage: http://www.infrastructureanywhere.com
-Depends: wget, python (>= 2.6) | python2.6, python-yaml, python-support
+Depends: wget, python (>= 2.6) | python2.6, python-yaml, python-support, python-argparse
 Suggests: dhcp3-server, tftpd-hpa, dnsmasq
 Description: The cleanest way of Debian/Ubuntu netboot installations
  seedBank consists of several small tools which manage Debian/Ubuntu

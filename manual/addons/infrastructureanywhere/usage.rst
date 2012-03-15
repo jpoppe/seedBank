@@ -58,7 +58,7 @@ Generic functions
 |                   |                                             | bootstrap                           |
 +-------------------+---------------------------------------------+-------------------------------------+
 | update_dns_domain | None                                        | Update the powerdns schema on the   |
-|                   |                                             | overlord. See powerdns_ for details |
+|                   |                                             | overlord. See powerdns for details  |
 +-------------------+---------------------------------------------+-------------------------------------+
 
 ------------------

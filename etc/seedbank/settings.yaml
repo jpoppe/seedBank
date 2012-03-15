@@ -1,0 +1,74 @@
+# seedBank example configuration created by Jasper Poppe <jpoppe@ebay.com>
+#
+# hint: all settings could be overridden by creating override yaml files
+# in the configs directory (default: /etc/seedbank/configs)
+
+# when the seedBank daemon is used it should be restarted after changing
+# those settings (/etc/init.d/seedbank restart)
+# address -> used as variable in other settings
+settings:
+  seed_host: 192.168.0.1
+  bottle_listen: ''
+  bottle_port: '7467'
+  bottle_server: WSGIRefServer
+  #bottle_server: FlupFCGIServer
+
+# seed template variables, feel free change or add variables, those variables
+# are used in the seed files which are in located in the 'seeds' path
+# (default: /etc/seedbank/seeds)
+# to install an Ubuntu desktop environment change the values of
+# ubuntu_tasksel to 'standard, desktop'
+#
+# NOTE: the following reserved variables will be added automatically and will
+# be ignored when those will be defined here:
+# fqdn
+# host_name
+# dns_domain
+#
+# NOTE: the earlycommand and latecommand variables are mandatory and used by
+# seedBank internally, feel free to add more commands, but seedBank will
+# break if those variables are removed
+seed:
+  earlycommand: []
+  latecommand: []
+  addkernelopts: ''
+  debian_mirrordirectory: /debian
+  debian_mirrorhostname: ftp.debian.org
+  mirror_allow_unauthenticated: 'true'
+  debian_packages: openssh-server puppet debconf-utils lsb-release vim less
+  ntpserver: ntp.xs4all.nl
+  repository_0: 'deb http://192.168.122.1/debian/sn squeeze main'
+  repository_0_key: 'http://192.168.122.1/debian/repository.key'
+  timezone: Europe/Amsterdam
+  ubuntu_mirrordirectory: /ubuntu
+  ubuntu_mirrorhostname: nl.archive.ubuntu.com
+  ubuntu_tasksel: standard, server
+  ubuntu_packages: openssh-server puppet debconf-utils lsb-release vim less
+  user: seedbank
+  userfullname: seedBank User
+  username: seedbank
+  userpassword: seed123
+
+# pxe template variables, feel free to add or modify the values, those
+# variables are used in the Debian and Ubuntu pxe template files (default:
+# /etc/seedbank/templates/pxe_debian and /etc/seedbank/templates/pxe_ubuntu)
+pxe:
+  console_charmap: UTF-8
+  console_layout: us
+  countrychooser: NL
+  debug_level: '0'
+  extra: netcfg/dhcp_timeout=60 debian-installer/allow_unauthenticated=true
+  interface: eth0
+  locale: en_US
+  template: pxehost
+  theme: dark
+
+# enable and disable hooks which contain command(s) which will be executed on
+# the host you are running seedBank from. When running seedBank to enable
+# a netboot installation the command(s) specified in the enable hook will be
+# executed, the command(s) specified in the disable hook will be executed by the
+# seedBank daemon when the installation has finished and just before the system
+# restarts
+hooks:
+  enable: ['puppet cert --clean ${host_name}.${dns_domain}']
+  disable: []

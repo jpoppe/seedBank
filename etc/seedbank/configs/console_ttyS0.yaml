@@ -1,0 +1,4 @@
+seed:
+  addkernelopts: console=ttyS0,115200n8
+pxe:
+  extra: console=ttyS0,115200n8 netcfg/dhcp_timeout=60 debian-installer/allow_unauthenticated=true

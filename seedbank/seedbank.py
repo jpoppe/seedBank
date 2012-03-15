@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-
 """
-
 Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,559 +13,214 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+"""
 
+"""
 todo
 ====
-
-enable the seedbank_partitioner script again
-improve security, run as different user, daemon hardening
-fix override option for daemon variables (-c) (requires quite some changes)
-more verbose try messages
-catch errors when wrong user permissions are used
-
-additional
-==========
-
-more structured error handling in input validation
 improve documentation
-default pxe generator
-nginx support
-better structured code
+add validation for YAML configuration files
+improve security, run as a different user, daemon hardening
+default pxelinux config file generator
 
 future
 ======
-
-Solaris jumpstart/RedHat kickstart support?
-add freeDOS support?
+RedHat kickstart support?
+freeDOS support?
 more?
-
 """
 
 __author__ = 'Jasper Poppe <jpoppe@ebay.com>'
 __copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
 __credits__ = ''
 __license__ = 'Apache License, Version 2.0'
-__version__ = '1.1.0'
+__version__ = '2.0.0rc3'
 __maintainer__ = 'Jasper Poppe'
 __email__ = 'jpoppe@ebay.com'
 __status__ = 'production'
 
-import optparse
-import os
-import re
-import seedlib
-import socket
-import string
+import argparse
+import logging
+import logging.config
 import sys
-import urllib
-import yaml
 
-sys.path.append('/etc/seedbank')
+from argparse import RawTextHelpFormatter
 
-from settings import sp_paths, server, settings, settings_pxe, hooks_enable, external_nodes
-
-class ManagePxe(object):
-    """manage and generate pxe files"""
-
-    def _rmfile(self, filename):
-        """if file exists, delete file"""
-        if os.path.isfile(filename):
-            try:
-                os.remove(filename)
-            except IOError:
-                print ('error: can not remove file "%s"' % filename)
-                return
-            else:
-                print ('info: file "%s" has been removed' % filename)
-
-        return True
-
-    def _writefile(self, filename, contents):
-        """(over)write contents to filename"""
-        if os.path.isfile(filename):
-            print ('warning: file "%s" will be overwritten since it already exists' % filename)
-
-        try:
-            f = open(filename, 'w')
-            f.write(contents)
-        except IOError:
-            print ('error: opening of file "%s" failed' % filename)
-            return
-        else:
-            print ('info: file "%s" has been written' % filename)
-
-        return True
-
-    def _construct_query(self, address, release, seed, recipes, hostname, domainname):
-        """generate the url path"""
-        if not seed: 
-            seed = release.split('-')[1]
-
-        query = [('seed', seed), ('address', address), ('host', hostname), ('domain', domainname)]
-        if recipes:
-            for recipe in recipes:
-                query.append(('recipe', recipe))
-
-        return urllib.urlencode(query)
-
-    def create(self, opts, hostname, domainname, address, release, external):
-        """generate the pxe boot file"""
-
-        seed = opts.seed
-        if opts.seed_additional:
-            seed_additional = ','.join(opts.seed_additional)
-        else:
-            seed_additional = []
-        recipes = opts.recipes
-        overlay = opts.overlay
-        udebs = opts.udebs
-        manifests = opts.manifests
-        pxevariables = opts.pxevariables
-
-        if not os.path.isdir(sp_paths['status']):
-            print ('error: seedBank status directory "%s" does not exist' % sp_paths['status'])
-            sys.exit(1)
-
-        file_prefix = '%s.%s_' % (hostname, domainname)
-        for file_name in os.listdir(sp_paths['status']):
-            if file_name.startswith(file_prefix) and file_name.endswith('.state'):
-                target = os.path.join(sp_paths['status'], file_name)
-                try:
-                    os.unlink(target)
-                except Exception:
-                    print ('error: failed to delete "%s"' % target)
-                    sys.exit(1)
-                else:
-                    print ('info: removed state file "%s"' % target)
-
-        partitioner = ''
-
-        if overlay and external:
-            external = ['# %s = %s' % (k, v) for k, v in external.items()]
-            overlay += '\n#\n'
-            overlay += '\n'.join(external)
-        elif overlay:
-            overlay += '\n#\n'
-        else:
-            overlay = ''
-
-        if udebs:
-            udebs = ','.join(udebs)
-        else:
-            udebs = ''
-
-        if manifests:
-            manifests = ','.join(manifests)
-        else:
-            manifests = ''
-
-        variables = []
-        if pxevariables:
-            for values in pxevariables:
-                variables.append('# seedbank_%s = %s' % (values[0], values[1]))
-            variables = '\n'.join(variables)
-
-        if recipes:
-            for recipe in recipes:
-                filename = os.path.join(sp_paths['recipes'], recipe + '.extended')
-                if os.path.isfile(filename):
-                    partitioner = recipe
-
-        values = {
-            'seeds': seed_additional,
-            'seed_host': server['address'],
-            'seed_port': server['port'],
-            'address': address,
-            'overlay': overlay,
-            'manifests': manifests,
-            'partitioner': partitioner,
-            'udebs': udebs,
-            'hostname': hostname,
-            'domainname': domainname,
-            'fqdn': hostname + '.' + domainname,
-            'query': self._construct_query(address, release, seed, recipes, hostname, domainname),
-            'kernel': '%s/%s/%s' % ('seedbank', release, 'linux'),
-            'initrd': '%s/%s/%s' % ('seedbank', release, 'initrd.gz')
-        }
-        values.update(settings_pxe)
-
-        filename = os.path.join(sp_paths['templates'], 'pxe-' + release.split('-')[0])
-        if not os.path.isfile(filename):
-            print ('error: file "%s" not found (hint: check /etc/seedbank/settings.py)' % filename)
-        else:
-            contents = seedlib.read_file(filename)
-            contents = string.Template(contents)
-            if contents:
-                contents = contents.substitute(values)
-                if variables:
-                    contents = contents + variables + '\n'
-                return contents
-
-    def write(self, filename, contents):
-        """write the pxe boot file"""
-        pxefile = os.path.join(sp_paths['tftpboot'], 'pxelinux.cfg', filename)
-        path = os.path.dirname(pxefile)
-
-        if not seedlib.makedirs(path):
-            return
-        elif not self._rmfile('%s.disabled' % pxefile):
-            return
-        elif not self._writefile(pxefile, contents):
-            return
-        else:
-            return True
+import settings
+import parse
+import utils
 
 
-class ProcessInput(object):
-    """process the input"""
-
-    def __init__(self):
-        """initialize class variables"""
-        self.filename = False
-
-    def _validate(self, value, path):
-        """check if file is in directory"""
-        if not os.path.isdir(path):
-            return
-        elif value in os.listdir(path):
-            return True
-
-    def _get_address(self, host):
-        """resolve ip address for a host"""
-        try:
-            address = socket.gethostbyname(host)
-        except socket.error:
-            return
-        else:
-            return address
-
-    def _get_hostname(self, host):
-        """resolve hostname for a host"""
-        try:
-            hostname = socket.gethostbyaddr(host)[0]
-        except socket.error:
-            return
-        else:
-            return hostname
-
-    def _ip2hex(self, address):
-        """convert ip to hex"""
-        return ''.join(['%02X' % int(octet) for octet in address.split('.')])
-
-    def validate_release(self, release):
-        """check if tftp files are available for the chosen release""" 
-        validate = self._validate(release, os.path.join(sp_paths['tftpboot'], 'seedbank'))
-        if not validate:
-            return True
-
-    def validate_seed(self, seed):
-        """check if the seed file is available"""
-        if seed:
-            return self._validate(seed + '.seed', sp_paths['seeds'])
-        else:
-            return True
-
-    def validate_recipes(self, recipes):
-        """check if chosen recipe exists"""
-        for recipe in recipes:
-            validate = self._validate(recipe, sp_paths['recipes'])
-            if not validate:
-                return
-        return True
-
-    def validate_manifests(self, manifests):
-        """check if chosen manifests exists"""
-        for manifest in manifests:
-            validate = self._validate(manifest + '.pp', sp_paths['manifests'])
-            if not validate:
-                return manifest
-
-    def validate_udebs(self, udebs):
-        """check if chosen udebs exists"""
-        for udeb in udebs:
-            validate = self._validate(udeb + '.udeb', sp_paths['udebs'])
-            if not validate:
-                return udeb
-
-    def validate_overlay(self, overlay):
-        """check if chosen overlay exists"""
-        if overlay:
-            validate = self._validate(overlay, sp_paths['overlays'])
-            if not validate:
-                return overlay
-
-    def host_by_name(self, host):
-        """return ip address converted to hex, hostname and domainname"""
-        fqdn = socket.getfqdn(host)
-        address = self._get_address(host)
-        if not address:
-            raise
-        else:
-            return self.return_host(fqdn, self._ip2hex(address))
-
-    def host_by_mac(self, fqdn, address):
-        """return mac address, hostname and domainname"""
-        if len(address) == 12:
-            pass
-        elif not re.match('([a-fA-F0-9]{2}[:|\-]?){6}', address):
-            return
-        return self.return_host(fqdn, seedlib.format_address(address))
-
-    def host_by_ip(self, address):
-        """return ip address converted to hex, hostname and domainname"""
-        try:
-            socket.inet_aton(address)
-        except socket.error:
-            raise
-
-        fqdn = self._get_hostname(address)
-        if not fqdn:
-            return
-        else:
-            print ('info: fqdn for "%s" is "%s"' % (address, fqdn))
-            return self.return_host(fqdn, self._ip2hex(address))
-
-    def return_host(self, fqdn, address):
-        hostname, domainname = seedlib.get_domain(fqdn)
-        return address, hostname, domainname
+cfg = settings.parse_cfg()
+logging.config.fileConfig(cfg['logging']['configuration'])
+logger = logging.getLogger(cfg['logging']['logger'])
 
 
-class Hooks(object):
-    """enable and disable hooks"""
+def argument_parser():
+    """process the arguments"""
+    parse_arg = parse.ParseArguments(cfg)
 
-    def __init__(self, values):
-        """initialize variables"""
-        self.values = values
+    parser = argparse.ArgumentParser(description='seedBank - Debian/Ubuntu '
+        'netboot installations the way it is meant to be... (c) 2009-2012 '
+        'Jasper Poppe <jpoppe@ebay.com>', epilog='for more information visit: '
+        'http://www.infrastructureanywhere.com', fromfile_prefix_chars='@')
+    parser.add_argument('--version', action='version', version=__version__)
+    subparsers = parser.add_subparsers(help='commands')
 
-    def run(self, hooks):
-        """check if hooks are enabled and run a hook"""
-        if settings['disable_hooks']:
-            return
+    parser_list = subparsers.add_parser('list',
+        help='list resources like netboot images, seed files, Puppet '
+        'manifests, configuration overrides, file overlays, pxelinux.cfg files'
+        ', netboot images and ISOs', formatter_class=RawTextHelpFormatter)
+    parser_list.add_argument('-a', '--all', action='store_true',
+        help='List all resources')
+    parser_list.add_argument('-n', '--netboots', action='store_true',
+        help='list releases which are available for netboot\ninstallations'
+        ', names starting with an asterisk are\nready to use\nnetboot images '
+        'are managed by the "seedbank manage"\ncommand')
+    parser_list.add_argument('-i', '--isos', action='store_true',
+        help='list ISOs which are used for building (unattended)\ninstallation '
+        'ISOs ISO names starting with an asterisk\nare ready to use\nISOs '
+        'are managed by the "seedbank manage" command')
+    parser_list.add_argument('-s', '--seeds',  action='store_true',
+        help='list available seed files\nseed files are (partial) preseed ' 
+        'files which are used\nfor providing answers to the installer\n'
+        'default location: /etc/seedbank/seeds')
+    parser_list.add_argument('-c', '--configs', action='store_true',
+        help='list available configs\nconfigs are used for overriding the '
+        'default configuration\nand providing default command line options '
+        'for the\n"seedbank net" and "seedbank iso commands"\ndefault '
+        'location: /etc/seedbank/configs')
+    parser_list.add_argument('-o', '--overlays', action='store_true',
+        help='list available overlays\nthe contents of an overlay directory '
+        'will be copied over\nthe file system just before the end of an '
+        'installation\ndefault location: /etc/seedbank/overlays')
+    parser_list.add_argument('-m', '--manifests', action='store_true',
+        help='list available Puppet manifests\nWhen you enable one or more '
+        'Puppet manifests they will\nbe applied once by a stand alone Puppet '
+        'instance,\ndirectly after the first boot of the machine\nwhich has '
+        'been installed\ndefault location: /etc/seedbank/manifests')
+    parser_list.add_argument('-p', '--pxe', action='store_true',
+        help='list all "pxelinux.cfg" configs\npxelinux.cfg files are '
+        'generated by the "seedbank net"\ncommand and are used to provide '
+        'machine specific\ninformation to the installer after the machine '
+        'PXE boots\nvia the network, the variables stored in those file\n'
+        'comments are used by the seedBank daemon for\ngenerating the preseed '
+        'file, those variables could also\nbe used in file overlay templates\n'
+        'default location: /var/lib/tftpboot/pxelinux.cfg')
+    parser_list.set_defaults(func=parse_arg.list)
 
-        queue = []
-        for value in hooks.values():
-            value = seedlib.apply_template(value, self.values)
-            queue.append(value)
-        
-        for command in queue:
-            print ('info: running hook "%s"' % command)
-            seedlib.run_pipe(command)
+    parser_shared = argparse.ArgumentParser(add_help=False)
+    parser_shared.add_argument('-o', '--overlay',  default=None, help='file '
+        'overlay which will be copied over the file system before the end of '
+        'the installation')
+    parser_shared.add_argument('-s', '--seed', help='override the default '
+        'preseed file (the default preseed file has the name of the '
+        'distribution, e.g: squeeze or precise)')
+    parser_shared.add_argument('-a', '--additional', action='append',
+        default=[], metavar='SEED', help='append additional seed files to the '
+        'default seed file like  disk recipes, repositories or other '
+        'additional (custom) seeds')
+    parser_shared.add_argument('fqdn', help='fully qualified domain name of '
+        'the node to install')
+    parser_shared.add_argument('release', help='release name')
+    parser_shared.add_argument('-m', '--manifests', action='append', default=[], 
+        help='choose one or more Puppet manifest(s) to apply after the '
+        'installation')
+    parser_shared.add_argument('-c', '--config', default=None, help='override '
+        'template (pxe and seed) settings')
+  
+    parser_net = subparsers.add_parser('net', parents=[parser_shared],
+        help='manage netboot installations, prepare a pxelinux.cfg '
+        'file with all the settings required for a netboot installation')
+    parser_net.add_argument('-M', '--macaddress',
+        help='use a MAC address instead of a to hexidecimal converted IP '
+        'address for the pxelinux.cfg configuration file name, the advantage '
+        'of this is there will be no DNS lookups needed')
+    parser_net.add_argument('-v', '--variables', nargs=2, action='append',
+        metavar=('KEY', 'VALUE'),
+        default=[], help='add one or more additional pxe variables which '
+        'will be stored in the generated pxelinux.cfg file and could be used '
+        'by seedBank templates in the overlay directory and the disable and '
+        'enable hooks')
+    parser_net.set_defaults(func=parse_arg.net)
 
+    parser_iso = subparsers.add_parser('iso', parents=[parser_shared],
+        help='build an (unattended) installation ISO')
+    parser_iso.add_argument('output', help='file name of the generated ISO')
+    parser_iso.add_argument('-v', '--variables', nargs=2, action='append',
+        metavar=('KEY', 'VALUE'),
+        default=[], help='add (or overrides) one or more seed and or overlay '
+        'variables which could be used by seedBank templates in the overlay '
+        'directory and preseed files')
+    parser_iso.set_defaults(func=parse_arg.iso)
 
-class ExternalNodes(object):
-    """use external nodes for getting configuration details"""
-    
-    def __init__(self, provider, values):
-        """initialize variables"""
-        self.provider = provider
-        self.values = values
+    parser_manage = subparsers.add_parser('manage', help='download and '
+        'manage netboot images, syslinux files and ISOs')
+    group = parser_manage.add_mutually_exclusive_group() 
+    group.add_argument('-s', '--syslinux', action='store_true',
+        help='download the syslinux archive and extract the pxelinux.0, '
+        'menu.c32 and vesamenu.c32 files and place those in the tftpboot '
+        'directory. (those files are required for doing a PXE boot)')
+    group.add_argument('-n', '--netboot', action='store', metavar='RELEASE',
+        help='download and prepare a netboot image, when the release has been '
+        'defined in the distributions -> firmware section Debian "non free" '
+        'firmware files will be integrated into the netboot image, the '
+        'contents of the netboot archive will be placed in the configured '
+        'tftpboot path')
+    group.add_argument('-i', '--iso', action='store', metavar='RELEASE',
+        help='download ISO images which are used by the "seedbank iso command"')
+    group.add_argument('-r', '--remove', action='store', metavar='RELEASE',
+        help='remove an iso or netboot images from the tftpboot and seedBank '
+        'archives directories')
+    group.add_argument('-o', '--overlay', action='store_true',
+        help='update or create <overlay>.permissions for all overlaysi, those '
+        'files contain user, group and permissions which will be set by a '
+        'dynamically generated script just before the end of an installation'
+        'after the overlay got applied')
+    group.set_defaults(func=parse_arg.manage)
 
-    def _gather_http(self):
-        """get internal nodes information via http ot https"""
-        url = seedlib.apply_template(self.provider, self.values)
-        try:
-            output = seedlib.read_url(url, 1)
-        except Exception:
-            return
-        else:
-            return self._return(yaml.load(output))
+    parser_daemon = subparsers.add_parser('daemon', help='seedBank daemon')
+    parser_daemon.add_argument('-s', '--start', action='store_true',
+        help='start the seedBank daemon which provides dynamically resources '
+        'used by the installer, it also takes care of disabling the pxelinux '
+        'configuration files after a successfull installation')
+    parser_daemon.add_argument('-b', '--bottle', action='store_true',
+        help='start the bottle')
+    parser_daemon.set_defaults(func=parse_arg.daemon)
 
-    def _return(self, result):
-        if result:
-            return dict([('external_' + k, v) for k, v in result.items()])
-        else:
-            print ('warning: no external node information found')
+    args = parser.parse_args()
+    logging.debug('given arguments: %s', args)
 
-    def _gather_script(self):
-        """get node information via a lookup script"""
-        command = seedlib.apply_template(self.provider, self.values)
-        command = command.split(' ')
-        result = seedlib.run(command)
-        if not result.retcode:
-            return self._return(yaml.load(result.output))
-
-    def gather(self):
-        """get the type of the external nodes data provider and gather data"""
-        if self.provider.startswith('http://') or self.provider.startswith('https://'):
-            return self._gather_http()
-        elif not self.provider:
-            return self._gather_http()
-        else:
-            return self._gather_script()
-
-
-def list_releases():
-    """list available releases, recipes, manifests, overlays"""
-    list = seedlib.FormatListDir('releases')
-    list.listdir(os.path.join(sp_paths['tftpboot'], 'seedbank'), 'dirs')
-    list.show()
-    print ('')
-    list = seedlib.FormatListDir('recipes')
-    list.listdir(sp_paths['recipes'], 'files', '.extended')
-    list.show()
-    print ('')
-    list = seedlib.FormatListDir('manifests')
-    list.listdir(sp_paths['manifests'], 'files')
-    list.rstrip('.pp')
-    list.show()
-    print ('')
-    list = seedlib.FormatListDir('udebs')
-    list.listdir(sp_paths['udebs'], 'files')
-    list.rstrip('.udeb')
-    list.show()
-    print ('')
-    list = seedlib.FormatListDir('overlays')
-    list.listdir(sp_paths['overlays'], 'dirs')
-    list.show()
-    print ('')
-    list = seedlib.FormatListDir('seeds')
-    list.listdir(sp_paths['seeds'], 'files')
-    list.rstrip('.seed')
-    list.show()
-
-def list_pxe_files():
-    '''list the seedbank managed file in pxelinux.cfg'''
-    list = seedlib.FormatListDir('pxe files')
-    list.listdir(os.path.join(sp_paths['tftpboot'], 'pxelinux.cfg'), 'files')
-    list.show()
-
-def override_settings(overrides):
-    """override settings from settings.py"""
-    for entry in overrides:
-        try:
-            category, key, value = entry.split(':', 2)
-        except Exception:
-            return '"%s" is not a valid custom override, check syntax' % entry
-
-        if not globals().has_key(category):
-            return 'settings has not a category named "%s"' % category
-
-        if globals()[category].has_key(key):
-            print ('info: "%s:%s" has been overridden with "%s"' % (category, key, value))
-            globals()[category][key] = value
-        else:
-            return 'category "%s" in settings has no key "%s"' % (entry, key)
+    if len(sys.argv) == 2:
+        if sys.argv[1] == 'list':
+            parser_list.print_help()
+        if sys.argv[1] == 'manage':
+            parser_manage.print_help()
+        if sys.argv[1] == 'daemon':
+            parser_daemon.print_help()
+    else:
+        args.func(args)
 
 def main():
-    """main application, this function won't called when used as a module"""
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+    """the main application"""
 
-    for path in sp_paths:
-        if not sp_paths[path].startswith('/'):
-            sp_paths[path] = os.path.join(base_dir, sp_paths[path])
-
-    parser = optparse.OptionParser(prog='seedbank', version=__version__)
-
-    parser.set_description('seedbank - Debian/Ubuntu netboot installations the way it\'s meant to be\
-                            (c) 2009-2012 Jasper Poppe <jpoppe@ebay.com>')
-
-    parser.set_usage('%prog [-e]|[-M macaddress] [-r recipe] [-o overlay] [-m manifest] [-s seed] [-c override] <fqdn> <release>|-l|-p')
-    parser.add_option('-M', '--macaddress', dest='macaddress', help='use mac address as pxe filename')
-    parser.add_option('-e', '--externalhost', dest='externalhost', help='get the node information from an external source', action='store_true')
-    parser.add_option('-l', '--list', dest='list', help='list available releases, (disk) recipes and manifests', action='store_true')
-    parser.add_option('-r', '--recipe', dest='recipes', help='choose (disk) recipe(s)', action='append')
-    parser.add_option('-m', '--manifest', dest='manifests', help='choose Puppet manifest(s) to apply after the installation', action='append')
-    parser.add_option('-o', '--overlay', dest='overlay', help='choose an overlay from which files/templates should be copied')
-    parser.add_option('-u', '--udeb', dest='udebs', help='choose custom udebs to use in the installer', action='append')
-    parser.add_option('-s', '--seed', dest='seed', help='override default seed file (default: distribution name)')
-    parser.add_option('-a', '--seed-additional', dest='seed_additional', help='append additional seed files to the default seed file', action='append')
-    parser.add_option('-c', '--custom', dest='custom', help='override setting(s) from settings.py (dict:key:\'new_value\')', action='append')
-    parser.add_option('-p', '--listpxefiles', dest='pxefiles', help='list all pxe host configs', action='store_true')
-    parser.add_option('-v', '--variables', dest='pxevariables', help='specify additional pxe variables, (name value)', action='append', nargs=2)
-
-    (opts, args) = parser.parse_args()
-
-    if opts.custom:
-        error = override_settings(opts.custom)
-        if error:
-            parser.error(error)
-
-    if opts.list:
-        list_releases()
-        sys.exit(0)
-    elif opts.pxefiles:
-        list_pxe_files()
-        sys.exit(0)
-    elif not args:
-        parser.print_help()
-        sys.exit(0)
-    elif not len(args) == 2:
-        parser.error('you need to specify 2 arguments (fqdn|ip and a release), use -h for help')
-        
-    target, release = args
-    process = ProcessInput()
-
-    if process.validate_release(release):
-        parser.error('%s is an unknown release (use -l to list available releases)' % release)
-
-    if opts.macaddress:
-        try:
-            address, hostname, domainname = process.host_by_mac(target, opts.macaddress)
-        except Exception:
-            parser.error('"%s" is not a valid MAC address' % opts.macaddress)
-    elif opts.externalhost:
-        if external_nodes['provider']:
-            hostname, domainname = seedlib.get_domain(args[0])
-        else:
-            parser.error('a provider needs to be specified in settings.py '
-                            'in the external_nodes section')
-    else:
-        try:
-            address, hostname, domainname = process.host_by_ip(target)
-        except:
-            try:
-                address, hostname, domainname = process.host_by_name(target)
-            except:
-                parser.error('reverse DNS lookup for "%s" failed' % target)
-
-    host_dict = {'hostname': hostname, 'domainname': domainname}
-
-    if opts.externalhost:
-        if external_nodes['provider']:
-            external = ExternalNodes(external_nodes['provider'], host_dict)
-            external_vars = external.gather()
-            if not external_vars:
-                parser.error('failed to gather information via "%s"' % external_nodes['provider'])
-
-        address = external_vars[external_nodes['address']]
-        address = seedlib.format_address(address)
-    else:
-        external_vars = ''
-
-    pxe = ManagePxe()
-
-    if opts.seed_additional:
-        for additional in opts.seed_additional:
-            if not process.validate_seed(additional):
-                parser.error('seed file "%s/%s.seed" does not exist' % (sp_paths['seeds'], additional))
-
-    if not process.validate_seed(opts.seed):
-        parser.error('seed file "%s/%s.seed" does not exist' % (sp_paths['seeds'], opts.seed))
-
-    if opts.recipes and not process.validate_recipes(opts.recipes):
-        parser.error('"%s" is/are unknown recipe(s) (use -l to list available recipes)' % ', '.join(opts.recipes))
-
-    if opts.manifests and process.validate_manifests(opts.manifests):
-        manifest = process.validate_manifests(opts.manifests)
-        parser.error('"%s" is an unknown manifest (use -l to list available manifests)' % (manifest))
-
-    if opts.udebs and process.validate_udebs(opts.udebs):
-        udeb = process.validate_udebs(opts.udebs)
-        parser.error('"%s" is an unknown udeb (use -l to list available udebs)' % (udeb))
-
-    if opts.overlay and process.validate_overlay(opts.overlay):
-        overlay = process.validate_overlay(opts.overlay)
-        parser.error('"%s" is an unknown overlay (use -l to list available overlays)' % (overlay))
-
-    contents = pxe.create(opts, hostname, domainname, address, release, external_vars)
-    if not contents:
-        parser.error('failed to generate pxe file')
-
-    if not pxe.write(address, contents):
-        parser.error('can not write pxe file (hint: do you have the right permissions?')
-
-    hooks = Hooks(host_dict)
-    hooks.run(hooks_enable)
+    try:
+        #if sys.stdin.isatty():
+        argument_parser()
+        #else:
+        #    piped = sys.stdin.read()
+        #    print(piped)
+    except utils.FatalException:
+        sys.exit(1)
+    except Exception as err:
+        logger.exception(err)
+        sys.exit(1)
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except SystemExit as err:
+        sys.exit(err.code)
+    except KeyboardInterrupt:
+        sys.stderr.write('info: cancelled by user\n')
+        sys.exit(1)

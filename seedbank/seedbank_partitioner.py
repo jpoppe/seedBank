@@ -1,9 +1,5 @@
 #!/usr/bin/env python
-
 """
-
-seedbankPartitioner
-
 Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +13,13 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
 """
 
 __author__ = 'Jasper Poppe <jpoppe@ebay.com>'
 __copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
 __credits__ = ''
 __license__ = 'Apache License 2.0'
-__version__ = '1.1.0'
+__version__ = '2.0.0rc3'
 __maintainer__ = 'Jasper Poppe'
 __email__ = 'jpoppe@ebay.com'
 __status__ = 'production'
@@ -34,7 +29,8 @@ import os
 import subprocess
 import sys
 
-class ProcessInput(object):
+
+class ProcessInput:
 
     def __init__(self):
         self.devices = {}
@@ -148,7 +144,7 @@ class ProcessInput(object):
         else:
             return byte_size
 
-class Partitioner(object):
+class Partitioner:
 
     def __init__(self, recipe):
         self.sector = 0

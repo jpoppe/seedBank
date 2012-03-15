@@ -1,0 +1,72 @@
+# seedBank example configuration created by Jasper Poppe <jpoppe@ebay.com>
+
+# seedBank paths, be sure the tftpboot path points to the path used by the tftp server
+paths:
+  archives: /var/cache/seedbank/archives
+  configs: /etc/seedbank/configs
+  files: /etc/seedbank/www
+  isos: /var/cache/seedbank/isos
+  puppet_manifests: /etc/seedbank/manifests
+  overlays: /etc/seedbank/overlays
+  seeds: /etc/seedbank/seeds
+  status: /var/lib/seedbank/status
+  temp: /tmp
+  templates: /etc/seedbank/templates
+  tftpboot: /var/lib/tftpboot
+
+# logging configuration file and logger destination
+logging:
+  configuration: /etc/seedbank/logging.conf
+  logger: default    
+
+# urls for getting the pxe boot files, ISOs and syslinux
+urls:
+  debian: 'http://ftp.debian.org'
+  debian_firmware: 'http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/${release}/current/firmware.tar.gz'
+  debian_iso: 'http://cdimage.debian.org/debian-cd/current/${architecture}/iso-cd/debian-${version}-${architecture}-businesscard.iso'
+  ubuntu: 'http://archive.ubuntu.com'
+  syslinux: 'http://www.kernel.org/pub/linux/utils/boot/syslinux/4.xx/syslinux-4.05.tar.gz'
+
+# supported netboot images and a list of distributions which do not
+# "non free" firmwares integrated into the netboot images. ISOs should
+# include the version number
+distributions:
+  architectures: [amd64, i386]
+  firmwares: [debian-squeeze, debian-wheezy]
+  netboots: [debian-squeeze, debian-wheezy, debian-sid, ubuntu-lucid, ubuntu-oneiric, ubuntu-precise]
+  isos: [debian-squeeze-6.0.4]
+
+# commands which are used by seedBank internally
+commands:
+  iso_overlay: ['cd /target', 'tar -xf ../cdrom/overlay.tar', 'sh /target/fix_perms.sh', 'rm /target/fix_perms.sh']
+  iso_puppet_manifest: ['cp /target/etc/runonce.d/${manifest}.enabled'] # FIXME
+  iso_late_command: [] # FIXME
+  net_overlay: ['cd /target', 'wget http://${seed_host}:${seed_port}/overlay.tgz/${address} -O - | tar zxvf -']
+  net_early_command: ['wget -q -O - http://${seed_host}:${seed_port}/install/${address}']
+  net_late_command: [
+    'mv /target/etc/rc.local /target/etc/rc.local.seedbank',
+    'wget http://${seed_host}:${seed_port}/rclocal -O /target/etc/rc.local',
+    'chmod 755 /target/etc/rc.local',
+    'wget http://${seed_host}:${seed_port}/disable/${address} -O -']
+  net_puppet_manifests: [
+    'mkdir /target/seedbank',
+    'wget http://${seed_host}:${seed_port}/manifests.tgz -O /target/seedbank/manifests.tgz',
+    'cd /target/seedbank; tar zxvf manifests.tgz'
+  ]
+  net_puppet_manifest: ['wget -q http://${seed_host}:${seed_port}/puppet/${manifest} -O /target/etc/runonce.d/${manifest}.enabled']
+
+# bootstrap commands used in the bootstrap_init template
+bootstrap:
+  puppet: ['puppet apply --clientbucketdir /var/lib/puppet/clientbucket --debug /seedbank/${manifest} | tee -a /tmp/seedbank-bootstrap.log']
+
+# template files which are in the templates path
+# (default: /etc/seedbank/templates)
+templates:
+  manifest: seedbank_bootstrap
+  puppet_manifest: puppet_manifest
+  pxe_default: pxe_default
+  pxe_debian: pxe_debian
+  pxe_ubuntu: pxe_ubuntu
+  isolinux: isolinux.cfg
+  rc_local: rc.local
+  permission_script: permission_script

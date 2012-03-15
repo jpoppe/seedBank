@@ -1,0 +1,2 @@
+export RUBYLIB=/seedbank/lib
+puppet apply --clientbucketdir /var/lib/puppet/clientbucket --debug /seedbank/${manifest}.pp | tee -a /tmp/seedbank-bootstrap.log

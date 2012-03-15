@@ -1,20 +1,29 @@
 from __future__ import with_statement
 from fabric.api import env, local, run, put, settings
 
+import os
+import sys
+
 env.hosts = ['overlord001.a.c.m.e']
 #env.hosts = ['overlord001.h.o.m.e']
 env.user = 'root'
 application = 'seedbank'
-version = '1.1.0'
+version = '2.0.0rc3'
 deb_file = 'seedbank_%s_all.deb' % version
 repository = '/home/www/repositories/debian/sn'
+puppet = '~/git/ecg-puppet-staging/modules/xx/platform/xx_overlord/templates/etc/seedbank'
+
+if not os.path.dirname(os.path.realpath(__file__)) == os.getcwd():
+    print ('please run fabric from the main path')
+    sys.exit(1)
 
 def bump_version():
-    local('find . -type f -name "*seed*.py" | while read file; do sed -i "s/__version__ .*/__version__ = \'%s\'/" ${file}; done' % version)
+    local('find ./seedbank -max-depth 1 -type f -name "*.py" | while read file; do sed -i "s/__version__ .*/__version__ = \'%s\'/" ${file}; done' % version)
     local('sed -i "s/    version=.*/    version=\'%s\',/" setup.py' % version)
     local('sed -i "s/    version=.*/    version=\'%s\',/" setup.py' % version)
     local('sed -i "s/version = .*/version = \'%s\'/" manual/conf.py' % version)
     local('sed -i "s/release = .*/release = \'%s\'/" manual/conf.py' % version)
+    local('dch')
 
 def build():
     local('dpkg-buildpackage -b -tc')
@@ -28,6 +37,10 @@ def repo_remove():
         local('reprepro -Vb %s remove squeeze %s' % (repository, application))
 
 def localhost():
+    local('sudo rm -rf /etc/seedbank')
+    local('sudo ./setup.py install; sudo rm -rf build/')
+    local('sudo ln -s ~/git/ecg-puppet-staging /etc/seedbank/overlays/iso_overlord/root/')
+    local('sudo ln -s ~/git/ecg-puppet-staging /etc/seedbank/overlays/iso_overlord_vbox/root/')
     build()
     repo_remove()
     repo_add()
@@ -56,3 +69,6 @@ def test_seedslave():
     run('dpkg -i %s' % deb_file)
     run('cp /root/settings.py /etc/seedbank')
     run('/etc/init.d/%s start' % application)
+
+def update_puppet():
+    local('cp ~/git/seedbank/etc/seedbank/*.yaml %s' % puppet)

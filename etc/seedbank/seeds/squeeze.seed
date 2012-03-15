@@ -7,6 +7,7 @@
 #
 # For much more options and explanation see: 
 #  http://www.debian.org/releases/squeeze/example-preseed.txt
+#  http://d-i.alioth.debian.org/tmp/en.i386/apbs04.html
 #
 # Get a list of every possible question that could be asked during an 
 # install, do an installation and run these commands:
@@ -31,8 +32,8 @@ d-i debian-installer/locale string en_US.UTF-8
 
 ### - Network
 d-i netcfg/choose_interface select auto
-d-i netcfg/get_hostname string *hostname
-d-i netcfg/get_domain string *domainname
+d-i netcfg/get_hostname string ${host_name}
+d-i netcfg/get_domain string ${dns_domain}
 d-i netcfg/wireless_wep string
 d-i hw-detect/load_firmware boolean true
 
@@ -44,9 +45,10 @@ d-i network-console/start note
 
 ### - Mirror 
 d-i mirror/country string manual
-d-i mirror/http/hostname string *debian_mirrorhostname
-d-i mirror/http/directory string *debian_mirrordirectory
+d-i mirror/http/hostname string ${debian_mirrorhostname}
+d-i mirror/http/directory string ${debian_mirrordirectory}
 d-i mirror/http/proxy string
+d-i debian-installer/allow_unauthenticated boolean ${mirror_allow_unauthenticated}
 
 ### - Suite
 #d-i mirror/suite string testing
@@ -54,9 +56,9 @@ d-i mirror/http/proxy string
 
 ### - Date and Time
 d-i clock-setup/utc boolean true
-d-i time/zone string *timezone
+d-i time/zone string ${timezone}
 d-i clock-setup/ntp boolean true
-d-i clock-setup/ntp-server string *ntpserver
+d-i clock-setup/ntp-server string ${ntpserver}
 
 ### - Partitioning
 d-i partman-lvm/device_remove_lvm boolean true
@@ -70,10 +72,10 @@ d-i partman/confirm_nooverwrite boolean true
 
 ### - Accounts
 d-i passwd/root-login boolean false
-d-i passwd/user-fullname string *userfullname
-d-i passwd/username string *user
-d-i passwd/user-password password *userpassword
-d-i passwd/user-password-again password *userpassword
+d-i passwd/user-fullname string ${userfullname}
+d-i passwd/username string ${user}
+d-i passwd/user-password password ${userpassword}
+d-i passwd/user-password-again password ${userpassword}
 
 ### - Apt
 d-i apt-setup/non-free boolean true
@@ -86,7 +88,7 @@ d-i apt-setup/services-select multiselect
 
 ### - Package selection
 tasksel tasksel/first multiselect minimal
-d-i pkgsel/include string *debian_packages
+d-i pkgsel/include string ${debian_packages}
 d-i pkgsel/upgrade select full-upgrade
 
 ### - Popularity contest
@@ -95,12 +97,12 @@ popularity-contest popularity-contest/participate boolean false
 ### - Grub
 d-i grub-installer/only_debian boolean true
 d-i grub-installer/with_other_os boolean true
-d-i debian-installer/add-kernel-opts string *addkernelopts
+d-i debian-installer/add-kernel-opts string ${addkernelopts}
 
 ### - Finish 
 d-i finish-install/reboot_in_progress note
 
 ### - Custom commands
-d-i preseed/early_command string *earlycommand
-d-i preseed/late_command string *latecommand
+d-i preseed/early_command string ${earlycommand}
+d-i preseed/late_command string ${latecommand}
 #d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh

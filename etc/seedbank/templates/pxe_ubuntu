@@ -1,0 +1,41 @@
+# seedBank Ubuntu PXE template 
+#
+# NOTE: 
+# The 2.4 kernel accepts a maximum of 8 command line options and 8 environment
+# options (including any options added by default for the installer). With kernel 
+# 2.6.9 or newer, you can use 32 command line options and 32 environment options. 
+#
+# For more info and options see: 
+# http://www.debian.org/releases/stable/i386/apbs02.html.en
+# http://www.debian.org/releases/stable/i386/ch05s03.html
+# https://help.ubuntu.com/11.10/installation-guide/amd64/boot-parms.html
+
+# This section is used by the seedBank daemon, to add additional variables use the
+# "seedbank net --variables" option, those variables will be added for the node
+# you enable. Adding default variables is also possible, the variables added to
+# the should also be added to the 'pxe' section in the seedBank config configuration
+#
+# seedBank pxe variables could be used in overlay templates whom's file names end
+# with .sb_template
+#
+# *** start - seedBank pxe variables ***
+#
+# fqdn = ${fqdn}
+# host_name = ${host_name}
+# dns_domain = ${dns_domain}
+# config = ${config}
+# seeds = ${seeds}
+# manifests = ${manifests}
+# overlay = ${overlay}
+# seed_host = ${seed_host}
+# seed_port = ${seed_port}
+# address = ${address}
+# date_generated = ${date_generated}
+#
+# *** end - seedBank pxe variables ***
+
+default seedbank
+label seedbank
+
+kernel ${kernel}
+append initrd=${initrd} preseed/url=http://${seed_host}:${seed_port}/seed/${address} hostname=${host_name} domain=${dns_domain} locale=en_US.UTF-8 text interface=${interface} theme=${theme} BOOT_DEBUG=${debug_level} ${extra} keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false
