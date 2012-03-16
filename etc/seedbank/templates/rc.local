@@ -12,10 +12,10 @@
 # By default this script does nothing.
 
 RUNONCE_DIR="/etc/runonce.d"
-if [ -d ${RUNONCE_DIR} ]; then
-	ls ${RUNONCE_DIR} | grep "enabled$" | while read file; do
-		bash ${RUNONCE_DIR}/${file} && \
-		mv ${RUNONCE_DIR}/${file} ${RUNONCE_DIR}/`echo "${file}" | sed -e 's,\.enabled,\.disabled,g'`
+if [ -d $${RUNONCE_DIR} ]; then
+	ls $${RUNONCE_DIR} | grep "enabled$$" | while read file; do
+		bash $${RUNONCE_DIR}/$${file} && \
+		mv $${RUNONCE_DIR}/$${file} $${RUNONCE_DIR}/`echo "$${file}" | sed -e 's,\.enabled,\.disabled,g'`
 	done
 fi
 unset file
