@@ -69,7 +69,6 @@ class SeedPimp:
         commands = self.cfg['commands']
         if self.target == 'iso':
             cmd_overlay = commands['iso_overlay']
-            #cmd_puppet_manifest = commands['iso_puppet_manifest']
             cmd_late = commands['iso_late_command']
         elif self.target == 'net':
             cmd_overlay = commands['net_overlay']
@@ -89,10 +88,11 @@ class SeedPimp:
             elif self.target == 'iso':
                 src = os.path.join(self.cfg['paths']['templates'],
                 self.cfg['templates']['puppet_manifest'])
-                dst = os.path.join(self.cfg['paths']['temp'], 'seedbank',
-                    values['fqdn'],
-                    'iso/iso/seedbank/etc/runonce.d/puppet_manifest_%s.enabled'
-                    % manifest)
+                path = os.path.join(self.cfg['paths']['temp'], 'seedbank',
+                    values['fqdn'], 'iso/iso/seedbank/etc/runonce.d')
+                utils.make_dirs(path)
+                dst = os.path.join(path, 'puppet_manifest_%s.enabled' %
+                    manifest)
                 utils.write_template(values, src, dst)
         
         values['latecommand'] += cmd_late

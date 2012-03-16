@@ -13,8 +13,9 @@ deb_file = 'seedbank_%s_all.deb' % version
 repository = '/home/www/repositories/debian/sn'
 puppet = '~/git/ecg-puppet-staging/modules/xx/platform/xx_overlord/templates/etc/seedbank'
 
+fab_path = os.path.dirname(os.path.realpath(__file__))
 if not os.path.dirname(os.path.realpath(__file__)) == os.getcwd():
-    print ('please run fabric from the main path')
+    print ('please run fabric from "%s"' % fab_path)
     sys.exit(1)
 
 def bump_version():

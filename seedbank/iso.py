@@ -44,21 +44,24 @@ class Build:
         self.iso_dst = dst
 
     def prepare(self):
-        """remove temporary files and overlord ISO if they exist,
-        create a new directory structure"""
+        """remove temporary files, create the directory structure"""
         utils.rmtree(self.work_path)
-        #utils.file_delete(self.data['iso'])
-        #utils.make_dirs(self.data['storage_path'])
-        utils.make_dirs(self.work_iso)
+        utils.make_dirs(os.path.join(self.work_iso, 'seedbank/etc/runonce.d'))
         utils.make_dirs(self.work_initrd)
         utils.run('bsdtar -C "%s" -xf "%s"' % (self.work_iso, self.iso_file))
         utils.run('chmod -R u+w "%s"' % self.work_iso)
-        isolinux = os.path.join(self.cfg['paths']['templates'],
-            self.cfg['templates']['isolinux'])
-        template = utils.file_read(isolinux)
-        template = utils.apply_template(template, self.data, 'isolinux.cfg')
+
+    def add_templates(self):
+        """process and add the rc.local and isolinux templates"""
+        path = self.cfg['paths']['templates']
+
+        src = os.path.join(path, self.cfg['templates']['isolinux'])
         dst = os.path.join(self.work_iso, 'isolinux/isolinux.cfg')
-        utils.file_write(dst, template)
+        utils.write_template(self.data, src, dst)
+
+        src = os.path.join(path, self.cfg['templates']['rc_local'])
+        dst = os.path.join(self.work_iso, 'seedbank/etc/rc.local')
+        utils.write_template(self.data, src, dst)
 
     def add_preseed(self, contents):
         """add the seed file to the intrd image"""

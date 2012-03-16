@@ -11,19 +11,11 @@
 #
 # By default this script does nothing.
 
+# Simple NAT firewall rules
 echo "1" > /proc/sys/net/ipv4/ip_forward
 iptables -F
 iptables -t nat -F
 iptables -I FORWARD -j ACCEPT
 iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE
-
-RUNONCE_DIR="/etc/runonce.d"
-if [ -d ${RUNONCE_DIR} ]; then
-	ls ${RUNONCE_DIR} | grep "enabled$" | while read file; do
-		. ${RUNONCE_DIR}/${file} && \
-		mv ${RUNONCE_DIR}/${file} ${RUNONCE_DIR}/`echo "${file}" | sed -e 's,\.enabled,\.disabled,g'`
-	done
-fi
-unset file
 
 exit 0

@@ -31,8 +31,8 @@ import logging
 
 from wsgiref.simple_server import WSGIRequestHandler
 
-from thirdparty.bottle import run, route, request, abort
-from thirdparty import bottle
+from bottle import run, route, request, abort
+import bottle
 
 import parse
 import pimp
@@ -125,56 +125,28 @@ def overlay(address):
     result = utils.tar_gz_directory(overlay.dst)
     return result
 
-@route('/bootstrapinit/:address')
-def bootstrapinit(address):
-    """return the generated seedbank bootstrap init file"""
+@route('/rclocal/:address')
+def rclocal(address):
+    """return the rc.local file"""
     pxe_vars = settings.pxe_variables(cfg, address)
-    commands = ''
-    call_functions = []
-    command = '; '.join(cfg['bootstrap']['puppet'])
-    commands = [command.replace('${manifest}', manifest + '.pp')
-        for manifest in pxe_vars['manifests']]
-    commands = '\n'.join(commands)
-    call_functions.append('manifests')
-
-    if call_functions:
-        template_file = os.path.join(cfg['paths']['templates'],
-            cfg['templates']['manifest'])
-        values = {
-            'manifests_commands': commands,
-            'call_functions': '\n'.join(call_functions),
-            'server': cfg['settings']['address'],
-            'port': cfg['settings']['port']
-        }
-        result = utils.file_read(template_file)
-        result = utils.apply_template(result, values, template_file)
-        logging.info('%(fqdn)s - bootstrap init file generated' % pxe_vars)
-    else:
-        raise Exception('%(fqdn)s - generating bootstrap init file failed'
-            % pxe_vars)
-    return result
-
-@route('/rclocal')
-def rclocal():
-    """return the generated seedbank bootstrap init file"""
     file_name = os.path.join(cfg['paths']['templates'],
         cfg['templates']['rc_local'])
     result = utils.file_read(file_name)
+    result = utils.apply_template(result, pxe_vars, file_name)
     return result
 
 @route('/puppet/:manifest')
 def puppet(manifest):
     """return the generated seedbank bootstrap init file"""
-    template_file = os.path.join(cfg['paths']['templates'],
-            cfg['templates']['puppet_manifest'])
-    result = utils.file_read(template_file)
-    result = utils.apply_template(result, {'manifest': manifest}, template_file)
+    file_name = os.path.join(cfg['paths']['templates'],
+        cfg['templates']['puppet_manifest'])
+    result = utils.file_read(file_name)
+    result = utils.apply_template(result, {'manifest': manifest}, file_name)
     return result
 
 @route('/disable/:address')
 def disable(address):
     """disable a pxelinux configuration file by renaming the file"""
-    #pxe_vars = settings.pxe_variables(cfg, address)
     file_name = os.path.join(cfg['paths']['tftpboot'], 'pxelinux.cfg', address)
     utils.file_move(file_name, file_name + '.disabled')
     if cfg['hooks']['disable']:

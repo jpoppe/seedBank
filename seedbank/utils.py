@@ -317,15 +317,15 @@ def chmod(path, perms):
     else:
         logging.info('changed permissons "%s" to "%s"', path, perms)
 
-def apply_template(data, values, msg=None):
+def apply_template(data, values, log=None):
     """apply a template to a string"""
     try:
         data = string.Template(data)
         data = data.substitute(values)
     except KeyError as err:
-        if msg:
+        if log:
             logging.error('processing template variables failed, could not '
-                'find value for key %s (%s)', err, msg)
+                'find value for key %s (%s)', err, log)
         else:
             logging.error('processing template variables failed, could not '
                 'find value for key %s', err)
@@ -334,7 +334,7 @@ def apply_template(data, values, msg=None):
         return data
 
 def write_template(values, src, dst=None):
-    """open template, apply template variables, write to new file"""
+    """open a template file, apply template variables, write to a new file"""
     if not dst:
         dst = src
     data = file_read(src)

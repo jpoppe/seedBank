@@ -182,7 +182,7 @@ class ParseArguments:
 
         if args.manifests:
             for index, manifest in enumerate(args.manifests):
-                file_name = os.path.join(config['paths']['manifests'],
+                file_name = os.path.join(config['paths']['puppet_manifests'],
                     manifest + '.pp')
                 if not os.path.isfile(file_name):
                     err = 'Puppet manifest "%s" does not exist' % manifest
@@ -222,6 +222,7 @@ class ParseArguments:
 
         build = iso.Build(config, iso_file, args.fqdn, iso_dst)
         build.prepare()
+        build.add_templates()
 
         if args.manifests:
             build.add_puppet_manifests(args.fqdn)
