@@ -31,7 +31,7 @@ setup(
     maintainer ='Jasper Poppe',
     maintainer_email='jpoppe@ebay.com',
     url='http://www.infrastructureanywhere.com',
-    packages=['seedbank', 'seedbank.thirdparty'],
+    packages=['seedbank'],
     scripts=get_scripts('bin'),
     data_files = get_data_files('etc') + get_docs('manual'),
     requires = 'yaml',
