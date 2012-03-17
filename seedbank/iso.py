@@ -54,11 +54,9 @@ class Build:
     def add_templates(self):
         """process and add the rc.local and isolinux templates"""
         path = self.cfg['paths']['templates']
-
         src = os.path.join(path, self.cfg['templates']['isolinux'])
         dst = os.path.join(self.work_iso, 'isolinux/isolinux.cfg')
         utils.write_template(self.data, src, dst)
-
         src = os.path.join(path, self.cfg['templates']['rc_local'])
         dst = os.path.join(self.work_iso, 'seedbank/etc/rc.local')
         utils.write_template(self.data, src, dst)

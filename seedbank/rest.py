@@ -111,7 +111,7 @@ def seed(address):
 @route('/manifests.tgz')
 def manifests():
     """return a gzipped tar archive with all puppet manifests"""
-    result = utils.tar_gz_directory(cfg['paths']['manifests'])
+    result = utils.tar_gz_directory(cfg['paths']['puppet_manifests'])
     return result
 
 @route('/overlay.tgz/:address')
