@@ -42,16 +42,13 @@ def parse_cfg():
             netboots.append(release + '-' + architecture)
     cfg['distributions']['netboots'] = netboots
 
-    #isos = []
     isos_version = []
     for iso in cfg['distributions']['isos']:
         distribution, release, version = iso.split('-')
         for architecture in cfg['distributions']['architectures']:
             isos_version.append('%s-%s-%s-%s' % (distribution, release,
                 architecture, version))
-            #isos.append('%s-%s-%s' % (distribution, release, architecture))
     cfg['distributions']['isos'] = isos_version
-    #cfg['distributions']['isos_version'] = isos_version
 
     return cfg
 
