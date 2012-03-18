@@ -47,7 +47,6 @@ from argparse import RawTextHelpFormatter
 
 import settings
 import parse
-import utils
 
 
 cfg = settings.parse_cfg()
@@ -209,8 +208,6 @@ def main():
         #else:
         #    piped = sys.stdin.read()
         #    print(piped)
-    except utils.FatalException:
-        sys.exit(1)
     except Exception as err:
         logger.exception(err)
         sys.exit(1)

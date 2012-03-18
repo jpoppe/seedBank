@@ -51,8 +51,10 @@ class FatalException(Exception):
         if args:
             self.msg = args[0]
             logging.debug(self.msg)
+            sys.exit(1)
         else:
             self.msg = ''
+            sys.exit(1)
 
     def __str__(self):
         """return error message as a string"""
