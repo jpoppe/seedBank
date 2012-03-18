@@ -19,7 +19,7 @@ if not os.path.dirname(os.path.realpath(__file__)) == os.getcwd():
     sys.exit(1)
 
 def bump_version():
-    local('find ./seedbank -max-depth 1 -type f -name "*.py" | while read file; do sed -i "s/__version__ .*/__version__ = \'%s\'/" ${file}; done' % version)
+    local('find ./seedbank -max-depth 1 -type f -name "*.py" | grep -v bottle.py | while read file; do sed -i "s/__version__ .*/__version__ = \'%s\'/" ${file}; done' % version)
     local('sed -i "s/    version=.*/    version=\'%s\',/" setup.py' % version)
     local('sed -i "s/    version=.*/    version=\'%s\',/" setup.py' % version)
     local('sed -i "s/version = .*/version = \'%s\'/" manual/conf.py' % version)
@@ -72,4 +72,6 @@ def test_seedslave():
     run('/etc/init.d/%s start' % application)
 
 def update_puppet():
-    local('cp ~/git/seedbank/etc/seedbank/*.yaml %s' % puppet)
+    puppet_conf = os.path.join(puppet, 'conf.d')
+    local('cp ~/git/seedbank/etc/seedbank/settings.yaml %s' % puppet)
+    local('cp ~/git/seedbank/etc/seedbank/conf.d/* %s' % puppet_conf)
