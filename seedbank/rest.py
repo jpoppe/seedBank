@@ -102,12 +102,18 @@ def seed(address):
     template_cfg = settings.template(pxe_vars['fqdn'], pxe_vars['overlay'],
         pxe_vars['config'], pxe_vars)
     seed = pimp.SeedPimp(template_cfg, 'net')
-    result = seed.pimp(pxe_vars['seeds'], pxe_vars['overlay'],
-        pxe_vars['manifests'])
-    return result
+    try:
+        result = seed.pimp(pxe_vars['seeds'], pxe_vars['overlay'],
+            pxe_vars['puppet_manifests'])
+    except KeyError as err:
+        msg = 'key %s not found in the PXE variables' % err
+        logging.error(msg)
+        abort(400, msg)
+    else:
+        return result
 
-@route('/manifests.tgz')
-def manifests():
+@route('/puppet_manifests.tgz')
+def puppet_manifests():
     """return a gzipped tar archive with all puppet manifests"""
     result = utils.tar_gz_directory(cfg['paths']['puppet_manifests'])
     return result

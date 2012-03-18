@@ -49,7 +49,7 @@ class GeneratePxe:
         self.overlay = args.overlay
         self.address = args.address
         self.release = args.release
-        self.manifests = args.manifests
+        self.puppet = args.puppet
         self.pxe_variables = {}
 
     def state_remove(self):
@@ -70,7 +70,7 @@ class GeneratePxe:
             'seed_port': cfg['settings']['bottle_port'],
             'address': self.address,
             'overlay': self.overlay,
-            'manifests': self.manifests,
+            'puppet_manifests': self.puppet,
             'host_name': self.host_name,
             'dns_domain': self.dns_domain,
             'fqdn': self.fqdn,
@@ -106,7 +106,7 @@ class GeneratePxe:
         pxe_variables_custom = '\n'.join(pxe_variables_custom)
 
         data = utils.file_read(file_name)
-        data = utils.apply_template(data, self.pxe_variables)
+        data = utils.apply_template(data, self.pxe_variables, file_name)
         if pxe_variables_custom:
             data = re.sub(
                 '(#\n# \*\*\* end - seedBank pxe variables \*\*\*)',

@@ -56,7 +56,7 @@ class ParseArguments:
             args.overlays = True
             args.configs = True
             args.isos = True
-            args.manifests = True
+            args.puppet = True
             args.pxe = True
 
         if args.netboots:
@@ -69,8 +69,8 @@ class ParseArguments:
             list_resource.configs()
         if args.isos:
             list_resource.isos()
-        if args.manifests:
-            list_resource.manifests()
+        if args.puppet:
+            list_resource.puppet()
         if args.pxe:
             list_resource.pxe()
 
@@ -143,8 +143,8 @@ class ParseArguments:
             ip_address = utils.resolve_ip_address(args.fqdn) 
             args.address = utils.ip_to_hex(ip_address)
 
-        if args.manifests:
-            for index, manifest in enumerate(args.manifests):
+        if args.puppet:
+            for index, manifest in enumerate(args.puppet):
                 file_name = os.path.join(config['paths']['puppet_manifests'],
                     manifest + '.pp')
                 if not os.path.isfile(file_name):
@@ -152,7 +152,7 @@ class ParseArguments:
                     logging.error(err)
                     raise utils.FatalException()
                 else:
-                    args.manifests[index] = manifest
+                    args.puppet[index] = manifest
 
         pxe = net.GeneratePxe(args)
         pxe.state_remove()
@@ -166,8 +166,8 @@ class ParseArguments:
             args.seed = ''
         if not 'config' in args:
             args.config = ''
-        if not 'manifests' in args:
-            args.manifests = []
+        if not 'puppet' in args:
+            args.puppet = []
 
         _ , release, _, _ = args.release.split('-')
         args, config = self._shared(args, release)
@@ -186,7 +186,7 @@ class ParseArguments:
         build = iso.Build(config, iso_file, args.fqdn, iso_dst)
         build.prepare()
 
-        if args.manifests:
+        if args.puppet:
             build.add_puppet_manifests(args.fqdn)
 
         template_cfg = settings.template(args.fqdn, args.overlay, args.config,
@@ -199,7 +199,7 @@ class ParseArguments:
             permissions.script(overlay.dst, args.overlay, '/target')
  
         seed = pimp.SeedPimp(template_cfg, 'iso')
-        preseed = seed.pimp(args.seeds, args.overlay, args.manifests)
+        preseed = seed.pimp(args.seeds, args.overlay, args.puppet)
         build.add_preseed(preseed)
         build.add_templates()
         if args.overlay:

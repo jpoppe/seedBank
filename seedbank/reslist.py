@@ -80,8 +80,8 @@ class ListResources:
         images = self._prefix_installed(configured, installed)
         self._add(images, 'ISOs')
 
-    def manifests(self):
-        items = self._list_files(self.cfg['paths']['manifests'], '.pp')
+    def puppet(self):
+        items = self._list_files(self.cfg['paths']['puppet_manifests'], '.pp')
         self._add(items, 'Puppet manifests')
 
     def overlays(self):
