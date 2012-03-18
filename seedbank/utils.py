@@ -226,8 +226,8 @@ def file_write(file_name, data):
     try:
         open(file_name, 'w').write(data)
     except IOError as err:
-        logging.error('failed to write data to "%s"', file_name)
-        raise FatalException(err)
+        logging.error('failed to write data to "%s" (%s)', file_name, err[1])
+        raise FatalException()
     else:
         logging.info('written data to "%s"', file_name)
 
