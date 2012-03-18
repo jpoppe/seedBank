@@ -33,8 +33,34 @@ import utils
 
 def parse_cfg():
     """validate the configuration"""
-    cfg = utils.yaml_read(['/etc/seedbank/settings.yaml',
-        '/etc/seedbank/system.yaml'])
+    settings = None
+    override_files = ['./settings.yaml', '~/.seedbank/settings.yaml']
+    settings_file_name = '/etc/seedbank/settings.yaml'
+    files = override_files + [settings_file_name]
+
+    for file_name in files:
+        if os.path.isfile(file_name):
+            settings_file = file_name
+            break
+
+    settings = utils.yaml_read(settings_file)
+    if not settings:
+        logging.error('could not find any of the following settings files: '
+            '%s', ', '.join(files))
+        raise utils.FatalException()
+    else:
+        path = settings['settings']['configuration_path']
+    if not os.path.isdir(path):
+        raise utils.FatalException()
+    if settings_file in override_files:
+        logging.info('found settings file "%s", will use this settings file '
+            'instead of the default (%s)', settings_file, settings_file_name)
+
+    files = os.listdir(path)
+    files = [file_name for file_name in files if file_name.endswith('.yaml')]
+    files = [os.path.join(path, file_name) for file_name in files]
+    cfg = utils.yaml_read(files)
+    cfg.update(settings)
 
     netboots = []
     for release in cfg['distributions']['netboots']:
@@ -77,6 +103,7 @@ def template(fqdn, overlay, config, variables):
     cfg['seed'].update(dict(variables))
     return cfg
 
+    #FIXME: reimplemnt this code
     '''
     missing = []
     for path in cfg['paths'].values():
