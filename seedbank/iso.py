@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-#FIXME: Debian 32 BIT support
-
 __author__ = 'Jasper Poppe <jpoppe@ebay.com>'
 __copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
 __credits__ = ''
@@ -31,6 +29,8 @@ import utils
 
 
 class Build:
+    """all tasks needed to extract an installer ISO copy files to it and
+    rebuild the ISO"""
 
     def __init__(self, cfg, iso_file, fqdn, dst):
         """prepare the data dictionary"""
@@ -42,6 +42,7 @@ class Build:
         self.work_iso = os.path.join(work_path, 'iso')
         self.iso_file = iso_file
         self.iso_dst = dst
+        self.data['architecture'] = None
 
     def prepare(self):
         """remove temporary files, create the directory structure"""
@@ -65,8 +66,15 @@ class Build:
         """add the seed file to the intrd image"""
         dst = os.path.join(self.work_initrd, 'preseed.cfg')
         utils.file_write(dst, contents)
-        initrd = os.path.join(self.work_iso, 'install.amd',
-            'initrd.gz')
+        path_amd = os.path.join(self.work_iso, 'install.amd')
+        path_i386 = os.path.join(self.work_iso, 'install.386')
+        if os.path.isdir(path_amd):
+            self.data['architecture'] = 'amd'
+            path = path_amd
+        elif os.path.isdir(path_i386):
+            self.data['architecture'] = '386'
+            path = path_i386
+        initrd = os.path.join(path, 'initrd.gz')
         utils.initrd_extract(self.work_initrd, initrd)
         utils.initrd_create(self.work_initrd, initrd)
 
