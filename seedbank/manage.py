@@ -1,23 +1,19 @@
 #!/usr/bin/env python
-"""
-Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+# Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#    http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-This tool downloads the needed netboot tarballs from the internet and
-extracts the needed files to the right place, it's also able to integrate
-the 'non free' firmware files into the Debian netboot initrd.
-"""
 
 __author__ = 'Jasper Poppe <jpoppe@ebay.com>'
 __copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
@@ -78,7 +74,8 @@ class Manage:
             if fnmatch.fnmatch(file_name, '*.deb'):
                 result = utils.call(['dpkg', '-x', file_name, 'temp'])
                 if result:
-                    utils.throws('failed to extract package "%s"' % file_name)
+                    logging.error('failed to extract package "%s"', file_name)
+                    raise utils.FatalException()
                 logging.info('extracted "%s"', file_name)
 
     def _pxe_default(self):
@@ -102,7 +99,7 @@ class Manage:
 
     def _debian_firmware(self, target):
         """download and integrate the debian non free firmware"""
-        distribution, release, architecture = target.split('-')
+        distribution, release, _ = target.split('-')
         path = 'firmware-' + distribution + '-' + release
         dst = os.path.join(self.cfg['paths']['archives'], path)
         temp_initrd = os.path.join(self.temp, 'initrd')
@@ -165,7 +162,7 @@ class Manage:
         self._download(src, dst)
         self._extract(prefix, files, src, dst, name)
         firmware = distribution + '-' + release
-        if firmware in self.cfg['distributions']['firmwares']:                         
+        if firmware in self.cfg['distributions']['firmwares']:
             self._debian_firmware(name)
 
     def _remove_netboot(self, name):

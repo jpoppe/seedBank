@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+"""this module is shared by the Infrastructure Anywhere and seedBank project"""
+
 # Copyright 2011-2012 Jasper Poppe <jpoppe@ebay.com>
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -136,8 +138,9 @@ def run(command, user=None, host=None):
     if host != 'localhost' and user and host:
         logging.info('%s@%s - running "%s"', user, host, command)
         command = _shell_escape(command)
-        proc = subprocess.Popen(['ssh', '-t', '-o PasswordAuthentication=no', '%s@%s'
-            % (user, host), 'bash -c "%s"' % command], stdout=subprocess.PIPE,
+        proc = subprocess.Popen(['ssh', '-t', '-o PasswordAuthentication=no',
+            '%s@%s' % (user, host),
+            'bash -c "%s"' % command], stdout=subprocess.PIPE,
             stderr=subprocess.PIPE, stdin=sys.stdin)
     else:
         logging.info('localhost - running "%s"', command)

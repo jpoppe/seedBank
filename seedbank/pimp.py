@@ -1,20 +1,18 @@
 """this module processes the preseed templates and file overlays """
 
-"""
-Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-"""
+# Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#    http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 __author__ = 'Jasper Poppe <jpoppe@ebay.com>'
 __copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
@@ -106,6 +104,7 @@ class SeedPimp:
 
 
 class Overlay:
+    """copy the file overlay directory"""
 
     def __init__(self, cfg, overlay, fqdn):
         """set the configuration variable, source and destination paths"""
@@ -131,6 +130,7 @@ class Overlay:
 
 
 class OverlayPermissions:
+    """create and process the overlay permissons script"""
 
     def __init__(self, cfg):
         """set the configuration variable"""
@@ -150,8 +150,8 @@ class OverlayPermissions:
 
         perm_list = {}
         for entry in overlay_contents:
-            st = os.stat(entry)
-            mode = int(oct(st.st_mode)[3:])
+            stat = os.stat(entry)
+            mode = int(oct(stat.st_mode)[3:])
             entry = entry.split(path, 1)[1]
             if entry == '/root':
                 perm_list[entry] = ('0700', 0, 0)
@@ -228,5 +228,5 @@ class OverlayPermissions:
             logging.warning('overlay "%s" has been selected but permission '
                 'file "%s" does not exist, so all files will be owned by root '
                 'and will keep the current permissons which could lead to '
-                'problems', self.overlay, perm_file)
+                'problems', overlay, perm_file)
             utils.file_write(perm_script, '')

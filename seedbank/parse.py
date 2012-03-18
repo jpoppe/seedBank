@@ -1,20 +1,18 @@
-"""this module processes the given arguments"""
+"""this module processes the arguments"""
 
-"""
-Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-"""
+# Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#    http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 __author__ = 'Jasper Poppe <jpoppe@ebay.com>'
 __copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
@@ -42,6 +40,7 @@ import utils
 
 
 class ParseArguments:
+    """process the given arguments"""
 
     def __init__(self, cfg):
         """load the configuration"""
@@ -116,44 +115,8 @@ class ParseArguments:
         return args, config
 
     def net(self, args):
-        """validate input for the net command, and there are no errors create
-        the pxelinix.cfg file"""
-        '''
-        import pprint
-        if type(args) == dict:
-            import ast
-
-            print(args)
-
-            args = dict(((key, value[0]) for key, value in args.items()))
-            new_args = []
-            types = ['True', 'None', 'False']
-            for key, value in args.items():
-                print value
-                if value.startswith('[') or value in types:
-                    new_args.append((key, ast.literal_eval(value)))
-                else:
-                    new_args.append((key, value))
-            args = dict(new_args)
-            #args = dict(((key, ast.literal_eval(value[0]))
-            #    for key, value in args.items()))
-            pprint.pprint(args)
-            args = AttributeDict(args)
-            #print (args)
-            #print args.fqdn
-            #return
-        else:
-            args_dict = vars(copy.copy(args))
-            del args_dict['func']
-            pprint.pprint(args_dict)
-        #import urllib
-        #import urlparse
-        #url = urllib.urlencode(args_dict)
-        #print ('net?' + url)
-        #pprint.pprint(urlparse.parse_qs(url))
-        '''
-
-        distribution, release, architecture = args.release.split('-')
+        """process the net command"""
+        _, release, _ = args.release.split('-')
         args, config = self._shared(args, release)
 
         path = os.path.join(config['paths']['tftpboot'], 'seedbank',
@@ -206,7 +169,7 @@ class ParseArguments:
         if not 'manifests' in args:
             args.manifests = []
 
-        distribution, release, architecture, version = args.release.split('-')
+        _ , release, _, _ = args.release.split('-')
         args, config = self._shared(args, release)
 
         if args.release in config['distributions']['isos']:
@@ -222,7 +185,6 @@ class ParseArguments:
 
         build = iso.Build(config, iso_file, args.fqdn, iso_dst)
         build.prepare()
-        build.add_templates()
 
         if args.manifests:
             build.add_puppet_manifests(args.fqdn)
@@ -239,6 +201,7 @@ class ParseArguments:
         seed = pimp.SeedPimp(template_cfg, 'iso')
         preseed = seed.pimp(args.seeds, args.overlay, args.manifests)
         build.add_preseed(preseed)
+        build.add_templates()
         if args.overlay:
             build.add_overlay(overlay.dst)
         build.create()

@@ -10,21 +10,19 @@ Testing URLs:
 
 """
 
-"""
-Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-"""
+# Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#    http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 import os
 import logging
@@ -173,10 +171,11 @@ def start():
         settings = cfg['settings']
         bottle_server = settings['bottle_server']
         bottle_server = getattr(bottle, bottle_server)
-        if not settings['bottle_listen']:
-            settings['bottle_listen'] = '0.0.0.0'
-        run(host=settings['bottle_listen'], port=settings['bottle_port'],
-            handler_class=GetHandler, server=bottle_server)
+        if not cfg['settings']['bottle_listen']:
+            cfg['settings']['bottle_listen'] = '0.0.0.0'
+        run(host=cfg['settings']['bottle_listen'],
+            port=cfg['settings']['bottle_port'], handler_class=GetHandler,
+            server=bottle_server)
     except Exception as error:
         logging.error(error)
 
