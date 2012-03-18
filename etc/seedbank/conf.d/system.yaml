@@ -1,65 +1,5 @@
 # seedBank example configuration created by Jasper Poppe <jpoppe@ebay.com>
 
-# seed template variables, feel free change or add variables, those variables
-# are used in the seed files which are in located in the 'seeds' path
-# (default: /etc/seedbank/seeds)
-# to install an Ubuntu desktop environment change the values of
-# ubuntu_tasksel to 'standard, desktop'
-#
-# NOTE: the following reserved variables will be added automatically and will
-# be ignored when those will be defined here:
-# fqdn
-# host_name
-# dns_domain
-#
-# NOTE: the earlycommand and latecommand variables are mandatory and used by
-# seedBank internally, feel free to add more commands, but seedBank will
-# break if those variables are removed
-seed:
-  earlycommand: []
-  latecommand: []
-  addkernelopts: ''
-  debian_mirrordirectory: /debian
-  debian_mirrorhostname: ftp.debian.org
-  mirror_allow_unauthenticated: 'true'
-  debian_packages: openssh-server puppet debconf-utils lsb-release vim less
-  ntpserver: ntp.xs4all.nl
-  repository_0: 'deb http://192.168.122.1/debian/sn squeeze main'
-  repository_0_key: 'http://192.168.122.1/debian/repository.key'
-  timezone: Europe/Amsterdam
-  ubuntu_mirrordirectory: /ubuntu
-  ubuntu_mirrorhostname: nl.archive.ubuntu.com
-  ubuntu_tasksel: standard, server
-  ubuntu_packages: openssh-server puppet debconf-utils lsb-release vim less
-  user: seedbank
-  userfullname: seedBank User
-  username: seedbank
-  userpassword: seed123
-
-# pxe template variables, feel free to add or modify the values, those
-# variables are used in the Debian and Ubuntu pxe template files (default:
-# /etc/seedbank/templates/pxe_debian and /etc/seedbank/templates/pxe_ubuntu)
-pxe:
-  console_charmap: UTF-8
-  console_layout: us
-  countrychooser: NL
-  debug_level: '0'
-  extra: netcfg/dhcp_timeout=60 debian-installer/allow_unauthenticated=true
-  interface: eth0
-  locale: en_US
-  template: pxehost
-  theme: dark
-
-# enable and disable hooks which contain command(s) which will be executed on
-# the host you are running seedBank from. When running seedBank to enable
-# a netboot installation the command(s) specified in the enable hook will be
-# executed, the command(s) specified in the disable hook will be executed by the
-# seedBank daemon when the installation has finished and just before the system
-# restarts
-hooks:
-  enable: ['puppet cert --clean ${host_name}.${dns_domain}']
-  disable: []
-
 # seedBank paths, be sure the tftpboot path points to the path used by the tftp server
 paths:
   archives: /var/cache/seedbank/archives
@@ -79,14 +19,6 @@ logging:
   configuration: /etc/seedbank/logging.conf
   logger: default    
 
-# urls for getting the pxe boot files, ISOs and syslinux
-urls:
-  debian: 'http://ftp.debian.org'
-  debian_firmware: 'http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/${release}/current/firmware.tar.gz'
-  debian_iso: 'http://cdimage.debian.org/debian-cd/current/${architecture}/iso-cd/debian-${version}-${architecture}-businesscard.iso'
-  ubuntu: 'http://archive.ubuntu.com'
-  syslinux: 'http://www.kernel.org/pub/linux/utils/boot/syslinux/4.xx/syslinux-4.05.tar.gz'
-
 # supported netboot images and a list of distributions which do not
 # "non free" firmwares integrated into the netboot images. ISOs should
 # include the version number
@@ -95,34 +27,6 @@ distributions:
   firmwares: [debian-squeeze, debian-wheezy]
   netboots: [debian-squeeze, debian-wheezy, debian-sid, ubuntu-lucid, ubuntu-oneiric, ubuntu-precise]
   isos: [debian-squeeze-6.0.4]
-
-# commands which are used by seedBank internally
-commands:
-  iso_overlay: ['cd /target', 'tar -xf ../cdrom/overlay.tar', 'sh /target/fix_perms.sh', 'rm /target/fix_perms.sh']
-  iso_late_command: [
-    'mv /target/etc/rc.local /target/etc/rc.local.seedbank',
-    'cp /cdrom/seedbank/etc/rc.local /target/etc',
-    'cp -r /cdrom/seedbank/etc/runonce.d /target/etc',
-    'cp -r /cdrom/manifests /target/seedbank',
-    'chmod 0755 /target/etc/rc.local',
-  ]
-  net_overlay: ['cd /target', 'wget http://${seed_host}:${seed_port}/overlay.tgz/${address} -O - | tar zxvf -']
-  net_early_command: ['wget -q -O - http://${seed_host}:${seed_port}/install/${address}']
-  net_late_command: [
-    'mv /target/etc/rc.local /target/etc/rc.local.seedbank',
-    'wget http://${seed_host}:${seed_port}/rclocal/${address} -O /target/etc/rc.local',
-    'chmod 0755 /target/etc/rc.local',
-    'wget http://${seed_host}:${seed_port}/disable/${address} -O -']
-  net_puppet_manifests: [
-    'mkdir /target/seedbank',
-    'wget http://${seed_host}:${seed_port}/manifests.tgz -O /target/seedbank/manifests.tgz',
-    'cd /target/seedbank; tar zxvf manifests.tgz'
-  ]
-  net_puppet_manifest: ['wget -q http://${seed_host}:${seed_port}/puppet/${manifest} -O /target/etc/runonce.d/${manifest}.enabled']
-
-# bootstrap commands used in the bootstrap_init template
-bootstrap:
-  puppet: ['puppet apply --clientbucketdir /var/lib/puppet/clientbucket --debug /seedbank/${manifest} | tee -a /tmp/seedbank-bootstrap.log']
 
 # template files which are in the templates path
 # (default: /etc/seedbank/templates)

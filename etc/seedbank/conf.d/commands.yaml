@@ -1,0 +1,25 @@
+# seedBank example configuration created by Jasper Poppe <jpoppe@ebay.com>
+
+# commands which are used by seedBank internally
+commands:
+  iso_overlay: ['cd /target', 'tar -xf ../cdrom/overlay.tar', 'sh /target/fix_perms.sh', 'rm /target/fix_perms.sh']
+  iso_late_command: [
+    'mv /target/etc/rc.local /target/etc/rc.local.seedbank',
+    'cp /cdrom/seedbank/etc/rc.local /target/etc',
+    'cp -r /cdrom/seedbank/etc/runonce.d /target/etc',
+    'cp -r /cdrom/manifests /target/seedbank',
+    'chmod 0755 /target/etc/rc.local',
+  ]
+  net_overlay: ['cd /target', 'wget http://${seed_host}:${seed_port}/overlay.tgz/${address} -O - | tar zxvf -']
+  net_early_command: ['wget -q -O - http://${seed_host}:${seed_port}/install/${address}']
+  net_late_command: [
+    'mv /target/etc/rc.local /target/etc/rc.local.seedbank',
+    'wget http://${seed_host}:${seed_port}/rclocal/${address} -O /target/etc/rc.local',
+    'chmod 0755 /target/etc/rc.local',
+    'wget http://${seed_host}:${seed_port}/disable/${address} -O -']
+  net_puppet_manifests: [
+    'mkdir /target/seedbank',
+    'wget http://${seed_host}:${seed_port}/manifests.tgz -O /target/seedbank/manifests.tgz',
+    'cd /target/seedbank; tar zxvf manifests.tgz'
+  ]
+  net_puppet_manifest: ['wget -q http://${seed_host}:${seed_port}/puppet/${manifest} -O /target/etc/runonce.d/${manifest}.enabled']

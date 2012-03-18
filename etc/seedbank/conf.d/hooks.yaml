@@ -1,0 +1,11 @@
+# seedBank example configuration created by Jasper Poppe <jpoppe@ebay.com>
+
+# enable and disable hooks which contain command(s) which will be executed on
+# the host you are running seedBank from. When running seedBank to enable
+# a netboot installation the command(s) specified in the enable hook will be
+# executed, the command(s) specified in the disable hook will be executed by the
+# seedBank daemon when the installation has finished and just before the system
+# restarts
+hooks:
+  enable: ['puppet cert --clean ${host_name}.${dns_domain}']
+  disable: []
