@@ -19,7 +19,7 @@ commands:
     'wget http://${seed_host}:${seed_port}/disable/${address} -O -']
   net_puppet_manifests: [
     'mkdir /target/seedbank',
-    'wget http://${seed_host}:${seed_port}/manifests.tgz -O /target/seedbank/manifests.tgz',
-    'cd /target/seedbank; tar zxvf manifests.tgz'
+    'wget http://${seed_host}:${seed_port}/puppet_manifests.tgz -O /target/seedbank/puppet_manifests.tgz',
+    'cd /target/seedbank; tar zxvf puppet_manifests.tgz'
   ]
   net_puppet_manifest: ['wget -q http://${seed_host}:${seed_port}/puppet/${manifest} -O /target/etc/runonce.d/${manifest}.enabled']
