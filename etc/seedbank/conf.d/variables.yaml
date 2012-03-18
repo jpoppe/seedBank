@@ -22,7 +22,7 @@ seed:
   debian_mirrordirectory: /debian
   debian_mirrorhostname: ftp.debian.org
   mirror_allow_unauthenticated: 'true'
-  debian_packages: openssh-server puppet debconf-utils lsb-release vim less
+  debian_packages: openssh-server puppet debconf-utils lsb-release rsync vim less
   ntpserver: ntp.xs4all.nl
   repository_0: 'deb http://192.168.122.1/debian/sn squeeze main'
   repository_0_key: 'http://192.168.122.1/debian/repository.key'
@@ -30,7 +30,7 @@ seed:
   ubuntu_mirrordirectory: /ubuntu
   ubuntu_mirrorhostname: nl.archive.ubuntu.com
   ubuntu_tasksel: standard, server
-  ubuntu_packages: openssh-server puppet debconf-utils lsb-release vim less
+  ubuntu_packages: openssh-server puppet debconf-utils lsb-release rsync vim less
   user: seedbank
   userfullname: seedBank User
   username: seedbank
