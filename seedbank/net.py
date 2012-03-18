@@ -127,7 +127,7 @@ class GeneratePxe:
         hook(s)"""
         for hook in cfg['hooks']['enable']:
             hook = utils.apply_template(hook, self.pxe_variables)
-            logging.info('running enable hook "%s"', hook)
+            logging.info('found enable hook "%s"', hook)
             utils.run(hook)
 
 
