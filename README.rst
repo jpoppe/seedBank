@@ -35,19 +35,18 @@ Features
 --------
 
 - support for Debian and Ubuntu
-- automated setup of debian/ubuntu pxe netboot images
-- override any setting from settings.py on the command line
-- support for custom enable / disable hooks
-- support for running standolone puppet manifests
+- automated setup of Debian and Ubuntu PXE netboot images
+- override most settings from the command line of via config override files
+- support for custom enable and disable hooks
+- support for running standalone Puppet manifests after an installation
 - support for templated file overlays
-- external nodes support
 - Debian non free firmware integration support
-- much more
+- and more
 
 Requirements
 ------------
 
-Python version 2.5 or higher
+Python version 2.6 or 2.7
 Properly configured DHCP server
 Properly configured DNS Server (hosts file will also work)
 Properly configured TFTP Server
