@@ -12,29 +12,29 @@
 # host_name
 # dns_domain
 #
-# NOTE: the earlycommand and latecommand variables are mandatory and used by
-# seedBank internally, feel free to add more commands, but seedBank will
+# NOTE: the early_command and late_command variables are mandatory and used
+# by seedBank internally, feel free to add custom commands, seedBank will
 # break if those variables are removed
 seed:
-  earlycommand: []
-  latecommand: []
-  addkernelopts: ''
-  debian_mirrordirectory: /debian
-  debian_mirrorhostname: ftp.debian.org
+  early_command: []
+  late_command: []
+  add_kernel_opts: ''
+  debian_mirror_directory: /debian
+  debian_mirror_host_name: ftp.debian.org
   mirror_allow_unauthenticated: 'true'
   debian_packages: openssh-server puppet debconf-utils lsb-release rsync vim less
-  ntpserver: ntp.xs4all.nl
+  ntp_server: ntp.xs4all.nl
   repository_0: 'deb http://192.168.122.1/debian/sn squeeze main'
   repository_0_key: 'http://192.168.122.1/debian/repository.key'
   timezone: Europe/Amsterdam
-  ubuntu_mirrordirectory: /ubuntu
-  ubuntu_mirrorhostname: nl.archive.ubuntu.com
-  ubuntu_tasksel: standard, server
+  ubuntu_mirror_directory: /ubuntu
+  ubuntu_mirror_hostname: nl.archive.ubuntu.com
+  ubuntu_task_sel: standard, server
   ubuntu_packages: openssh-server puppet debconf-utils lsb-release rsync vim less
   user: seedbank
-  userfullname: seedBank User
-  username: seedbank
-  userpassword: seed123
+  user_full_name: seedBank User
+  user_name: seedbank
+  user_password: seed123
 
 # pxe template variables, feel free to add or modify the values, those
 # variables are used in the Debian and Ubuntu pxe template files (default:
@@ -42,7 +42,7 @@ seed:
 pxe:
   console_charmap: UTF-8
   console_layout: us
-  countrychooser: NL
+  country_chooser: NL
   debug_level: '0'
   extra: netcfg/dhcp_timeout=60 debian-installer/allow_unauthenticated=true
   interface: eth0

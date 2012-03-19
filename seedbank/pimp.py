@@ -75,14 +75,14 @@ class SeedPimp:
 
         values = self.cfg['seed']
         if overlay:
-            values['latecommand'] += cmd_overlay
+            values['late_command'] += cmd_overlay
         if self.target == 'net' and manifests:
-            values['latecommand'] += commands['net_puppet_manifests']
+            values['late_command'] += commands['net_puppet_manifests']
         for manifest in manifests:
             values['manifest'] = manifest
             if self.target == 'net':
                 puppet_command = commands_merge(cmd_puppet_manifest, values)
-                values['latecommand'] += [puppet_command]
+                values['late_command'] += [puppet_command]
             elif self.target == 'iso':
                 src = os.path.join(self.cfg['paths']['templates'],
                 self.cfg['templates']['puppet_manifest'])
@@ -93,9 +93,10 @@ class SeedPimp:
                     manifest)
                 utils.write_template(values, src, dst)
         
-        values['latecommand'] += cmd_late
-        values['earlycommand'] = commands_merge(values['earlycommand'], values)
-        values['latecommand'] = commands_merge(values['latecommand'], values)
+        values['late_command'] += cmd_late
+        values['early_command'] = commands_merge(values['early_command'],
+            values)
+        values['late_command'] = commands_merge(values['late_command'], values)
 
         seed_file = self._merge_seeds(seeds, values)
         logging.debug(seed_file)
