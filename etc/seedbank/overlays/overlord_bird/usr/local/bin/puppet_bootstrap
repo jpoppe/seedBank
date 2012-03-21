@@ -1,9 +1,0 @@
-puppet apply --modulepath /root/ecg-puppet-staging/modules/shared:/root/ecg-puppet-staging/modules/private:/root/ecg-puppet-staging/modules/xx/platform:/root/ecg-puppet-staging/modules/xx/configs:/root/ecg-puppet-staging/modules/xx/platform:/root/ecg-puppet-staging/modules/xx/configs --no-daemonize --onetime /root/ecg-puppet-staging/manifests/site.pp | tee -a /var/log/bootstrap_puppet.log
-sleep 7
-puppet agent --test | tee -a /var/log/bootstrap_puppet.log
-/etc/init.d/puppetmaster restart
-/etc/init.d/nginx restart
-sleep 5
-puppet agent --test | tee -a /var/log/bootstrap_puppet.log
-sleep 3
-/etc/init.d/puppet stop
