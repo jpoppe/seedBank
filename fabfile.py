@@ -8,7 +8,7 @@ env.hosts = ['overlord001.a.c.m.e']
 #env.hosts = ['overlord001.h.o.m.e']
 env.user = 'root'
 application = 'seedbank'
-version = '2.0.0rc3'
+version = '2.0.0rc4'
 deb_file = 'seedbank_%s_all.deb' % version
 repository = '/home/www/repositories/debian/sn'
 puppet = '~/git/ecg-puppet-staging/modules/xx/platform/xx_overlord/templates/etc/seedbank'
@@ -19,7 +19,7 @@ if not os.path.dirname(os.path.realpath(__file__)) == os.getcwd():
     sys.exit(1)
 
 def bump_version():
-    local('find ./seedbank -max-depth 1 -type f -name "*.py" | grep -v bottle.py | while read file; do sed -i "s/__version__ .*/__version__ = \'%s\'/" ${file}; done' % version)
+    local('find ./seedbank -type f -name "*.py" | grep -v bottle.py | while read file; do sed -i "s/__version__ .*/__version__ = \'%s\'/" ${file}; done' % version)
     local('sed -i "s/    version=.*/    version=\'%s\',/" setup.py' % version)
     local('sed -i "s/    version=.*/    version=\'%s\',/" setup.py' % version)
     local('sed -i "s/version = .*/version = \'%s\'/" manual/conf.py' % version)

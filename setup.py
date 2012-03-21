@@ -24,7 +24,7 @@ def get_docs(dir):
 
 setup(
     name='seedbank',
-    version='2.0.0rc3',
+    version='2.0.0rc4',
     description='The cleanest way of Debian/Ubuntu netboot installations',
     author='Jasper Poppe',
     author_email='jpoppe@ebay.com',

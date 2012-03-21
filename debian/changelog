@@ -1,8 +1,8 @@
-seedbank (2.0.0rc3) oneiric; urgency=low
+seedbank (2.0.0rc4) TESTING; urgency=low
 
-  * Version 2.0.0rc3
+  * Version 2.0.0rc4
 
- -- Jasper Poppe <jpoppe@ebay.com>  Tue, 13 Mar 2012 11:12:27 +0100
+ -- Jasper Poppe <jpoppe@ebay.com>  Wed, 21 Mar 2012 11:52:58 +0100
 
 seedbank (1.1.0) STABLE; urgency=low
 
