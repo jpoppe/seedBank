@@ -5,7 +5,15 @@
 
 # when the seedBank daemon is used it should be restarted after changing
 # those settings (/etc/init.d/seedbank restart)
-# seed_host -> used as variable in other settings
+#
+# seed_host          -> used as a variable in other settings, fill in the hostname or IP 
+#                       address of the server which is running seedBank
+# bottle_listen      -> the IP address the seedBank daemon should listen to, if you
+#                       leave it empty the seedBank daemon will listen to all interfaces
+# bottle_port        -> the port the seedBank daemon will listen to
+# bottle_server      -> the WSGIref server to use with Bottle, for more information see the
+#                       Bottle homepage: http://bottlepy.org/
+# configuration_path -> the path with the seedBank settings snippets
 settings:
   seed_host: 192.168.0.1
   bottle_listen: ''

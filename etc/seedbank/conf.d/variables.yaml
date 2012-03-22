@@ -39,6 +39,8 @@ seed:
 # pxe template variables, feel free to add or modify the values, those
 # variables are used in the Debian and Ubuntu pxe template files (default:
 # /etc/seedbank/templates/pxe_debian and /etc/seedbank/templates/pxe_ubuntu)
+#
+# see the pxe template for more informations
 pxe:
   console_charmap: UTF-8
   console_layout: us

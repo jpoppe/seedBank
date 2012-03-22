@@ -6,6 +6,12 @@
 # executed, the command(s) specified in the disable hook will be executed by the
 # seedBank daemon when the installation has finished and just before the system
 # restarts
+#
+# enable  -> those command(s) will run after a system has been enabled for
+#            installation by the 'seedbank net' command
+# disable -> those command(s) will run after an installation is done and
+#            the machine will notify the seedBank daemon by requesting
+#            the disable url
 hooks:
   enable: ['puppet cert --clean ${host_name}.${dns_domain}']
   disable: []

@@ -1,3 +1,9 @@
+# For more information see:
+# http://anonscm.debian.org/viewvc/d-i/trunk/installer/doc/devel/partman-auto-recipe.txt?revision=59002&view=co&pathrev=66261
+#
+# NOTE: $ signs should be escaped by a $ since seeds are treated as
+# template files in seedBank, so for example $primary becomes $$primary
+#
 d-i partman-auto/disk string /dev/sda /dev/sdb
 d-i partman-auto/method string lvm
 d-i partman-lvm/device_remove_lvm boolean true
