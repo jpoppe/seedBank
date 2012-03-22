@@ -1,8 +1,9 @@
 # For more information see:
 # http://anonscm.debian.org/viewvc/d-i/trunk/installer/doc/devel/partman-auto-recipe.txt?revision=59002&view=co&pathrev=66261
 #
-# NOTE: $ signs should be escaped by a $ since seeds are treated as
-# template files in seedBank, so for example $primary becomes $$primary
+# NOTE: unless you want to used seed variables dollar signs should be
+# escaped by a dollar sign since preseed files are treated as templates
+# in seedBank
 #
 d-i partman-auto/disk string
 d-i partman-auto/method string regular
