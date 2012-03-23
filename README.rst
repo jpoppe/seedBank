@@ -7,6 +7,7 @@ seedBank is a small but very flexible tool to manage Debian/Ubuntu unattended in
 Development started in August 2009, seedbank has been open sourced at PuppetConf 2011 Portland
 
 * Homepage: http://www.infrastructureanywhere.com
+* Mailing List: https://groups.google.com/group/infrastructureanywhere
 * Changelog: https://github.com/jpoppe/seedBank/blob/master/CHANGES.txt
 * GitHub: http://github.com/jpoppe
 * Freshmeat: http://freshmeat.net/projects/seedbank
