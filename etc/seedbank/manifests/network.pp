@@ -7,7 +7,7 @@ define network_interfaces ($type, $ip, $broadcast, $gateway) {
     group   => 'root',
     mode    => '0644',
     content => template("/seedbank/templates/interfaces.${type}"),
-    require   => [Package['ifenslave-2.6']],
+    require => Package['ifenslave-2.6'],
     notify  => Exec['remove_ip'];
   }
 
