@@ -58,6 +58,7 @@ class SeedPimp:
         result = ''
         for seed in seeds:
             file_name = os.path.join(self.cfg['paths']['seeds'], seed + '.seed')
+            logging.info('applying template values to "%s"', file_name)
             data = utils.file_read(file_name)
             result += utils.apply_template(data, values, file_name)
         return result
