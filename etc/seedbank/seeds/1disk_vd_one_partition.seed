@@ -8,6 +8,3 @@
 d-i partman-auto/disk string /dev/vda
 d-i partman-auto/method string regular
 d-i partman-auto/choose_recipe select atomic
-d-i partman/confirm boolean true
-d-i partman-lvm/confirm_nooverwrite boolean false
-d-i partman/choose_partition select finish
