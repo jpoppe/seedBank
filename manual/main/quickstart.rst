@@ -49,20 +49,21 @@ Installation
 
 This section will describe how to install seedBank on seedbank001.intern.local
 
-Install seedBank from a Debian/Ubuntu repository
+Install seedBank from a Debian or Ubuntu repository
 
 .. code-block:: none
 
     sudo apt-get install seedbank
 
-Install seedBank in Debian/Ubuntu without a repository
+Install seedBank on Debian or Ubuntu without a repository
 
 .. code-block:: none
 
-    sudo dpkg -i seedbank*.deb
+    wget http://www.infrastructureanywhere.com/seedbank_2.0.0rc5_all.deb
+    sudo dpkg -i seedbank_2.0.0rc5_all.deb
     sudo apt-get -f install
 
-Or install seedBank manually (this will need more manual steps which won't be covered here)
+Install seedBank manually (this will require more manual steps which won't be covered here)
 
 .. code-block:: none
 
@@ -71,21 +72,21 @@ Or install seedBank manually (this will need more manual steps which won't be co
 Configure default settings
 ==========================
 
-The seedBank settings.py file is just a Python source file with dictionaries, so no errors are allowed. It's a wise idea to make a backup before you start editing the file.
+seedBank configuration is in the YAML format. It's a wise idea to make a backup of the configuration before you start.
 
-Create a backup
-
-.. code-block:: none
-
-    sudo cp /etc/seedbank/settings.py{,-org}
-
-Edit the settings.py file, please take some time to scroll through the file, since seedBank is using a lot of templating the possibilities are endless. I recommend to leave the default settings for now. If the seedBank server address is not 192.168.0.1 change it now.
+Create a backup of the current seedBank configuration
 
 .. code-block:: none
 
-    sudo vi /etc/seedbank/settings.py
+    sudo cp -r /etc/seedbank{,-org}
 
-After editing the settings.py file the seedBank daemon needs to be resarted to use the new settings.
+Edit the settings.yaml file, replace the IP address of the 'seed_host' variable with the IP address or fully qualified domain name of the server which you are running seedBank from
+
+.. code-block:: none
+
+    sudo vi /etc/seedbank/settings.yaml
+
+After editing the settings.yaml file the seedBank daemon needs to be resarted to use the new settings.
 
 .. code-block:: none
 
@@ -94,25 +95,25 @@ After editing the settings.py file the seedBank daemon needs to be resarted to u
 Get the netboot image and syslinux files
 ========================================
 
-Run seedbank_setup for downloading and preparing the Debian Squeeze netboot image.
+Run "seedbank manage" for downloading and preparing the Debian Squeeze netboot image.
 
-List all available distributions
-
-.. code-block:: none
-
-    seedbank_setup -l
-
-Download and install the needed syslinux files to */var/lib/tftpboot*
+List all available netboot distributions
 
 .. code-block:: none
 
-    sudo seedbank_setup -s
+    seedbank list -n
 
-Download the Debian Squeeze netboot image
+Download and install the required syslinux files to */var/lib/tftpboot*
 
 .. code-block:: none
 
-    sudo seedbank_setup debian-squeeze-amd64
+    sudo seedbank manage -s
+
+Download the Debian Squeeze netboot image tar archive and extract it to the right place
+
+.. code-block:: none
+
+    sudo seedbank manage -n debian-squeeze-amd64
 
 Generate the PXE file with seedBank
 ===================================
@@ -121,15 +122,13 @@ Run the following command on the seedBank server after reading the explanation b
 
 .. code-block:: none
 
-    sudo seedbank -H seednode001.intern.local -r default debian-squeeze-i386
+    sudo seedbank net -a 1disk_sd_one_partition seednode001.intern.local debian-squeeze-i386
 
 Explanation:
 
 This command will prepare everything for an automated install of a client (seednode001).
 
-The -H option specfies you want to enable a host by hostname. seedBank will do a DNS lookup to get the IP address which in our case will be 192.168.0.20.
-
-The -r option specifies a recipe to append at the end of the chosen seed file, in the default seedBank setup recipes are used for partitioning the hard disk, so this will use the disk recipe which is located at */etc/seedbank/recipes/desktop*.
+The -a option specifies a recipe to append at the end of the chosen seed file, in the default seedBank setup recipes are used for partitioning the hard disk, so this will use the disk recipe which is located at */etc/seedbank/recipes/desktop*.
 
 The seed file which will be used is chosen automatically, it takes the second part of the chosen distribution, so in this case the second part of *debian-squeeze-i386* is squeeze. seedBank will now use automatically */etc/seedbank/seeds/squeeze.seed* as seed file. This can be overridden with the -s option.
 
