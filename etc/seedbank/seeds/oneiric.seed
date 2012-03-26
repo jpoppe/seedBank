@@ -1,15 +1,15 @@
 ###############################################################################
 #
-# seedBank Oneiric Ocelot preseed file 0.1 
+# seedBank Ubuntu Oneiric Ocelot preseed file 0.1 
 # created by Jasper Poppe <jpoppe@ebay.com>
 #
 # This seed file does a minimal Ubuntu Oneiric Ocelot installation, 
 # feel free to customize ;)
 #
 # For much more options and explanation and documentation see: 
-#  http://help.ubuntu.com/10.04/installation-guide/example-preseed.txt
-#  https://help.ubuntu.com/10.04/installation-guide/i386/preseed-using.html
-#  https://help.ubuntu.com/10.04/installation-guide/i386/preseed-contents.html
+#  http://help.ubuntu.com/11.04/installation-guide/example-preseed.txt
+#  https://help.ubuntu.com/11.04/installation-guide/i386/preseed-using.html
+#  https://help.ubuntu.com/11.04/installation-guide/i386/preseed-contents.html
 #
 # To get a list of every possible question that could be asked during an 
 # install, do an installation and run these commands:

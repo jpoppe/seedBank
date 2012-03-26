@@ -7,8 +7,8 @@
 # feel free to customize ;)
 #
 # For much more options and explanation and documentation see: 
-#  http://help.ubuntu.com/9.04/installation-guide/example-preseed.txt
-#  https://help.ubuntu.com/9.04/installation-guide/i386/preseed-using.html
+#  http://help.ubuntu.com/10.04/installation-guide/example-preseed.txt
+#  https://help.ubuntu.com/10.04/installation-guide/i386/preseed-using.html
 #
 # To get a list of every possible question that could be asked during an 
 # install, do an installation and run these commands:
