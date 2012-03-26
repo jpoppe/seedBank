@@ -28,7 +28,7 @@ seed:
   repository_0_key: 'http://192.168.122.1/debian/repository.key'
   timezone: Europe/Amsterdam
   ubuntu_mirror_directory: /ubuntu
-  ubuntu_mirror_hostname: nl.archive.ubuntu.com
+  ubuntu_mirror_host_name: nl.archive.ubuntu.com
   ubuntu_task_sel: standard, server
   ubuntu_packages: openssh-server puppet debconf-utils lsb-release rsync vim less
   user: seedbank
