@@ -68,9 +68,13 @@ def api_parse(command, args):
             return
 
     args = AttributeDict(args)
-    parse_arg = parse.ParseArguments(cfg)
+    parse_arg = parse.ParseArguments(cfg, api=True)
     action = getattr(parse_arg, command)
-    action(args)
+    try:
+        action(args)
+    except utils.APIException as err:
+        logging.error(err)
+        abort(400, err)
 
 @route('/api/:command', method='POST')
 def api(command):
