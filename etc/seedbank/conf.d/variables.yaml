@@ -1,10 +1,15 @@
 # seedBank example configuration created by Jasper Poppe <jpoppe@ebay.com>
 
 # seed template variables, feel free change or add variables, those variables
-# are used in the seed files which are in located in the 'seeds' path
+# are used in the preseed files which are in located in the 'seeds' path
 # (default: /etc/seedbank/seeds)
+#
 # to install an Ubuntu desktop environment change the values of
-# ubuntu_tasksel to 'standard, desktop'
+# ubuntu_tasksel to 'standard, ubuntu-desktop'
+#
+# You can choose to install any combination of tasks that are available
+# standard ubuntu-desktop kubuntu-desktop edubuntu-desktop xubuntu-desktop dns-server lamp-server
+#
 #
 # NOTE: the following reserved variables will be added automatically and will
 # be ignored when those will be defined here:
@@ -29,7 +34,7 @@ seed:
   timezone: Europe/Amsterdam
   ubuntu_mirror_directory: /ubuntu
   ubuntu_mirror_host_name: nl.archive.ubuntu.com
-  ubuntu_task_sel: standard, server
+  ubuntu_task_sel: standard
   ubuntu_packages: openssh-server puppet debconf-utils lsb-release rsync vim less
   user: seedbank
   user_full_name: seedBank User
