@@ -746,6 +746,8 @@ class Bottle(object):
             return self._handle(environ)
         except utils.FatalException:
             return HTTPError(500, "Internal Server Error", '', '')
+        except utils.APIException:
+            return HTTPError(500, "Internal Server Error", '', '')
         except (KeyboardInterrupt, SystemExit, MemoryError):
             raise
         except Exception, e:
