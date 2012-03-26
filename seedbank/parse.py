@@ -27,7 +27,6 @@ import logging
 import os
 import re
 
-#import daemon
 import iso
 import net
 import manage
@@ -35,7 +34,6 @@ import reslist
 import rest
 import settings
 import pimp
-
 import utils
 
 
@@ -240,6 +238,5 @@ class ParseArguments:
         """start the seedBank daemon"""
         if args.start:
             rest.start()
-            #daemon.start()
         elif args.bottle:
             rest.start()
