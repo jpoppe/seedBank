@@ -45,9 +45,12 @@ class ListResources:
             return []
 
     def _list_dirs(self, path):
-        dirs = [item for item in os.listdir(path)
-            if os.path.isdir(os.path.join(path, item))]
-        return dirs
+        if os.path.isdir(path):
+            dirs = [item for item in os.listdir(path)
+                if os.path.isdir(os.path.join(path, item))]
+            return dirs
+        else:
+            return []
 
     def _add(self, category, header):
         category.insert(0, header + ':')
