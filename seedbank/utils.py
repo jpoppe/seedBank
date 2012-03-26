@@ -30,6 +30,7 @@ import cStringIO
 import datetime
 import json
 import logging
+import lxml.html
 import os
 import pprint
 import shutil
@@ -48,13 +49,34 @@ class FatalException(Exception):
     def __init__(self, *args):
         """if an error message has been defined log it to the logging debug
         level"""
-        if args:
+
+        if len(args) == 1:
             self.msg = args[0]
-            logging.debug(self.msg)
+            logging.error(self.msg)
+            #logging.debug(self.msg)
+            #logging.exception(self.msg)
             sys.exit(1)
-        else:
+        elif not args:
             self.msg = ''
             sys.exit(1)
+        else:
+            self.msg = args
+
+    def __str__(self):
+        """return error message as a string"""
+        return repr(self.msg)
+
+
+class APIException(Exception):
+
+    def __init__(self, *args):
+        """if an error message has been defined log it to the logging debug
+        level"""
+        if args:
+            self.msg = args[0].encode()
+            #logging.exception(args)
+        else:
+            self.msg = ''
 
     def __str__(self):
         """return error message as a string"""
@@ -69,6 +91,12 @@ def json_client(url, data):
         response = urllib2.urlopen(request).read()
         if response:
             logging.info(response)
+    except urllib2.HTTPError as err:
+        contents = err.read()
+        tree = lxml.html.fromstring(contents)
+        for element in tree.xpath('.//pre'):
+            err = element.text
+        raise FatalException(err)
     except urllib2.URLError as err:
         logging.error('failed to connect to "%s"', url)
         raise FatalException(err)
