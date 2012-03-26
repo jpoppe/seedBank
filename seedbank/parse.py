@@ -42,9 +42,13 @@ import utils
 class ParseArguments:
     """process the given arguments"""
 
-    def __init__(self, cfg):
+    def __init__(self, cfg, api=None):
         """load the configuration"""
         self.cfg = cfg
+        if api:
+            self.exception = utils.APIException
+        else:
+            self.exception = utils.FatalException
 
     def list(self, args):
         """list resources based on selected arguments"""
@@ -93,15 +97,13 @@ class ParseArguments:
             if os.path.isdir(path):
                 args.path = path
             else:
-                logging.error('file overlay directory "%s" does not exist',
-                    path)
-                raise utils.FatalException()
+                raise self.exception('file overlay directory "%s" does not '
+                    'exist' % path)
 
         if not '.' in args.fqdn:
-            logging.error('"%s" is not a fully qualified domain name',
+            raise self.exception('"%s" is not a fully qualified domain name' %
                 args.fqdn)
-            raise utils.FatalException()
-
+            
         if not args.seed:
             args.seed = release
         args.seeds = [args.seed] + args.additional
@@ -109,8 +111,18 @@ class ParseArguments:
             file_name = os.path.join(self.cfg['paths']['seeds'], seed_file)
             file_name += '.seed'
             if not os.path.isfile(file_name):
-                logging.error('preseed file "%s" does not exist', file_name)
-                raise utils.FatalException()
+                raise self.exception('preseed file "%s" does not exist' %
+                    file_name)
+
+        if args.puppet:
+            for index, manifest in enumerate(args.puppet):
+                file_name = os.path.join(config['paths']['puppet_manifests'],
+                    manifest + '.pp')
+                if not os.path.isfile(file_name):
+                    err = 'Puppet manifest "%s" does not exist' % file_name
+                    raise self.exception(err)
+                else:
+                    args.puppet[index] = manifest
 
         return args, config
 
@@ -123,36 +135,24 @@ class ParseArguments:
             args.release)
         if not os.path.isdir(path):
             if release in config['distributions']['netboots']:
-                logging.error('"%s" is not available, run "seedbank manage -n '
-                    '"%s" to download an prepare the release', args.release)
+                err = '"%s" is not available, run "seedbank manage -n "%s" to '\
+                    'download an prepare the release' % args.release
             else:
-                logging.error('"%s" could not be find in the system settings',
-                    args.release)
-            raise utils.FatalException()
+                err = '"%s" could not be find in the system settings' %\
+                    args.release
+            raise self.exception(err)
 
         if args.macaddress:
             if len(args.macaddress) == 12:
                 pass
             elif not re.match('([a-fA-F0-9]{2}[:|\-]?){6}', args.macaddress):
                 err = '"%s" is not a valid MAC address' % args.macaddress
-                logging.error(err)
-                raise utils.FatalException()
+                raise self.exception(err)
             else:
                 args.address = utils.format_address(args.macaddress)
         else:
             ip_address = utils.resolve_ip_address(args.fqdn) 
             args.address = utils.ip_to_hex(ip_address)
-
-        if args.puppet:
-            for index, manifest in enumerate(args.puppet):
-                file_name = os.path.join(config['paths']['puppet_manifests'],
-                    manifest + '.pp')
-                if not os.path.isfile(file_name):
-                    err = 'Puppet manifest "%s" does not exist' % manifest
-                    logging.error(err)
-                    raise utils.FatalException()
-                else:
-                    args.puppet[index] = manifest
 
         pxe = net.GeneratePxe(args)
         pxe.state_remove()
@@ -169,15 +169,18 @@ class ParseArguments:
         if not 'puppet' in args:
             args.puppet = []
 
-        _ , release, _, _ = args.release.split('-')
+        try:
+            _ , release, _, _ = args.release.split('-')
+        except ValueError:
+            raise self.exception('"%s" is not a valid release' % args.release)
+
         args, config = self._shared(args, release)
 
         if args.release in config['distributions']['isos']:
             iso_file = os.path.join(config['paths']['isos'], args.release)
             iso_file += '.iso'
         else:
-            logging.error('"%s" is not a valid release', args.release)
-            raise utils.FatalException()
+            raise self.exception('"%s" is not a valid release' % args.release)
 
         iso_dst = os.path.abspath(args.output)
         if os.path.isfile(iso_dst):
@@ -214,17 +217,17 @@ class ParseArguments:
             if args.netboot in self.cfg['distributions']['netboots']:
                 setup.netboot(args.netboot)
             else:
-                logging.error('"%s" is not configured (use "seedbank list '
-                    '--netboots" to list available and downloaded netboot '
-                    'images)', args.netboot)
-                raise utils.FatalException()
+                err = '"%s" is not configured (use "seedbank list '\
+                    '--netboots" to list available and downloaded netboot '\
+                    'images)' % args.netboot
+                raise self.exception(err)
         elif args.iso:
             if args.iso in self.cfg['distributions']['isos']:
                 setup.iso(args.iso)
             else:
-                logging.error('"%s" is not configured (use "seedbank list '
-                    '--isos" to list available and downloaded ISOs)', args.iso)
-                raise utils.FatalException()
+                err = '"%s" is not configured (use "seedbank list --isos" to '\
+                    'list available and downloaded ISOs)' % args.iso
+                raise self.exception(err)
         elif args.syslinux:
             setup.syslinux()
         elif args.remove:
