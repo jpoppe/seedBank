@@ -36,9 +36,6 @@ How does it work?
 
 SeedBank based installations are done via Debian/Ubuntu preseed files. Those preseed files are part of the Debian installation and are available for quite some time. But they are pretty hard to manage and not flexible. This is where seedBank could be the helping hand. See the diagram for an overview.
 
-
-
-
 Links
 =====
 

@@ -211,10 +211,10 @@ def main():
         #    print(piped)
     except utils.FatalException:
         sys.exit(1)
-
-    #except Exception as err:
-    #    logger.error(err)
-    #    sys.exit(1)
+    except Exception as err:
+        logger.error(err)
+        raise
+        sys.exit(1)
 
 if __name__ == '__main__':
     try:

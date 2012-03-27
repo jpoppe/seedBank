@@ -8,8 +8,8 @@ seedBank Introduction:
 .. toctree::
     :maxdepth: 3
 
-    main/overview.rst
-    main/quickstart.rst
+    overview
+    quickstart
 
 seedBank Core Documentation:
 
@@ -23,17 +23,17 @@ Infrastructure Anywhere Documentation:
 .. toctree::
     :maxdepth: 2
 
-    addons/infrastructureanywhere/index.rst
+    addons/infrastructureanywhere/index
 
 Additional Documentation:
 
 .. toctree::
     :maxdepth: 3
 
-    additional/dnsmasq.rst
-    additional/networkservices.rst
-    additional/mirrors.rst
-    additional/virtualbox.rst
+    additional/dnsmasq
+    additional/networkservices
+    additional/mirrors
+    additional/virtualbox
 
 Developer Reference:
 
