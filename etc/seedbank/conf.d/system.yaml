@@ -29,21 +29,24 @@ logging:
 # "non free" firmwares integrated into the netboot images. ISOs should
 # include the version number
 #
-# architectures -> the supported architectures, this will be applied for
-#                  Debian and Ubuntu
-# firmwares     -> recent Debian releases do not include support for 
-#                  proprietary firmwares, seedBank manage will automatically
-#                  patch the firmware into the netboot image when it will
-#                  be downloaded
-# netboots      -> the netboot images which should show up in the various
-#                  seedBank commands
-# isos          -> isos which should show up in the iso related commands
+# architectures       -> the supported architectures, this will be applied for
+#                        Debian and Ubuntu
+# firmwares           -> recent Debian releases do not include support for 
+#                        proprietary firmwares, seedBank manage will automatically
+#                        patch the firmware into the netboot image when it will
+#                        be downloaded
+# netboots            -> the netboot images which should show up in the various
+#                        seedBank commands
+# isos                -> isos which should show up in the iso related commands
 #
+# ubuntu_iso_versions -> map codenames to version numbers, used for downloading installer ISOs
 distributions:
   architectures: [amd64, i386]
-  firmwares: [debian-squeeze, debian-wheezy]
-  netboots: [debian-squeeze, debian-wheezy, debian-sid, ubuntu-oneiric, ubuntu-precise]
-  isos: [debian-squeeze-6.0.4]
+  firmwares: [debian-squeeze]
+  netboots: [debian-squeeze, ubuntu-oneiric, ubuntu-precise]
+  isos: [debian-squeeze-6.0.4, ubuntu-oneiric-alternate]
+  ubuntu_iso_versions:
+    oneiric: '11.10'
 
 # template files which are in the templates path
 # (default: /etc/seedbank/templates)
@@ -56,7 +59,8 @@ distributions:
 #                       machine will be enabled for installation by the 'seedbank net command'
 # pxe_ubuntu         -> this template will be used for generating a node pxelinux.cfg file when an Ubuntu
 #                       machine will be enabled for installation by the 'seedbank net command'
-# isolinux           -> this template will replace the default isolinux.cfg file on an installation ISO
+# debian_isolinux    -> this template will replace the default isolinux.cfg file on a Debian installation ISO
+# ubuntu_isolinux    -> this template will replace the default isolinux.cfg file on an Ubuntu installation ISO
 # rc_local           -> this template constructs a temporary initrd file which will run once and run
 #                       by default the scripts in the /etc/runonce.d directory, and after it is done it
 #                       will run the 'orginal' initrd script and replace itself with the 'original'
@@ -69,6 +73,7 @@ templates:
   pxe_default: pxe_default
   pxe_debian: pxe_debian
   pxe_ubuntu: pxe_ubuntu
-  isolinux: isolinux.cfg
+  debian_isolinux: debian_isolinux.cfg
+  ubuntu_isolinux: ubuntu_isolinux.cfg
   rc_local: rc.local
   permission_script: permission_script

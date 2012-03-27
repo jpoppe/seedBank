@@ -136,8 +136,8 @@ class ParseArguments:
                 err = '"%s" is not available, run "seedbank manage -n "%s" to '\
                     'download an prepare the release' % args.release
             else:
-                err = '"%s" could not be find in the system settings' %\
-                    args.release
+                #FIXME: test this
+                err = '"%s" is an uknown release' % args.release
             raise self.exception(err)
 
         if args.macaddress:
@@ -168,7 +168,7 @@ class ParseArguments:
             args.puppet = []
 
         try:
-            _ , release, _, _ = args.release.split('-')
+            release = args.release.split('-')[1]
         except ValueError:
             raise self.exception('"%s" is not a valid release' % args.release)
 
@@ -179,6 +179,11 @@ class ParseArguments:
             iso_file += '.iso'
         else:
             raise self.exception('"%s" is not a valid release' % args.release)
+
+        if not os.path.isfile(iso_file):
+            raise self.exception('"%s" is a valid release, but the installer '
+                'ISO is not available (run "seedbank manage -i %s" for '
+                'downloading the ISO)' % (args.release, args.release))
 
         iso_dst = os.path.abspath(args.output)
         if os.path.isfile(iso_dst):
@@ -202,7 +207,8 @@ class ParseArguments:
         seed = pimp.SeedPimp(template_cfg, 'iso')
         preseed = seed.pimp(args.seeds, args.overlay, args.puppet)
         build.add_preseed(preseed)
-        build.add_templates()
+        distribution = args.release.split('-')[0]
+        build.add_templates(distribution)
         if args.overlay:
             build.add_overlay(overlay.dst)
         build.create()

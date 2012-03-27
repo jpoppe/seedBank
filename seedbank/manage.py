@@ -134,13 +134,16 @@ class Manage:
     def iso(self, name):
         """download ISOs"""
         distribution, release, architecture, version = name.split('-')
+        if distribution == 'ubuntu':
+            release = self.cfg['distributions']['ubuntu_versions'][release]
         values = {
             'distribution': distribution,
             'release': release,
             'architecture': architecture,
             'version': version
         }
-        url = self.cfg['urls']['debian_iso']
+
+        url = self.cfg['urls'][distribution + '_iso']
         url = utils.apply_template(url, values, 'iso url')
         dst = os.path.join(self.cfg['paths']['isos'], name + '.iso')
         if os.path.isfile(dst):

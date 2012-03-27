@@ -38,4 +38,4 @@ default seedbank
 label seedbank
 
 kernel ${kernel}
-append initrd=${initrd} preseed/url=http://${seed_host}:${seed_port}/seed/${address} hostname=${host_name} domain=${dns_domain} locale=en_US.UTF-8 text interface=${interface} theme=${theme} BOOT_DEBUG=${debug_level} ${extra} keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false
+append initrd=${initrd} preseed/url=http://${seed_host}:${seed_port}/seed/${address} hostname=${host_name} domain=${dns_domain} locale=en_US.UTF-8 text interface=${interface} theme=${theme} BOOT_DEBUG=${debug_level} ${extra} keyboard-configuration/layout=USA keyboard-configuration/variant=USA

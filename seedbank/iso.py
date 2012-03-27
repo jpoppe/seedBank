@@ -50,10 +50,11 @@ class Build:
         utils.run('bsdtar -C "%s" -xf "%s"' % (self.work_iso, self.iso_file))
         utils.run('chmod -R u+w "%s"' % self.work_iso)
 
-    def add_templates(self):
+    def add_templates(self, distribution):
         """process and add the rc.local and isolinux templates"""
         path = self.cfg['paths']['templates']
-        src = os.path.join(path, self.cfg['templates']['isolinux'])
+        template = distribution + '_isolinux'
+        src = os.path.join(path, self.cfg['templates'][template])
         dst = os.path.join(self.work_iso, 'isolinux/isolinux.cfg')
         utils.write_template(self.data, src, dst)
         src = os.path.join(path, self.cfg['templates']['rc_local'])
@@ -66,12 +67,15 @@ class Build:
         utils.file_write(dst, contents)
         path_amd = os.path.join(self.work_iso, 'install.amd')
         path_i386 = os.path.join(self.work_iso, 'install.386')
+        path_ubuntu = os.path.join(self.work_iso, 'install')
         if os.path.isdir(path_amd):
             self.data['architecture'] = 'amd'
             path = path_amd
         elif os.path.isdir(path_i386):
             self.data['architecture'] = '386'
             path = path_i386
+        elif os.path.isdir(path_ubuntu):
+            path = path_ubuntu
         initrd = os.path.join(path, 'initrd.gz')
         utils.initrd_extract(self.work_initrd, initrd)
         utils.initrd_create(self.work_initrd, initrd)
