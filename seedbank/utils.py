@@ -152,17 +152,6 @@ def _shell_escape(command):
         command = command.replace(char, '\%s' % char)
     return command
 
-def run_old(command, user=None, host=None):
-    """run a local or remote command via SSH"""
-    if user and host:
-        command = _shell_escape(command)
-        proc = subprocess.Popen(['ssh', '-o PasswordAuthentication=no', '%s@%s'
-            % (user, host), 'bash -c "%s"' % command], stdout=subprocess.PIPE)
-    else:
-        proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-        logging.info('running "%s"', command)
-    return proc.stdout.read()
-
 def run(command, user=None, host=None):
     """run a command locally or remote via SSH"""
     if host != 'localhost' and user and host:
@@ -177,26 +166,25 @@ def run(command, user=None, host=None):
         proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
             stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     stdout, stderr = proc.communicate()
-    #return_code = proc.Poll()
-    #print(return_code)
-    #if stderr:
-    #    logging.info(stderr)
-    return stdout
-    #return proc.stdout.read()
+    return_code = proc.wait()
+    if return_code:
+        if stdout:
+            logging.info(stdout.strip())
+        if stderr:
+            logging.error(stderr.strip())
+        raise FatalException()
+    else:
+        return stdout
 
 def call(command, user=None, host=None):
     """run a local or remote command via SSH"""
     if user and host:
         command = _shell_escape(command)
-        #command = 'ssh %s@%s-noproxy "bash -c \'%s\'"' % (user, host, command)
-        #subprocess.call(['ssh', '%s@%s-noproxy' % (user, host), 'bash -c "%s"'
-        #    % command])
         return_code = subprocess.call(['ssh', '-o PasswordAuthentication=no',
             '%s@%s' % (user, host), 'bash -c "%s"' % command],
             stdout=subprocess.PIPE)
     else:
         return_code = subprocess.call(command, stdout=subprocess.PIPE)
-        #subprocess.call(command)
     return return_code
 
 def input_yes_no(question):
