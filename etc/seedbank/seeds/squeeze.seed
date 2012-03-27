@@ -1,6 +1,7 @@
 ##############################################################################
 #
-# seedBank Debian Squeeze preseed file created by Jasper Poppe <jpoppe@ebay.com>
+# seedBank Debian Squeeze preseed file
+# created by Jasper Poppe <jpoppe@ebay.com>
 #
 # This is seed file does a minimal Debian Squeeze installation, 
 # feel free to customize ;)
