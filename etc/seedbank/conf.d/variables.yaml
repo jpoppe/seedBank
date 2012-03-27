@@ -1,18 +1,19 @@
 # seedBank example configuration created by Jasper Poppe <jpoppe@ebay.com>
-
-# seed template variables, feel free change or add variables, those variables
-# are used in the preseed files which are in located in the 'seeds' path
+#
+# preseed template variables, feel free change or add variables. The variables
+# are used in the preseed files which are located in the 'seeds' path
 # (default: /etc/seedbank/seeds)
 #
 # to install an Ubuntu desktop environment change the values of
 # ubuntu_tasksel to 'standard, ubuntu-desktop'
-#
-# You can choose to install any combination of tasks that are available
+# You can choose to install any combination of the following tasks:
 # standard ubuntu-desktop kubuntu-desktop edubuntu-desktop xubuntu-desktop dns-server lamp-server
 #
+# HINT: those settings can be overridden by using override yaml files in the
+# seedBank configs directory. (default: /etc/seedbank/configs)
 #
-# NOTE: the following reserved variables will be added automatically and will
-# be ignored when those will be defined here:
+# NOTE: the following reserved variables will be generated automatically and will
+# be ignored when those will are defined here:
 # fqdn
 # host_name
 # dns_domain
@@ -45,7 +46,7 @@ seed:
 # variables are used in the Debian and Ubuntu pxe template files (default:
 # /etc/seedbank/templates/pxe_debian and /etc/seedbank/templates/pxe_ubuntu)
 #
-# see the pxe template for more informations
+# see the pxe template files for more informations
 pxe:
   console_charmap: UTF-8
   console_layout: us
