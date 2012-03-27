@@ -1,10 +1,10 @@
 seedbank Package
 ================
 
-:mod:`daemon` Module
+:mod:`bottle` Module
 --------------------
 
-.. automodule:: seedbank.daemon
+.. automodule:: seedbank.bottle
     :members:
     :undoc-members:
     :show-inheritance:
@@ -96,11 +96,4 @@ seedbank Package
     :members:
     :undoc-members:
     :show-inheritance:
-
-Subpackages
------------
-
-.. toctree::
-
-    seedbank.thirdparty
 

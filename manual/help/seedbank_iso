@@ -1,4 +1,4 @@
-usage: seedbank iso [-h] [-o OVERLAY] [-s SEED] [-a SEED] [-m MANIFESTS]
+usage: seedbank iso [-h] [-o OVERLAY] [-s SEED] [-a SEED] [-p MANIFEST]
                     [-c CONFIG] [-v KEY VALUE]
                     fqdn release output
 
@@ -19,12 +19,12 @@ optional arguments:
                         append additional seed files to the default seed file
                         like disk recipes, repositories or other additional
                         (custom) seeds
-  -m MANIFESTS, --manifests MANIFESTS
+  -p MANIFEST, --puppet MANIFEST
                         choose one or more Puppet manifest(s) to apply after
                         the installation
   -c CONFIG, --config CONFIG
                         override template (pxe and seed) settings
   -v KEY VALUE, --variables KEY VALUE
-                        add one or more additional seed and or overlay
+                        add (or overrides) one or more seed and or overlay
                         variables which could be used by seedBank templates in
                         the overlay directory and preseed files

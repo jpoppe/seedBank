@@ -1,5 +1,5 @@
-usage: seedbank net [-h] [-o OVERLAY] [-s SEED] [-a SEED] [-m MANIFESTS]
-                    [-c CONFIG] [-M MACADDRESS] [-v KEY VALUE]
+usage: seedbank net [-h] [-o OVERLAY] [-s SEED] [-a SEED] [-p MANIFEST]
+                    [-c CONFIG] [-m MACADDRESS] [-v KEY VALUE]
                     fqdn release
 
 positional arguments:
@@ -18,18 +18,18 @@ optional arguments:
                         append additional seed files to the default seed file
                         like disk recipes, repositories or other additional
                         (custom) seeds
-  -m MANIFESTS, --manifests MANIFESTS
+  -p MANIFEST, --puppet MANIFEST
                         choose one or more Puppet manifest(s) to apply after
                         the installation
   -c CONFIG, --config CONFIG
                         override template (pxe and seed) settings
+  -m MACADDRESS, --macaddress MACADDRESS
+                        use a MAC address instead of a to hexidecimal
+                        converted IP address for the pxelinux.cfg
+                        configuration file name, the advantage of this is
+                        there will be no DNS lookups needed
   -v KEY VALUE, --variables KEY VALUE
                         add one or more additional pxe variables which will be
                         stored in the generated pxelinux.cfg file and could be
                         used by seedBank templates in the overlay directory
                         and the disable and enable hooks
-  -M MACADDRESS, --macaddress MACADDRESS
-                        use a MAC address instead of a to hexidecimal
-                        converted IP address for the pxelinux.cfg
-                        configuration file name, the advantage of this is
-                        there will be no DNS lookups needed
