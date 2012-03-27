@@ -24,6 +24,7 @@ d-i console-setup/layout select USA
 d-i debian-installer/locale string en_US
 d-i console-setup/layoutcode string us
 d-i console-setup/variantcode string euro
+d-i keyboard-configuration/layoutcode string us
 
 ### - Localization, Keyboard
 d-i console-setup/ask_detect boolean false
