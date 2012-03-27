@@ -42,7 +42,7 @@ logging:
 distributions:
   architectures: [amd64, i386]
   firmwares: [debian-squeeze, debian-wheezy]
-  netboots: [debian-squeeze, debian-wheezy, debian-sid, ubuntu-lucid, ubuntu-oneiric, ubuntu-precise]
+  netboots: [debian-squeeze, debian-wheezy, debian-sid, ubuntu-oneiric, ubuntu-precise]
   isos: [debian-squeeze-6.0.4]
 
 # template files which are in the templates path

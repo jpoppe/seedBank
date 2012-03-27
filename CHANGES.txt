@@ -37,6 +37,8 @@ configuration/examples
 -- added external logging configuration (logging.conf)
 -- more variables can be used in the configuration 
 -- all settings can be overridden with a config overrride file (except for the settings section)
+-- removed support for Ubuntu Lucid Lynx (still can be added manually)
+-- added support for Ubuntu Precise Pangolin
 
 And much more ;)
 
