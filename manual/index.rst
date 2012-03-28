@@ -18,7 +18,7 @@ seedBank Core Documentation:
 
     seedbank_core
 
-Infrastructure Anywhere Documentation (deprecated a new version of IA is in development):
+Infrastructure Anywhere Documentation (deprecated since a new version of IA is in development which will replace the proof of concept described here):
 
 .. toctree::
     :maxdepth: 2

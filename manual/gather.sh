@@ -13,7 +13,7 @@ seedbank --help > help/seedbank
 #echo "" >> help/seedbank
 seedbank list --help > help/seedbank_list
 #echo "" >> help/seedbank_list
-seedbank net --help > help/seedbank_net
+seedbank pxe --help > help/seedbank_pxe
 #echo "" >> help/seedbank_net
 seedbank iso --help > help/seedbank_iso
 #echo "" >> help/seedbank_iso

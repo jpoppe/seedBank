@@ -25,14 +25,6 @@ seedbank Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`net` Module
------------------
-
-.. automodule:: seedbank.net
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`parse` Module
 -------------------
 
@@ -45,6 +37,14 @@ seedbank Package
 ------------------
 
 .. automodule:: seedbank.pimp
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`pxe` Module
+-----------------
+
+.. automodule:: seedbank.pxe
     :members:
     :undoc-members:
     :show-inheritance:

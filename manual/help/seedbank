@@ -1,15 +1,15 @@
-usage: seedbank [-h] [--version] {list,net,iso,manage,daemon} ...
+usage: seedbank [-h] [--version] {list,pxe,iso,manage,daemon} ...
 
 seedBank - Debian/Ubuntu netboot installations the way it is meant to be...
 (c) 2009-2012 Jasper Poppe <jpoppe@ebay.com>
 
 positional arguments:
-  {list,net,iso,manage,daemon}
+  {list,pxe,iso,manage,daemon}
                         commands
     list                list resources like netboot images, seed files, Puppet
                         manifests, configuration overrides, file overlays,
                         pxelinux.cfg files, netboot images and ISOs
-    net                 manage netboot installations, prepare a pxelinux.cfg
+    pxe                 manage netboot installations, prepare a pxelinux.cfg
                         file with all the settings required for a netboot
                         installation
     iso                 build an (unattended) installation ISO

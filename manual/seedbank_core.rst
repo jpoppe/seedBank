@@ -2,7 +2,7 @@
 seedBank
 ========
 
-This section describes how to use the seedbank binary, if this is the first time you will use seedBank please first read/modify /etc/seedbank/settings.yaml, /etc/seedbank/system.yaml and read the quick start guide.
+This section describes how to use the seedBank options, if this is the first time you will use seedBank please first read/modify /etc/seedbank/settings.yaml, /etc/seedbank/variables.yaml and read the quick start guide.
 
 Main Application
 ================
@@ -19,10 +19,10 @@ Help Output
 
 .. include:: help/seedbank_list
 
-Net Command
+PXE Command
 ===========
 
-.. include:: help/seedbank_net
+.. include:: help/seedbank_pxe
 
 ISO Command
 ===========
@@ -48,16 +48,16 @@ Prepare an installation for Debian Squeeze amd64 with the minimal required optio
 
 .. code-block:: none
 
-    seedbank net minion001.a.c.m.e debian-squeeze-amd64
+    seedbank pxe minion001.a.c.m.e debian-squeeze-amd64
 
 NOTE: if the default configuration (seed files) are used the installation will require user input for partitioning the disks, to do a fully unattended installation a disk recipe should be added to the command
 
 .. code-block:: none
 
-    seedbank net -s disk_one_partition minion001.a.c.m.e debian-squeeze-amd64
+    seedbank pxe -a 1disk_sd_one_partition minion001.a.c.m.e debian-squeeze-amd64
 
 Prepare an installation for Ubuntu Precise with a custom disk layout, run the Puppet network manifest after the installation and specify some custom PXE variable which could be used in the file overlay templates
 
 .. code-block:: none
 
-    seedbank net -s one_partition -m network -o minion minion001.a.c.m.e ubuntu-natty-amd64
+    seedbank pxe -a 1disk_sd_one_partition -p network -o minion minion001.a.c.m.e ubuntu-natty-amd64
