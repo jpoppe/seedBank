@@ -172,9 +172,9 @@ def argument_parser():
         help='remove an iso or netboot images from the tftpboot and seedBank '
         'archives directories')
     group.add_argument('-o', '--overlay', action='store_true',
-        help='update or create <overlay>.permissions for all overlaysi, those '
+        help='update or create <overlay>.permissions for all overlays, those '
         'files contain user, group and permissions which will be set by a '
-        'dynamically generated script just before the end of an installation'
+        'dynamically generated script just before the end of an installation '
         'after the overlay got applied')
     group.set_defaults(func=parse_arg.manage)
 
