@@ -38,7 +38,7 @@ d-i netcfg/get_domain string ${dns_domain}
 d-i mirror/country string manual
 d-i mirror/http/hostname string ${ubuntu_mirror_host_name}
 d-i mirror/http/directory string ${ubuntu_mirror_directory}
-d-i mirror/http/proxy string
+d-i mirror/http/proxy string ${apt_proxy}
 
 ### - Skip automatic updates configuration
 pkgsel pkgsel/update-policy select none
