@@ -48,7 +48,7 @@ d-i network-console/start note
 d-i mirror/country string manual
 d-i mirror/http/hostname string ${debian_mirror_host_name}
 d-i mirror/http/directory string ${debian_mirror_directory}
-d-i mirror/http/proxy string
+d-i mirror/http/proxy string ${apt_proxy}
 d-i debian-installer/allow_unauthenticated boolean ${mirror_allow_unauthenticated}
 
 ### - Suite
