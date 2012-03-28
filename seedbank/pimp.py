@@ -121,7 +121,7 @@ class Overlay:
     def prepare(self, values):
         """ apply templates to all the .sb_template files and build the
         fix_perms.sh script from the permissions file"""
-	values.update(self.cfg['pxe'])
+        values.update(self.cfg['pxe'])
         utils.rmtree(self.dst)
         utils.copy_tree(self.path, self.dst)
         for root, _, files in os.walk(self.dst):
