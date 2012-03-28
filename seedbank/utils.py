@@ -47,20 +47,20 @@ import yaml
 class FatalException(Exception):
 
     def __init__(self, *args):
-        """if an error message has been defined log it to the logging debug
+        """if an error message has been defined log it to the logging error
+        level, if 2 arguments are given the second will be logged to the debug
         level"""
 
-        if len(args) == 1:
+        if args:
             self.msg = args[0]
             logging.error(self.msg)
-            #logging.debug(self.msg)
-            #logging.exception(self.msg)
-            sys.exit(1)
         elif not args:
             self.msg = ''
-            sys.exit(1)
-        else:
-            self.msg = args
+        if len(args) == 2:
+            logging.debug(args[1])
+            #logging.exception(self.msg)
+
+        sys.exit(1)
 
     def __str__(self):
         """return error message as a string"""
