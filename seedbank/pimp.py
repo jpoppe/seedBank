@@ -69,19 +69,19 @@ class SeedPimp:
         if self.target == 'iso':
             cmd_overlay = commands['iso_overlay']
             cmd_late = commands['iso_late_command']
-        elif self.target == 'net':
-            cmd_overlay = commands['net_overlay']
-            cmd_puppet_manifest = commands['net_puppet_manifest']
-            cmd_late = commands['net_late_command']
+        elif self.target == 'pxe':
+            cmd_overlay = commands['pxe_overlay']
+            cmd_puppet_manifest = commands['pxe_puppet_manifest']
+            cmd_late = commands['pxe_late_command']
 
         values = self.cfg['seed']
         if overlay:
             values['late_command'] += cmd_overlay
-        if self.target == 'net' and manifests:
-            values['late_command'] += commands['net_puppet_manifests']
+        if self.target == 'pxe' and manifests:
+            values['late_command'] += commands['pxe_puppet_manifests']
         for manifest in manifests:
             values['manifest'] = manifest
-            if self.target == 'net':
+            if self.target == 'pxe':
                 puppet_command = commands_merge(cmd_puppet_manifest, values)
                 values['late_command'] += [puppet_command]
             elif self.target == 'iso':

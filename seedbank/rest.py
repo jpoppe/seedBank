@@ -58,7 +58,7 @@ def api_parse(command, args):
     """convert arguments to an object, pass it to parse"""
     if command == 'iso':
         positionals = ['release', 'output', 'fqdn']
-    elif command == 'net':
+    elif command == 'pxe':
         positionals = ['release', 'fqdn']
 
     for positional in positionals:
@@ -79,7 +79,7 @@ def api_parse(command, args):
 @route('/api/:command', method='POST')
 def api(command):
     """enable netboot installations or create ISOs via json requests"""
-    commands = ('net', 'iso')
+    commands = ('pxe', 'iso')
     if not command in commands:
         abort(404, '"%s" is an invalid command (valid commands: %s)' % (command,
             ', '.join(commands)))
@@ -105,7 +105,7 @@ def seed(address):
     pxe_vars = settings.pxe_variables(cfg, address)
     template_cfg = settings.template(pxe_vars['fqdn'], pxe_vars['overlay'],
         pxe_vars['config'], pxe_vars)
-    seed = pimp.SeedPimp(template_cfg, 'net')
+    seed = pimp.SeedPimp(template_cfg, 'pxe')
     try:
         result = seed.pimp(pxe_vars['seeds'], pxe_vars['overlay'],
             pxe_vars['puppet_manifests'])

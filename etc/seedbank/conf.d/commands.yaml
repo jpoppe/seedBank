@@ -9,15 +9,15 @@
 # iso_late_command     -> move the default rc.local to rc.local.seedbank, replace it with an rc.local
 #                         which is a template and supports the '/etc/runonce.d directory see the 
 #                         rc_local template for the behaviour
-# net_overlay          -> the command which will be used at the end of an installation for downloading
+# pxe_overlay          -> the command which will be used at the end of an installation for downloading
 #                         and extracting the overlay archive
-# net_early_command    -> this command will be executed at the beginning of an installation
+# pxe_early_command    -> this command will be executed at the beginning of an installation
 #                         used for logging
-# net_late_command     -> see the description of the 'iso_late_command', additionaly it will
+# pxe_late_command     -> see the description of the 'iso_late_command', additionaly it will
 #                         do a disable call to the seedBank daemon so it will disable the
 #                         appropiate pxelinux.cfg file by renaming the file to <file_name>.disabled
-# net_puppet_manifests -> download and extract the archive with all Puppet manifests
-# net_puppet_manifest  -> download the Puppet manifest template for every enabled Puppet manifest
+# pxe_puppet_manifests -> download and extract the archive with all Puppet manifests
+# pxe_puppet_manifest  -> download the Puppet manifest template for every enabled Puppet manifest
 #                         so the Puppet manifests will be applied from the rc.local script after the first  
 #                         boot of an installed machine
 commands:
@@ -29,15 +29,15 @@ commands:
     'cp -r /cdrom/manifests /target/seedbank',
     'chmod 0755 /target/etc/rc.local',
   ]
-  net_overlay: ['cd /target', 'wget http://${seed_host}:${seed_port}/overlay.tgz/${address} -O - | tar zxvf -']
-  net_early_command: ['wget -q -O - http://${seed_host}:${seed_port}/install/${address}']
-  net_late_command: [
+  pxe_overlay: ['cd /target', 'wget http://${seed_host}:${seed_port}/overlay.tgz/${address} -O - | tar zxvf -']
+  pxe_early_command: ['wget -q -O - http://${seed_host}:${seed_port}/install/${address}']
+  pxe_late_command: [
     'mv /target/etc/rc.local /target/etc/rc.local.seedbank',
     'wget http://${seed_host}:${seed_port}/rclocal/${address} -O /target/etc/rc.local',
     'chmod 0755 /target/etc/rc.local',
     'wget http://${seed_host}:${seed_port}/disable/${address} -O -']
-  net_puppet_manifests: [
+  pxe_puppet_manifests: [
     'mkdir /target/seedbank', 'cd /target/seedbank',
     'wget http://${seed_host}:${seed_port}/puppet_manifests.tgz -O - | tar zxvf -'
   ]
-  net_puppet_manifest: ['wget -q http://${seed_host}:${seed_port}/puppet/${manifest} -O /target/etc/runonce.d/${manifest}.enabled']
+  pxe_puppet_manifest: ['wget -q http://${seed_host}:${seed_port}/puppet/${manifest} -O /target/etc/runonce.d/${manifest}.enabled']

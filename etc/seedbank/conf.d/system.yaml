@@ -56,9 +56,9 @@ distributions:
 # pxe_default        -> the default file in the pxelinux.cfg directory, this file describes the actions
 #                       which should be done when no machine specific pxelinux.cfg file is found
 # pxe_debian         -> this template will be used for generating a node pxelinux.cfg file when a Debian
-#                       machine will be enabled for installation by the 'seedbank net command'
+#                       machine will be enabled for installation by the 'seedbank pxe command'
 # pxe_ubuntu         -> this template will be used for generating a node pxelinux.cfg file when an Ubuntu
-#                       machine will be enabled for installation by the 'seedbank net command'
+#                       machine will be enabled for installation by the 'seedbank pxe command'
 # debian_isolinux    -> this template will replace the default isolinux.cfg file on a Debian installation ISO
 # ubuntu_isolinux    -> this template will replace the default isolinux.cfg file on an Ubuntu installation ISO
 # rc_local           -> this template constructs a temporary initrd file which will run once and run

@@ -28,7 +28,7 @@ import os
 import re
 
 import iso
-import net
+import pxe
 import manage
 import reslist
 import rest
@@ -79,7 +79,7 @@ class ParseArguments:
         list_resource.print_list()
 
     def _shared(self, args, release):
-        """process shared arguments between the net and iso commands"""
+        """process shared arguments between the pxe and iso commands"""
         if args.config:
             yaml_file = os.path.join(self.cfg['paths']['configs'], args.config)
             yaml_file += '.yaml'
@@ -124,8 +124,8 @@ class ParseArguments:
 
         return args, config
 
-    def net(self, args):
-        """process the net command"""
+    def pxe(self, args):
+        """process the pxe command"""
         _, release, _ = args.release.split('-')
         args, config = self._shared(args, release)
 
@@ -152,10 +152,10 @@ class ParseArguments:
             ip_address = utils.resolve_ip_address(args.fqdn) 
             args.address = utils.ip_to_hex(ip_address)
 
-        pxe = net.GeneratePxe(args)
-        pxe.state_remove()
-        pxe.write(pxe.generate())
-        pxe.hook_enable()
+        pxe_linux = pxe.GeneratePxe(args)
+        pxe_linux.state_remove()
+        pxe_linux.write(pxe_linux.generate())
+        pxe_linux.hook_enable()
         
     def iso(self, args):
         """validate the input and if no errors are found build an (unattended)

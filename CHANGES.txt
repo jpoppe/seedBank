@@ -5,7 +5,7 @@ seedbank general
 -- removed recipes and added those to seeds since they are actually seeds, use -a/--additional instead of -r/--recipe to specify "disk recipes"
 -- replaced --custom option with variables option for overriding seed and pxe variables
 -- switched to one binary
-   seedbank -> seedbank net
+   seedbank -> seedbank pxe
    seedbank_setup -> seedbank manage
    seedbank_daemon -> seedbank daemon
    seedbank list -> for listing resources
