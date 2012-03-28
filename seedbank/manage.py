@@ -32,7 +32,7 @@ import utils
 
 
 class Manage:
-    """manage netboot, ISO and syslinux files"""
+    """manage netboot images, ISO, syslinux and permissions files"""
 
     def __init__(self, cfg):
         """initialize class variables"""
@@ -61,11 +61,13 @@ class Manage:
         """extract files to the seedbank temp directory and move those"""
         archive = os.path.join(dst, os.path.basename(src))
         files = (os.path.join(prefix, file_name) for file_name in files)
-        utils.rmtree(self.temp)
-        utils.make_dirs(self.temp)
-        utils.untar_files(archive, files, self.temp)
+        temp = os.path.join(self.temp, 'manage')
+        if os.path.isdir(temp):
+            utils.rmtree(temp)
+        utils.make_dirs(temp)
+        utils.untar_files(archive, files, temp)
         self._move(target)
-        utils.rmtree(self.temp)
+        utils.rmtree(temp)
 
     def _extract_debs(self, directory):
         """extract files from all debian packages in a directory"""
