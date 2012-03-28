@@ -27,6 +27,7 @@ seed:
   add_kernel_opts: ''
   debian_mirror_directory: /debian
   debian_mirror_host_name: ftp.debian.org
+  apt_proxy: ''
   mirror_allow_unauthenticated: 'true'
   debian_packages: openssh-server puppet debconf-utils lsb-release rsync vim less
   ntp_server: ntp.xs4all.nl
