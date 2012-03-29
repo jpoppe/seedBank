@@ -40,4 +40,7 @@ commands:
     'mkdir /target/seedbank', 'cd /target/seedbank',
     'wget http://${seed_host}:${seed_port}/puppet_manifests.tgz -O - | tar zxvf -'
   ]
-  pxe_puppet_manifest: ['wget -q http://${seed_host}:${seed_port}/puppet/${manifest} -O /target/etc/runonce.d/${manifest}.enabled']
+  pxe_puppet_manifest: [
+    'mkdir /target/etc/runonce.d',
+    'wget -q http://${seed_host}:${seed_port}/puppet/${manifest} -O /target/etc/runonce.d/${manifest}.enabled'
+  ]
