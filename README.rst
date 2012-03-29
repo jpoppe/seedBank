@@ -53,6 +53,11 @@ Properly configured DNS Server (hosts file will also work)
 Properly configured TFTP Server
 A Debian or Ubuntu repository
 
+Contributors
+------------
+- Martin Seener
+- M.D. Klapdijk
+
 Thanks to
 =========
 
