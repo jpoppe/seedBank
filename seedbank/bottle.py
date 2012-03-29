@@ -744,10 +744,10 @@ class Bottle(object):
         except RouteReset:
             route.reset()
             return self._handle(environ)
-        except utils.FatalException:
-            return HTTPError(500, "Internal Server Error", '', '')
+        except utils.FatalException as err:
+            return HTTPError(500, "Internal Server Error", err, '')
         except utils.APIException:
-            return HTTPError(500, "Internal Server Error", '', '')
+            return HTTPError(500, "Internal Server Error", err, '')
         except (KeyboardInterrupt, SystemExit, MemoryError):
             raise
         except Exception, e:

@@ -115,8 +115,8 @@ class Overlay:
             'overlay')
         self.path = os.path.join(self.cfg['paths']['overlays'], overlay)
         if not os.path.isdir(self.path):
-            logging.error('overlay directory "%s" does not exist', self.path)
-            raise utils.FatalException()
+            err = 'overlay directory "%s" does not exist' % self.path
+            raise utils.FatalException(err)
 
     def prepare(self, values):
         """ apply templates to all the .sb_template files and build the
@@ -214,11 +214,11 @@ class OverlayPermissions:
                 try:
                     mode, uid, gid, real_path = line.split('\t')
                 except ValueError:
-                    logging.error('%s is corrupt, delete or regenerate it with '
-                        'the "seedbank manage --overlay" command, or fix the '
-                        'file manually, line "%s" contains errors', perm_file,
-                        line)
-                    raise utils.FatalException()
+                    err = '%s is corrupt, delete or regenerate it with '\
+                        'the "seedbank manage --overlay" command, or fix the '\
+                        'file manually, line "%s" contains errors' % \
+                        (perm_file, line)
+                    raise utils.FatalException(err)
                 else:
                     if prefix:
                         real_path = os.path.join(prefix, real_path[1:])

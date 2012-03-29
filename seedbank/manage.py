@@ -76,8 +76,8 @@ class Manage:
             if fnmatch.fnmatch(file_name, '*.deb'):
                 result = utils.call(['dpkg', '-x', file_name, 'temp'])
                 if result:
-                    logging.error('failed to extract package "%s"', file_name)
-                    raise utils.FatalException()
+                    err = 'failed to extract package "%s"' % file_name
+                    raise utils.FatalException(err)
                 logging.info('extracted "%s"', file_name)
 
     def _pxe_default(self):

@@ -45,13 +45,13 @@ def parse_cfg():
 
     settings = utils.yaml_read(settings_file)
     if not settings:
-        logging.error('could not find any of the following settings files: '
-            '%s', ', '.join(files))
-        raise utils.FatalException()
-    else:
-        path = settings['settings']['configuration_path']
+        err = 'can not find a settings.yaml file (%s)' % ', '.join(files)
+        raise utils.FatalException(err)
+
+    path = settings['settings']['configuration_path']
     if not os.path.isdir(path):
-        raise utils.FatalException()
+        raise utils.FatalException('directory "%s" does not exist' % path)
+
     if settings_file in override_files:
         logging.info('found settings file "%s", will use this settings file '
             'instead of the default (%s)', settings_file, settings_file_name)

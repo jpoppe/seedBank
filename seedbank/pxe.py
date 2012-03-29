@@ -94,9 +94,9 @@ class GeneratePxe:
         file_name = cfg['templates']['pxe_' + distribution]
         file_name = os.path.join(cfg['paths']['templates'], file_name)
         if not os.path.isfile(file_name):
-            logging.error('file "%s" does not exist (hint: check the templates '
+            err = 'file "%s" does not exist (hint: check the templates '\
                 'section in your settings)', file_name)
-            raise utils.FatalException()
+            raise utils.FatalException(err)
 
         pxe_variables_custom = []
         for variable in self.variables:
