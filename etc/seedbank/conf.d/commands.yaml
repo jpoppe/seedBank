@@ -38,9 +38,7 @@ commands:
     'wget http://${seed_host}:${seed_port}/disable/${address} -O -']
   pxe_puppet_manifests: [
     'mkdir /target/seedbank', 'cd /target/seedbank',
+    'test -d /target/etc/runonce.d || mkdir /target/etc/runonce.d',
     'wget http://${seed_host}:${seed_port}/puppet_manifests.tgz -O - | tar zxvf -'
   ]
-  pxe_puppet_manifest: [
-    'mkdir /target/etc/runonce.d',
-    'wget -q http://${seed_host}:${seed_port}/puppet/${manifest} -O /target/etc/runonce.d/${manifest}.enabled'
-  ]
+  pxe_puppet_manifest: ['wget -q http://${seed_host}:${seed_port}/puppet/${manifest} -O /target/etc/runonce.d/${manifest}.enabled']
