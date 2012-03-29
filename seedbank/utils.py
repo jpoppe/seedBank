@@ -98,16 +98,14 @@ def json_client(url, data):
             err = element.text
         raise FatalException(err)
     except urllib2.URLError as err:
-        logging.error('failed to connect to "%s"', url)
-        raise FatalException(err)
+        raise FatalException('failed to connect to "%s"' % url, err)
 
 def resolve_ip_address(name):
     """resolve a host ip address by host name"""
     try:
         address = socket.gethostbyname(name)
     except socket.error as err:
-        logging.error('%s - failed to resolve IP address', name)
-        raise FatalException(err)
+        raise FatalException('%s - failed to resolve IP address' % name, err)
     else:
         return address
 
@@ -146,24 +144,24 @@ def defaults_override(dictionary, overrides):
         dictionary[key] = overrides[key]
     return dictionary
 
-def _shell_escape(command):
+def _shell_escape(cmd):
     """escape quotes, backticks and dollar signs"""
     for char in ('"', '$', '`'):
-        command = command.replace(char, '\%s' % char)
-    return command
+        cmd = cmd.replace(char, '\%s' % char)
+    return cmd
 
-def run(command, user=None, host=None):
+def run(cmd, user=None, host=None):
     """run a command locally or remote via SSH"""
     if host != 'localhost' and user and host:
-        logging.info('%s@%s - running "%s"', user, host, command)
-        command = _shell_escape(command)
+        logging.info('%s@%s - running "%s"', user, host, cmd)
+        cmd = _shell_escape(cmd)
         proc = subprocess.Popen(['ssh', '-t', '-o PasswordAuthentication=no',
             '%s@%s' % (user, host),
-            'bash -c "%s"' % command], stdout=subprocess.PIPE,
+            'bash -c "%s"' % cmd], stdout=subprocess.PIPE,
             stderr=subprocess.PIPE, stdin=sys.stdin)
     else:
-        logging.info('localhost - running "%s"', command)
-        proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
+        logging.info('localhost - running "%s"', cmd)
+        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
             stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     stdout, stderr = proc.communicate()
     return_code = proc.wait()
@@ -176,15 +174,15 @@ def run(command, user=None, host=None):
     else:
         return stdout
 
-def call(command, user=None, host=None):
+def call(cmd, user=None, host=None):
     """run a local or remote command via SSH"""
     if user and host:
-        command = _shell_escape(command)
+        cmd = _shell_escape(cmd)
         return_code = subprocess.call(['ssh', '-o PasswordAuthentication=no',
-            '%s@%s' % (user, host), 'bash -c "%s"' % command],
+            '%s@%s' % (user, host), 'bash -c "%s"' % cmd],
             stdout=subprocess.PIPE)
     else:
-        return_code = subprocess.call(command, stdout=subprocess.PIPE)
+        return_code = subprocess.call(cmd, stdout=subprocess.PIPE)
     return return_code
 
 def input_yes_no(question):
@@ -204,8 +202,8 @@ def input_yes_no(question):
 
 def put(src, dst, user=None, host=None):
     """scp a file or directory"""
-    command = ['scp', '-r', src, dst]
-    subprocess.Popen(command, stdout=subprocess.PIPE)
+    cmd = ['scp', '-r', src, dst]
+    subprocess.Popen(cmd, stdout=subprocess.PIPE)
 
 def yaml_read(files):
     """read one or multiple YAML file(s) return a Python dictionary"""
@@ -214,9 +212,7 @@ def yaml_read(files):
     try:
         result = yaml.load(files_read(files))
     except Exception as err:
-        logging.error('failed to parse "%s"', ', '.join(files))
-        logging.error(err)
-        raise FatalException()
+        raise FatalException('failed to parse "%s"' % ', '.join(files), err)
     else:
         return result
 
@@ -229,8 +225,8 @@ def file_read(file_name):
     try:
         result = open(file_name, 'r').read()
     except IOError as err:
-        logging.error('failed to read "%s"', file_name)
-        raise FatalException(err)
+        'failed to read "%s"' % file_name
+        raise FatalException('failed to read "%s"' % file_name, err)
     else:
         return result
 
@@ -244,8 +240,8 @@ def file_write(file_name, data):
     try:
         open(file_name, 'w').write(data)
     except IOError as err:
-        logging.error('failed to write data to "%s" (%s)', file_name, err[1])
-        raise FatalException()
+        err = 'failed to write data to "%s" (%s)' % (file_name, err[1])
+        raise FatalException(err)
     else:
         logging.info('written data to "%s"', file_name)
 
@@ -254,8 +250,7 @@ def file_copy(src, dst):
     try:
         shutil.copy2(src, dst)
     except (IOError, OSError) as err:
-        logging.error('failed to copy "%s" to "%s"', src, dst)
-        raise FatalException(err)
+        raise FatalException('failed to copy "%s" to "%s"' % (src, dst), err)
     else:
         logging.info('copied "%s" to "%s"', src, dst)
 
@@ -264,8 +259,7 @@ def file_move(src, dst):
     try:
         shutil.move(src, dst)
     except (IOError, OSError) as err:
-        logging.error('failed to move "%s" to "%s"', src, dst)
-        raise FatalException(err)
+        raise FatalException('failed to move "%s" to "%s"' % (src, dst), err)
     else:
         logging.info('moved "%s" to "%s"', src, dst)
 
@@ -275,8 +269,7 @@ def file_delete(path):
         try:
             os.remove(path)
         except OSError as err:
-            logging.error('failed to delete "%s"', path)
-            raise FatalException(err)
+            raise FatalException('failed to delete "%s"' % path, err)
         else:
             logging.info('deleted "%s"' % path)
             return True
@@ -289,8 +282,8 @@ def file_list(path, extension):
                 if extension in name:
                     print(name.rsplit(extension, 1)[0])
     except OSError as err:
-        logging.error('failed to get contents of directory "%s"', path)
-        raise FatalException(err)
+        raise FatalException('failed to get contents of directory "%s"' % \
+            path, err)
 
 def dir_list(path):
     """return a list with all directory names in the given path"""
@@ -300,8 +293,8 @@ def dir_list(path):
             if os.path.isdir(os.path.join(path, name)):
                 result.append(name)
     except OSError as err:
-        logging.error('failed to get contents of directory "%s"', path)
-        raise FatalException(err)
+        raise FatalException('failed to get contents of directory "%s"' % \
+            path, err)
     else:
         return result
 
@@ -310,8 +303,8 @@ def copy_tree(src, dst):
     try:
         shutil.copytree(src, dst)
     except (IOError, OSError) as err:
-        logging.error('failed to copy directory "%s" to "%s"', src, dst)
-        raise FatalException(err)
+        msg = 'failed to copy directory "%s" to "%s"' % (src, dst)
+        raise FatalException(msg, err)
     else:
         logging.info('copied directory "%s" to "%s"', src, dst)
 
@@ -323,8 +316,7 @@ def make_dirs(path):
     try:
         os.makedirs(path)
     except (OSError, IOError) as err:
-        logging.error('failed to create directory "%s"', path)
-        raise FatalException(err)
+        raise FatalException('failed to create directory "%s"' % path, err)
     else:
         logging.info('created directory "%s"', path)
 
@@ -333,8 +325,8 @@ def chmod(path, perms):
     try:
         os.chmod(path, perms)
     except IOError as err:
-        logging.error('changing permissions "%s" to "%s" failed', path, perms)
-        raise FatalException(err)
+        msg = 'changing permissions of "%s" to "%s" failed' % (path, perms)
+        raise FatalException(msg, err)
     else:
         logging.info('changed permissons "%s" to "%s"', path, perms)
 
@@ -345,11 +337,11 @@ def apply_template(data, values, log=None):
         data = data.substitute(values)
     except KeyError as err:
         if log:
-            logging.error('processing template variables failed, could not '
-                'find value for key %s (%s)', err, log)
+            err = 'processing template variables failed, could not '\
+                'find value for key %s (%s)' % (err, log)
         else:
-            logging.error('processing template variables failed, could not '
-                'find value for key %s', err)
+            err = 'processing template variables failed, could not '\
+                'find value for key %s' % err
         raise FatalException(err)
     else:
         return data
@@ -368,8 +360,7 @@ def rmtree(path):
         try:
             shutil.rmtree(path)
         except (IOError, OSError) as err:
-            logging.error('failed to remove %s"', path)
-            raise FatalException(err)
+            raise FatalException('failed to remove %s"' % path, err)
         else:
             logging.info('removed directory "%s"', path)
             return True
@@ -379,8 +370,7 @@ def read_url(url):
     try:
         result = urllib.urlopen(url).readlines()
     except Exception as err:
-        logging.error('failed to read "%s"', url)
-        raise FatalException(err)
+        raise FatalException('failed to read "%s"' % url, err)
     else:
         return result
 
@@ -397,8 +387,7 @@ def download(url, dst, report_hook=False):
     try:
         (filename, headers) = urllib.urlretrieve(url, dst, report_hook)
     except Exception as err:
-        logging.error('failed to download "%s"' % url)
-        raise FatalException(err)
+        raise FatalException('failed to download "%s"' % url, err)
     else:
         logging.info('finished downloading "%s"', url)
 
@@ -437,8 +426,8 @@ def tar_gz_directory(path):
         tar.close()
         os.chdir(current_cwd)
     except Exception as err:
-        logging.error('creating gzipped tar archive of "%s" failed', path)
-        raise FatalException(err)
+        msg = 'creating gzipped tar archive of "%s" failed' % path
+        raise FatalException(msg, err)
     else:
         logging.info('created gzipped tar archive of "%s"', path)
         return tar_file.getvalue()
@@ -450,8 +439,8 @@ def untar(archive, dst):
         tar.extractall(dst)
         tar.close()
     except IOError as err:
-        logging.error('failed to extract "%s" to "%s"', archive, dst)
-        raise FatalException(err)
+        msg = 'failed to extract "%s" to "%s"' % (archive, dst)
+        raise FatalException(msg, err)
     else:
         logging.info('extracted files to "%s"', dst)
 
@@ -463,8 +452,8 @@ def untar_files(archive, files, dst):
         tar.extractall('', members=(tar.getmember(member) for member in files))
         tar.close()
     except IOError as err:
-        logging.error('failed to extract "%s" to "%s"', archive, dst)
-        raise FatalException(err)
+        msg = 'failed to extract "%s" to "%s"' % archive, dst
+        raise FatalException(msg, err)
     else:
         logging.info('extracted "%s" to "%s"', archive, dst)
 
@@ -496,8 +485,7 @@ def validate_ip(ip_address):
     try:
         socket.inet_aton(ip_address)
     except socket.error as err:
-        logging.error(err)
-        raise FatalException(err)
+        raise FatalException('"%s" is an invalid IP address' % ip_address, err)
     else:
         return True
 
@@ -506,8 +494,7 @@ def resolve_host_name(name):
     try:
         host_name = socket.gethostbyaddr(name)[0]
     except socket.error as err:
-        logging.error('%s - failed to resolve IP address', name)
-        raise FatalException(err)
+        raise FatalException('%s - failed to resolve IP address' % name, err)
     else:
         return host_name
 
@@ -516,9 +503,8 @@ def resolve_fqdn(name):
     try:
         fqdn = socket.getfqdn(name)
     except socket.error as err:
-        logging.error('%s - failed to resolve fully qualified domain name',
-            name)
-        raise FatalException(err)
+        msg = '%s - failed to resolve fully qualified domain name' % name
+        raise FatalException(msg, err)
     else:
         return fqdn
 
