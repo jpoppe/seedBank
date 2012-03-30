@@ -8,7 +8,6 @@ seedBank Introduction:
 .. toctree::
     :maxdepth: 3
 
-    overview
     quickstart
 
 seedBank Core Documentation:
