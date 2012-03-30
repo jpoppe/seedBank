@@ -45,7 +45,7 @@ Features
 - and more
 
 Requirements
-------------
+============
 
 Python version 2.6 or 2.7
 Properly configured DHCP server
@@ -54,9 +54,9 @@ Properly configured TFTP Server
 A Debian or Ubuntu repository
 
 Contributors
-------------
+============
 - Martin Seener
-- M.D. Klapdijk
+- Marcel Klapdijk
 
 Thanks to
 =========
