@@ -100,7 +100,7 @@ Contributors
 ============
 
 - Martin Seener
-- Marcel Klapdijk
+- Marcel Klapwijk
 
 Thanks to
 =========
