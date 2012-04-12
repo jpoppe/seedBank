@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>
+# Copyright 2009-2012 Jasper Poppe <jgpoppe@gmail.com>
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__author__ = 'Jasper Poppe <jpoppe@ebay.com>'
+__author__ = 'Jasper Poppe <jgpoppe@gmail.com>'
 __copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
 __credits__ = ''
 __license__ = 'Apache License 2.0'
 __version__ = '2.0.0rc6'
 __maintainer__ = 'Jasper Poppe'
-__email__ = 'jpoppe@ebay.com'
+__email__ = 'jgpoppe@gmail.com'
 __status__ = 'production'
 
 import optparse
@@ -248,7 +248,7 @@ def generate(filename):
 def main():
     """main application, this function won't called when used as a module"""
     parser = optparse.OptionParser(prog='seedbank_daemon', version=__version__)
-    parser.set_description ('seedbank partitioner (c) 2009, 2010, 2011 Jasper Poppe <jpoppe@ebay.com>')
+    parser.set_description ('seedbank partitioner (c) 2009, 2010, 2011 Jasper Poppe <jgpoppe@gmail.com>')
     parser.set_usage('%prog [-d|-r] <recipe>')
     parser.add_option('-d', dest='dry', help='dry run (print partition script to screen)', action='store_true')
     parser.add_option('-r', dest='run', help='run (print partition script to screen)', action='store_true')
