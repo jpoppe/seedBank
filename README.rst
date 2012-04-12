@@ -23,7 +23,7 @@ License
 =======
 seedBank has been released under the Apache 2.0 license
 
-Copyright 2009-2012 (c) Jasper Poppe <jpoppe@ebay.com>
+Copyright 2009-2012 (c) Jasper Poppe <jgpoppe@gmail.com>
 
 Disclaimer
 ==========

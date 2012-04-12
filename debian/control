@@ -1,7 +1,7 @@
 Source: seedbank
 Section: admin
 Priority: optional
-Maintainer: Jasper Poppe <jpoppe@ebay.com>
+Maintainer: Jasper Poppe <jgpoppe@gmail.com>
 Build-Depends: debhelper (>= 7), python-support (>= 0.6), cdbs (>= 0.4.49), python-all-dev
 Standards-Version: 3.8.4
 

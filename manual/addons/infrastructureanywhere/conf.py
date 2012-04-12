@@ -38,7 +38,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Infrastructure Anywhere'
-copyright = u'2011, Jasper Poppe <jpoppe@ebay.com>, Lex van Roon <lvanroon@ebay.com>'
+copyright = u'2011, Jasper Poppe <jgpoppe@gmail.com>, Lex van Roon <lvanroon@ebay.com>'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -173,7 +173,7 @@ htmlhelp_basename = 'InfrastructureAnywheredoc'
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'InfrastructureAnywhere.tex', u'Infrastructure Anywhere Documentation',
-   u'Jasper Poppe \\textless{}jpoppe@ebay.com\\textgreater{}, Lex van Roon \\textless{}lvanroon@ebay.com\\textgreater{}', 'manual'),
+   u'Jasper Poppe \\textless{}jgpoppe@gmail.com\\textgreater{}, Lex van Roon \\textless{}lvanroon@ebay.com\\textgreater{}', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
