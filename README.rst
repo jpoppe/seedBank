@@ -99,7 +99,7 @@ Resources
 Contributors
 ============
 
-- Martin Seener
+- Martin Seener (martin[at]seener[dot]de)
 - Marcel Klapwijk
 
 Thanks to
