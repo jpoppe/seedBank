@@ -1,13 +1,4 @@
 """
-Testing URLs:
-  wget 'http://localhost:7467/seed/C0A80014' -q -O -
-  wget 'http://localhost:7467/manifests.tgz'
-  wget 'http://localhost:7467/bootstrapinit/C0A80014' -q -O -
-  wget 'http://localhost:7467/pimp/C0A80014' -q -O -
-  wget 'http://localhost:7467/overlay.tgz/C0A80014' -O overlay.tgz
-  wget 'http://localhost:7467/disable/C0A80014' -q -O
-  wget 'http://localhost:7467/status/C0A80014&state=done' -q -O
-
 """
 
 # Copyright 2009-2012 Jasper Poppe <jpoppe@ebay.com>

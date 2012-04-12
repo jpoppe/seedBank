@@ -9,6 +9,7 @@ seedBank Introduction:
     :maxdepth: 3
 
     quickstart
+    troubleshooting
 
 seedBank Core Documentation:
 
