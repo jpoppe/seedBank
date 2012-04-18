@@ -1,7 +1,7 @@
 usage: seedbank [-h] [--version] {list,pxe,iso,manage,daemon} ...
 
 seedBank - Debian/Ubuntu netboot installations the way it is meant to be...
-(c) 2009-2012 Jasper Poppe <jpoppe@ebay.com>
+(c) 2009-2012 Jasper Poppe <jgpoppe@gmail.com>
 
 positional arguments:
   {list,pxe,iso,manage,daemon}

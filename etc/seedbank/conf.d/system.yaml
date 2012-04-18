@@ -1,4 +1,4 @@
-# seedBank example configuration created by Jasper Poppe <jpoppe@ebay.com>
+# seedBank example configuration created by Jasper Poppe <jgpoppe@gmail.com>
 
 # seedBank paths, be sure the tftpboot path points to the path used by the 
 # tftp server on a Debian or Ubuntu machine the default paths should do
