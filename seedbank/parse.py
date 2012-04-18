@@ -126,7 +126,15 @@ class ParseArguments:
 
     def pxe(self, args):
         """process the pxe command"""
-        _, release, _ = args.release.split('-')
+        try:
+            _, release, _ = args.release.split('-')
+        except:
+            err = '"%s" is an unknown release (first run "seedbank '\
+                'manage -n <release>" to download and prepare the '\
+                'release, run "seedbank list -n" to list available '\
+                'releases' % args.release
+            raise self.exception(err)
+
         args, config = self._shared(args, release)
 
         path = os.path.join(config['paths']['tftpboot'], 'seedbank',
@@ -135,9 +143,6 @@ class ParseArguments:
             if release in config['distributions']['netboots']:
                 err = '"%s" is not available, run "seedbank manage -n "%s" to '\
                     'download an prepare the release' % args.release
-            else:
-                #FIXME: test this
-                err = '"%s" is an uknown release' % args.release
             raise self.exception(err)
 
         if args.macaddress:
@@ -146,8 +151,7 @@ class ParseArguments:
             elif not re.match('([a-fA-F0-9]{2}[:|\-]?){6}', args.macaddress):
                 err = '"%s" is not a valid MAC address' % args.macaddress
                 raise self.exception(err)
-            else:
-                args.address = utils.format_address(args.macaddress)
+            args.address = utils.format_address(args.macaddress)
         else:
             ip_address = utils.resolve_ip_address(args.fqdn) 
             args.address = utils.ip_to_hex(ip_address)
