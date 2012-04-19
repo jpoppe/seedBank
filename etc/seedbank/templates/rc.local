@@ -21,8 +21,8 @@ fi
 unset file
 
 /etc/rc.local.seedbank
-#rm -rf /seedbank
-#rm -rf /etc/runonce.d
-#mv /etc/rc.local.seedbank /etc/rc.local
+rm -rf /seedbank
+rm -rf /etc/runonce.d
+mv /etc/rc.local.seedbank /etc/rc.local
 
 exit 0
