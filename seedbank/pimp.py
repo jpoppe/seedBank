@@ -66,15 +66,19 @@ class SeedPimp:
     def pimp(self, seeds, overlay, manifests):
         """pimp the seed file template"""
         commands = self.cfg['commands']
+        values = self.cfg['seed']
+
         if self.target == 'iso':
             cmd_overlay = commands['iso_overlay']
+            cmd_early = commands['iso_early_command']
             cmd_late = commands['iso_late_command']
+            values['late_command'] += commands['iso_mount_command']
         elif self.target == 'pxe':
             cmd_overlay = commands['pxe_overlay']
             cmd_puppet_manifest = commands['pxe_puppet_manifest']
+            cmd_early = commands['pxe_early_command']
             cmd_late = commands['pxe_late_command']
 
-        values = self.cfg['seed']
         if overlay:
             values['late_command'] += cmd_overlay
         if self.target == 'pxe' and manifests:
@@ -94,9 +98,10 @@ class SeedPimp:
                     manifest)
                 utils.write_template(values, src, dst)
         
-        values['late_command'] += cmd_late
+        values['early_command'] += cmd_early
         values['early_command'] = commands_merge(values['early_command'],
             values)
+        values['late_command'] += cmd_late
         values['late_command'] = commands_merge(values['late_command'], values)
 
         seed_file = self._merge_seeds(seeds, values)
