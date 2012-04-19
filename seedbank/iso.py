@@ -72,6 +72,7 @@ class Build:
         path_amd = os.path.join(self.work_iso, 'install.amd')
         path_i386 = os.path.join(self.work_iso, 'install.386')
         path_ubuntu = os.path.join(self.work_iso, 'install')
+
         if os.path.isdir(path_amd):
             self.data['architecture'] = 'amd'
             path = path_amd
@@ -82,6 +83,7 @@ class Build:
             path = path_ubuntu
         else:
             path = self.work_iso
+
         initrd = os.path.join(path, 'initrd.gz')
         utils.initrd_extract(self.work_initrd, initrd)
         utils.initrd_create(self.work_initrd, initrd)
@@ -109,4 +111,5 @@ class Build:
         '"./%s*" -follow -type f) > md5sum.txt' % (self.work_iso, isolinux))
         utils.run('cd "%s" && mkisofs -quiet -o "%s" -r -J -no-emul-boot '
             '-boot-load-size 4 -boot-info-table -b %sisolinux.bin -c '
-            '%sboot.cat iso' % (self.work_path, self.iso_dst, isolinux, isolinux))
+            '%sboot.cat iso' % (self.work_path, self.iso_dst, isolinux,
+            isolinux))

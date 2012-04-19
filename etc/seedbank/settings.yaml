@@ -10,7 +10,7 @@
 # bottle_listen      -> the IP address the seedBank daemon should listen to, if you
 #                       leave it empty the seedBank daemon will listen to all interfaces
 # bottle_port        -> the port the seedBank daemon will listen to
-# bottle_server      -> the WSGIref server to use with Bottle, for more information see the
+# bottle_server      -> WSGIref server to use with Bottle, for more information see the
 #                       Bottle homepage: http://bottlepy.org/
 # configuration_path -> path with the seedBank settings files
 #
