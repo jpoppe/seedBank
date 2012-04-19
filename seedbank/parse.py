@@ -186,8 +186,8 @@ class ParseArguments:
 
         if not os.path.isfile(iso_file):
             raise self.exception('"%s" is a valid release, but the installer '
-                'ISO is not available (run "seedbank manage -i %s" for '
-                'downloading the ISO)' % (args.release, args.release))
+                'ISO is not available (run "seedbank manage -i %s" to download '
+                'the ISO)' % (args.release, args.release))
 
         iso_dst = os.path.abspath(args.output)
         if os.path.isfile(iso_dst):

@@ -11,7 +11,7 @@
 urls:
   debian: 'http://ftp.debian.org'
   debian_firmware: 'http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/${release}/current/firmware.tar.gz'
-  debian_iso: 'http://cdimage.debian.org/debian-cd/current/${architecture}/iso-cd/debian-${version}-${architecture}-businesscard.iso'
+  debian_iso: 'http://cdimage.debian.org/debian-cd'
   ubuntu: 'http://archive.ubuntu.com'
-  ubuntu_iso: 'http://mirrors.kernel.org/ubuntu-releases/${release}/ubuntu-${release}-${version}-${architecture}.iso'
+  ubuntu_iso: 'http://releases.ubuntu.com'
   syslinux: 'http://www.kernel.org/pub/linux/utils/boot/syslinux/4.xx/syslinux-4.05.tar.gz'

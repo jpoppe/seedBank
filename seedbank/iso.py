@@ -53,9 +53,13 @@ class Build:
     def add_templates(self, distribution):
         """process and add the rc.local and isolinux templates"""
         path = self.cfg['paths']['templates']
-        template = distribution + '_isolinux'
-        src = os.path.join(path, self.cfg['templates'][template])
         dst = os.path.join(self.work_iso, 'isolinux/isolinux.cfg')
+        if not os.path.isfile(dst):
+            template = distribution + '_mini_isolinux'
+            dst = os.path.join(self.work_iso, 'isolinux.cfg')
+        else:
+            template = distribution + '_isolinux'
+        src = os.path.join(path, self.cfg['templates'][template])
         utils.write_template(self.data, src, dst)
         src = os.path.join(path, self.cfg['templates']['rc_local'])
         dst = os.path.join(self.work_iso, 'seedbank/etc/rc.local')
@@ -76,6 +80,8 @@ class Build:
             path = path_i386
         elif os.path.isdir(path_ubuntu):
             path = path_ubuntu
+        else:
+            path = self.work_iso
         initrd = os.path.join(path, 'initrd.gz')
         utils.initrd_extract(self.work_initrd, initrd)
         utils.initrd_create(self.work_initrd, initrd)
@@ -93,8 +99,14 @@ class Build:
 
     def create(self):
         """generate the MD5 hashes and build the ISO"""
+        path = os.path.join(self.work_iso, 'isolinux')
+        if os.path.isdir(path):
+            isolinux = 'isolinux/'
+        else:
+            isolinux = ''
+
         utils.run('cd "%s" && md5sum $(find . \! -name "md5sum.txt" \! -path '
-        '"./isolinux/*" -follow -type f) > md5sum.txt' % self.work_iso)
+        '"./%s*" -follow -type f) > md5sum.txt' % (self.work_iso, isolinux))
         utils.run('cd "%s" && mkisofs -quiet -o "%s" -r -J -no-emul-boot '
-            '-boot-load-size 4 -boot-info-table -b isolinux/isolinux.bin -c '
-            'isolinux/boot.cat iso' % (self.work_path, self.iso_dst))
+            '-boot-load-size 4 -boot-info-table -b %sisolinux.bin -c '
+            '%sboot.cat iso' % (self.work_path, self.iso_dst, isolinux, isolinux))

@@ -121,6 +121,12 @@ class Manage:
         self._disable_usb(temp_initrd)
         utils.initrd_create(temp_initrd, initrd)
 
+    def _list_isos(self, url):
+        """return a list with available isos on given url"""
+        result = utils.read_url_links(url)
+        result = [link for link in result if link.endswith('.iso')]
+        return result
+
     def syslinux(self):
         """download syslinux and extract required files"""
         dst = os.path.join(self.cfg['paths']['archives'], 'syslinux')
@@ -133,26 +139,60 @@ class Manage:
             self.cfg['paths']['tftpboot'])
         self._pxe_default()
 
+    def iso_debian(self, name):
+        """download a Debian ISO"""
+        distribution, release, architecture, flavour = name.split('-')
+        if release == self.cfg['distributions']['debian_iso_current']:
+            release = 'current'
+        url = self.cfg['urls'][distribution + '_iso']
+        url = os.path.join(url, release, architecture, 'iso-cd')
+        isos = self._list_isos(url)
+        iso_split = isos[0].split('-')
+        version = iso_split[1]
+        iso_file = '-'.join(('debian', version, architecture, flavour)) + '.iso'
+        url = os.path.join(url, iso_file)
+        return url
+
+    def iso_ubuntu(self, name):
+        """download an Ubuntu ISO, the mini ISO comes from a different source
+        then the others, it will also detect and choose the current beta or
+        alpha release when there is no stable release"""
+        distribution, release, architecture, flavour = name.split('-')
+        if flavour == 'mini':
+            url = self.cfg['urls'][distribution]
+            url = os.path.join(url, 'ubuntu/dists', release, 'main/installer-' +
+                architecture, 'current/images/netboot/mini.iso')
+        else:
+            url = self.cfg['urls'][distribution + '_iso']
+            url = os.path.join(url, release)
+            isos = self._list_isos(url)
+            iso_split = isos[0].split('-')
+            version = iso_split[1]
+            if len(iso_split) == 4:
+                iso_file = '-'.join((distribution, version, flavour,
+                    architecture))
+            elif len(iso_split) == 5:
+                state = iso_split[2]
+                iso_file = '-'.join((distribution, version, state, flavour,
+                    architecture))
+                logging.warning('no stable release found for "%s"', name)
+            iso_file = iso_file + '.iso'
+            url = os.path.join(url, iso_file)
+        return url
+     
     def iso(self, name):
         """download ISOs"""
-        distribution, release, architecture, version = name.split('-')
-        if distribution == 'ubuntu':
-            release = self.cfg['distributions']['ubuntu_versions'][release]
-        values = {
-            'distribution': distribution,
-            'release': release,
-            'architecture': architecture,
-            'version': version
-        }
-
-        url = self.cfg['urls'][distribution + '_iso']
-        url = utils.apply_template(url, values, 'iso url')
         dst = os.path.join(self.cfg['paths']['isos'], name + '.iso')
         if os.path.isfile(dst):
             logging.info('nothing to do, "%s" already exists', dst)
-        else:
-            utils.make_dirs(self.cfg['paths']['isos'])
-            utils.download(url, dst)
+            return
+        distribution = name.split('-', 1)[0]
+        if distribution == 'ubuntu':
+            url = self.iso_ubuntu(name)
+        elif distribution == 'debian':
+            url = self.iso_debian(name)
+        utils.make_dirs(self.cfg['paths']['isos'])
+        utils.download(url, dst)
 
     def netboot(self, name):
         """download, extract and patch netboot images"""

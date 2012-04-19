@@ -374,6 +374,16 @@ def read_url(url):
     else:
         return result
 
+def read_url_links(url):
+    """return the hyper link targets from a web page"""
+    data = read_url(url)
+    html = lxml.html.fromstring(''.join(data))
+    result = []
+    for links in html.cssselect('a'):
+        target = links.get('href')
+        result.append(target)
+    return result
+
 def _reporthook(count, block_size, total_size):
     """download hook for showing progress"""
     mb = float(total_size) / 1024 / 1024
@@ -386,8 +396,10 @@ def download(url, dst, report_hook=False):
     logging.info('downloading "%s" to "%s"', url, dst)
     try:
         (filename, headers) = urllib.urlretrieve(url, dst, report_hook)
+    except (IOError, OSError) as err:
+        raise FatalException('failed to download "%s" (%s)' % (url, err), err)
     except Exception as err:
-        raise FatalException('failed to download "%s"' % url, err)
+        raise FatalException('failed to download "%s" (err)' % (url, err), err)
     else:
         logging.info('finished downloading "%s"', url)
 
