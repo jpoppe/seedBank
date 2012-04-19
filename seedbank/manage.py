@@ -142,15 +142,21 @@ class Manage:
     def iso_debian(self, name):
         """download a Debian ISO"""
         distribution, release, architecture, flavour = name.split('-')
-        if release == self.cfg['distributions']['debian_iso_current']:
-            release = 'current'
-        url = self.cfg['urls'][distribution + '_iso']
-        url = os.path.join(url, release, architecture, 'iso-cd')
-        isos = self._list_isos(url)
-        iso_split = isos[0].split('-')
-        version = iso_split[1]
-        iso_file = '-'.join(('debian', version, architecture, flavour)) + '.iso'
-        url = os.path.join(url, iso_file)
+        if flavour == 'mini':
+            url = self.cfg['urls'][distribution]
+            url = os.path.join(url, 'debian/dists', release, 'main/installer-' +
+                architecture, 'current/images/netboot/mini.iso')
+        else:
+            if release == self.cfg['distributions']['debian_iso_current']:
+                release = 'current'
+            url = self.cfg['urls'][distribution + '_iso']
+            url = os.path.join(url, release, architecture, 'iso-cd')
+            isos = self._list_isos(url)
+            iso_split = isos[0].split('-')
+            version = iso_split[1]
+            iso_file = '-'.join(('debian', version, architecture, flavour))
+            iso_file = iso_file + '.iso'
+            url = os.path.join(url, iso_file)
         return url
 
     def iso_ubuntu(self, name):

@@ -49,7 +49,7 @@ distributions:
   netboots: [debian-squeeze, ubuntu-oneiric, ubuntu-precise]
   isos: [debian-squeeze, ubuntu-oneiric, ubuntu-precise]
   debian_iso_current: squeeze
-  debian_iso_flavours: [businesscard, netinst]
+  debian_iso_flavours: [mini, businesscard, netinst]
   ubuntu_iso_flavours: [mini, alternate, desktop, server]
 
 # template files which are in the templates path
@@ -78,6 +78,7 @@ templates:
   pxe_debian: pxe_debian
   pxe_ubuntu: pxe_ubuntu
   debian_isolinux: debian_isolinux.cfg
+  debian_mini_isolinux: debian_mini_isolinux.cfg
   ubuntu_isolinux: ubuntu_isolinux.cfg
   ubuntu_mini_isolinux: ubuntu_mini_isolinux.cfg
   rc_local: rc.local
