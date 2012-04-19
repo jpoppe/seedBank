@@ -42,14 +42,14 @@ d-i mirror/http/hostname string ${ubuntu_mirror_host_name}
 d-i mirror/http/directory string ${ubuntu_mirror_directory}
 d-i mirror/http/proxy string ${apt_proxy}
 
-### - Skip automatic updates configuration
-pkgsel pkgsel/update-policy select none
+### - Automatic updates configuration
+pkgsel pkgsel/update-policy select ${ubuntu_update_policy}
 
 ### - Suite to install.
 d-i mirror/suite string oneiric
 
 ### - Date and Time
-d-i clock-setup/utc boolean true
+d-i clock-setup/utc boolean ${clock_utc}
 d-i time/zone string ${timezone}
 d-i clock-setup/ntp boolean true
 d-i clock-setup/ntp-server ${ntp_server}
@@ -100,6 +100,7 @@ d-i debian-installer/add-kernel-opts string ${add_kernel_opts}
 
 ### - Finish
 d-i finish-install/reboot_in_progress note
+d-i debian-installer/exit/poweroff boolean ${power_off}
 d-i cdrom-detect/eject boolean true
 
 ### - Custom commands
