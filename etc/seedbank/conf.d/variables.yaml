@@ -38,12 +38,12 @@ seed:
   ubuntu_mirror_host_name: nl.archive.ubuntu.com
   ubuntu_task_sel: standard
   ubuntu_packages: openssh-server puppet debconf-utils lsb-release rsync vim less
+  ubuntu_kernel_override: linux-generic
+  ubuntu_kernel_headers: 'true'
   user: seedbank
   user_full_name: seedBank User
   user_name: seedbank
   user_password: seed123
-  kernel_override: linux-generic
-  kernel_headers: 'true'
   update_db: 'true'
   utc: 'true'
   update_policy: 'none'

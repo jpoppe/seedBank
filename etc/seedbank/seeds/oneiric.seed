@@ -18,8 +18,9 @@
 #
 ###############################################################################
 
-### - Settings will loaded by kernel parameters when a netboot installation
-# is used
+### - Those settings will be ignored when doing a netboot installation
+#     and should be provided by kernel parameters (pxe variables and templates
+#     are used for this)
 d-i netcfg/get_hostname string ${host_name}
 d-i debian-installer/locale string en_US
 d-i keyboard-configuration/layout select USA
@@ -66,6 +67,10 @@ d-i partman/confirm_nooverwrite boolean true
 d-i partman-lvm/device_remove_lvm boolean true
 d-i partman-lvm/confirm_nooverwrite boolean true
 d-i partman-lvm/device_remove_lvm_span boolean true
+
+### - Kernel
+d-i base-installer/kernel/override-image string ${ubuntu_kernel_override}
+d-i base-installer/kernel/headers boolean ${ubuntu_kernel_headers}
 
 ### - Accounts
 d-i user-setup/allow-password-weak boolean true
