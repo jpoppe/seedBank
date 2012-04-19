@@ -28,6 +28,7 @@ d-i keyboard-configuration/layoutcode string us
 
 ### - Localization, Keyboard
 d-i keyboard-configuration/modelcode string pc105
+d-i pkgsel/install-language-support boolean false
 
 ### - Network
 d-i netcfg/choose_interface select auto
