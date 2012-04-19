@@ -150,7 +150,7 @@ def _shell_escape(cmd):
         cmd = cmd.replace(char, '\%s' % char)
     return cmd
 
-def run(cmd, user=None, host=None):
+def run(cmd, error=None, user=None, host=None):
     """run a command locally or remote via SSH"""
     if host != 'localhost' and user and host:
         logging.info('%s@%s - running "%s"', user, host, cmd)
@@ -170,7 +170,8 @@ def run(cmd, user=None, host=None):
             logging.info(stdout.strip())
         if stderr:
             logging.error(stderr.strip())
-        raise FatalException()
+        if not error:
+            raise FatalException()
     else:
         return stdout
 
@@ -411,12 +412,13 @@ def recursive(path, define, arg):
 
 def initrd_extract(path, initrd):
     """extract an initrd image"""
+    print(initrd)
     if sys.platform == 'darwin':
         cpio = 'gnucpio'
     else:
         cpio = 'cpio'
     run('cd "%s" && gzip -d < "%s" | %s --extract --make-directories ' 
-        '--no-absolute-filenames' % (path, initrd, cpio))
+        '--no-absolute-filenames' % (path, initrd, cpio), error=True)
 
 def initrd_create(path, initrd):
     """create an initrd image"""
