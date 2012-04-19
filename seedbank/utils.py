@@ -396,11 +396,16 @@ def download(url, dst, report_hook=False):
     """download a file"""
     logging.info('downloading "%s" to "%s"', url, dst)
     try:
+        urllib2.urlopen(url)
+    except urllib2.HTTPError as err:
+        raise FatalException('%s, failed to download "%s"' % (err, url))
+
+    try:
         (filename, headers) = urllib.urlretrieve(url, dst, report_hook)
     except (IOError, OSError) as err:
-        raise FatalException('failed to download "%s" (%s)' % (url, err), err)
+        raise FatalException('%s, failed to download "%s"' % (err, url))
     except Exception as err:
-        raise FatalException('failed to download "%s" (err)' % (url, err), err)
+        raise FatalException('%s, failed to download "%s"' % (err, url), err)
     else:
         logging.info('finished downloading "%s"', url)
 
