@@ -42,6 +42,12 @@ seed:
   user_full_name: seedBank User
   user_name: seedbank
   user_password: seed123
+  kernel_override: linux-generic
+  kernel_headers: 'true'
+  update_db: 'true'
+  utc: 'true'
+  update_policy: 'none'
+  power_off: ''
 
 # pxe template variables, feel free to add or modify the values, those
 # variables are used in the Debian and Ubuntu pxe template files (default:
