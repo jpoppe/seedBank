@@ -23,6 +23,7 @@
 commands:
   iso_overlay: ['cd /target', 'tar -xf ../cdrom/overlay.tar', 'sh /target/fix_perms.sh', 'rm /target/fix_perms.sh']
   iso_late_command: [
+    'test -d /cdrom || mkdir /cdrom && mount -t iso9660 /dev/cdrom /cdrom',
     'mv /target/etc/rc.local /target/etc/rc.local.seedbank',
     'cp /cdrom/seedbank/etc/rc.local /target/etc',
     'cp -r /cdrom/seedbank/etc/runonce.d /target/etc',
