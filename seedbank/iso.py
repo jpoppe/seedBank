@@ -22,6 +22,7 @@ __email__ = 'jgpoppe@gmail.com'
 __status__ = 'production'
 
 import os
+import sys
 
 import utils
 
@@ -107,8 +108,14 @@ class Build:
         else:
             isolinux = ''
 
-        utils.run('cd "%s" && md5sum $(find . \! -name "md5sum.txt" \! -path '
-        '"./%s*" -follow -type f) > md5sum.txt' % (self.work_iso, isolinux))
+        if sys.platform == 'darwin':
+            md5 = 'md5 -r'
+        else:
+            md5 = 'md5sums'
+
+        utils.run('cd "%s" && %s $(find . \! -name "md5sum.txt" \! -path '
+            '"./%s*" -follow -type f) > md5sum.txt' % (self.work_iso, md5,
+            isolinux))
         utils.run('cd "%s" && mkisofs -quiet -o "%s" -r -J -no-emul-boot '
             '-boot-load-size 4 -boot-info-table -b %sisolinux.bin -c '
             '%sboot.cat iso' % (self.work_path, self.iso_dst, isolinux,
