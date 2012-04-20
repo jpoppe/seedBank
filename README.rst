@@ -58,6 +58,7 @@ Features
 - clean and as simple as possible
 - PXE netboot installation management
 - no need for NFS mounts
+- seedBank runs on Mac OS X (Only ISO support has been tested on Lion)
 - stores data which is needed by the installer in the pxelinux.cfg files, so no database backend!
 - many configuration possibilities
 - support for the latest Debian and Ubuntu versions out of the box
