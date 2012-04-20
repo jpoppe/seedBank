@@ -100,8 +100,9 @@ Resources
 Contributors
 ============
 
-- Martin Seener (martin[at]seener[dot]de)
+- Martin Seener <martin[at]seener[dot]de>
 - Marcel Klapwijk
+- Glenn Aaldering
 
 Thanks to
 =========
