@@ -51,9 +51,13 @@ import utils
 
 
 cfg = settings.parse_cfg()
-logging.config.fileConfig(cfg['logging']['configuration'])
-logger = logging.getLogger(cfg['logging']['logger'])
-
+try:
+    logging.config.fileConfig(cfg['logging']['configuration'])
+except IOError as err:
+    sys.stderr.write(str(err) + ', do you have the right permissions?\n')
+    sys.exit(1)
+else:
+    logger = logging.getLogger(cfg['logging']['logger'])
 
 def argument_parser():
     """process the arguments"""
