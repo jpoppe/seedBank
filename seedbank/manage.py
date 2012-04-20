@@ -121,12 +121,6 @@ class Manage:
         self._disable_usb(temp_initrd)
         utils.initrd_create(temp_initrd, initrd)
 
-    def _list_isos(self, url):
-        """return a list with available isos on given url"""
-        result = utils.read_url_links(url)
-        result = [link for link in result if link.endswith('.iso')]
-        return result
-
     def syslinux(self):
         """download syslinux and extract required files"""
         dst = os.path.join(self.cfg['paths']['archives'], 'syslinux')
@@ -151,7 +145,8 @@ class Manage:
                 release = 'current'
             url = self.cfg['urls'][distribution + '_iso']
             url = os.path.join(url, release, architecture, 'iso-cd')
-            isos = self._list_isos(url)
+            data = utils.scrape_tag(url, 'a')
+            isos = [link for link in data if link.endswith('.iso')]
             iso_split = isos[0].split('-')
             version = iso_split[1]
             iso_file = '-'.join(('debian', version, architecture, flavour))
@@ -171,7 +166,8 @@ class Manage:
         else:
             url = self.cfg['urls'][distribution + '_iso']
             url = os.path.join(url, release)
-            isos = self._list_isos(url)
+            data = utils.scrape_tag(url, 'a')
+            isos = [link for link in data if link.endswith('.iso')]
             iso_split = isos[0].split('-')
             version = iso_split[1]
             if len(iso_split) == 4:

@@ -30,7 +30,6 @@ import cStringIO
 import datetime
 import json
 import logging
-import lxml.html
 import os
 import pprint
 import shutil
@@ -42,6 +41,8 @@ import tarfile
 import urllib
 import urllib2
 import yaml
+
+from HTMLParser import HTMLParser
 
 
 class FatalException(Exception):
@@ -83,6 +84,31 @@ class APIException(Exception):
         return repr(self.msg)
 
 
+class HTMLParseTag(HTMLParser):
+    """get the contents of all entries of the given HTML tag"""
+
+    def __init__(self, tag):
+        HTMLParser.__init__(self)
+        self.data = []
+        self.tag = tag
+
+    def handle_starttag(self, tag, attrs):
+        if tag == self.tag:
+            for _, value in attrs:
+                self.data.append(value)
+
+
+def scrape_tag(url, tag):
+    """return a list with all data from given HTML tag"""
+    data = urllib2.urlopen(url)
+    html = data.read()
+    parse = HTMLParseTag('a')
+    parse.feed(html)
+    result = parse.data
+    parse.close()
+    return result
+
+
 def json_client(url, data):
     """send a python dictionary as json to a rest api"""
     request = urllib2.Request(url, data=json.dumps(data),
@@ -93,9 +119,10 @@ def json_client(url, data):
             logging.info(response)
     except urllib2.HTTPError as err:
         contents = err.read()
-        tree = lxml.html.fromstring(contents)
-        for element in tree.xpath('.//pre'):
-            err = element.text
+        parse = HTMLParseTag('pre')
+        parse.feed(contents)
+        err = parse.data
+        parse.close()
         raise FatalException(err)
     except urllib2.URLError as err:
         raise FatalException('failed to connect to "%s"' % url, err)
@@ -374,16 +401,6 @@ def read_url(url):
         raise FatalException('failed to read "%s"' % url, err)
     else:
         return result
-
-def read_url_links(url):
-    """return the hyper link targets from a web page"""
-    data = read_url(url)
-    html = lxml.html.fromstring(''.join(data))
-    result = []
-    for links in html.cssselect('a'):
-        target = links.get('href')
-        result.append(target)
-    return result
 
 def _reporthook(count, block_size, total_size):
     """download hook for showing progress"""
