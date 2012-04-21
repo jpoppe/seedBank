@@ -111,7 +111,7 @@ class Build:
         if sys.platform == 'darwin':
             md5 = 'md5 -r'
         else:
-            md5 = 'md5sums'
+            md5 = 'md5sum'
 
         utils.run('cd "%s" && %s $(find . \! -name "md5sum.txt" \! -path '
             '"./%s*" -follow -type f) > md5sum.txt' % (self.work_iso, md5,
