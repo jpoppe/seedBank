@@ -65,8 +65,9 @@ def argument_parser():
 
     parser = argparse.ArgumentParser(description='seedBank - Debian/Ubuntu '
         'netboot installations the way it is meant to be... (c) 2009-2012 '
-        'Jasper Poppe <jgpoppe@gmail.com>', epilog='for more information visit: '
-        'http://www.infrastructureanywhere.com', fromfile_prefix_chars='@')
+        'Jasper Poppe <jgpoppe@gmail.com>', epilog='for more information '
+        'visit: http://www.infrastructureanywhere.com',
+        fromfile_prefix_chars='@')
     parser.add_argument('--version', action='version', version=__version__)
     subparsers = parser.add_subparsers(help='commands')
 
