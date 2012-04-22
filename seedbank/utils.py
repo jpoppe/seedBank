@@ -32,6 +32,7 @@ import json
 import logging
 import os
 import pprint
+import re
 import shutil
 import socket
 import string
@@ -97,7 +98,6 @@ class HTMLParseTag(HTMLParser):
             for _, value in attrs:
                 self.data.append(value)
 
-
 def scrape_tag(url, tag):
     """return a list with all data from given HTML tag"""
     data = urllib2.urlopen(url)
@@ -108,7 +108,6 @@ def scrape_tag(url, tag):
     parse.close()
     return result
 
-
 def json_client(url, data):
     """send a python dictionary as json to a rest api"""
     request = urllib2.Request(url, data=json.dumps(data),
@@ -118,12 +117,16 @@ def json_client(url, data):
         if response:
             logging.info(response)
     except urllib2.HTTPError as err:
-        contents = err.read()
-        parse = HTMLParseTag('pre')
-        parse.feed(contents)
-        err = parse.data
-        parse.close()
-        raise FatalException(err)
+        html = err.read()
+        msg = str(err)
+        regex = re.compile(r'.*<pre>(.*?)</pre>', re.S|re.M)
+        match = regex.match(html)
+        if match:
+            text = match.groups()[0].strip()
+            htmlparser = HTMLParser()
+            text = htmlparser.unescape(text)
+            msg += ': ' + text.strip('\'')
+        raise FatalException(msg)
     except urllib2.URLError as err:
         raise FatalException('failed to connect to "%s"' % url, err)
 
