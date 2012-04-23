@@ -5,13 +5,14 @@
 # really exotic configurations, if you want to add 'early' ot 'late'
 # commands, you should add those commands to the variables.yaml file
 # 
-# iso_overlay          -> extact the overlay tar archive at the end of an installation and fix the permissions
+# iso_overlay          -> extact the overlay tar archive at the end of the installation and fix the permissions
+# iso_early_command    -> this command(s) will be executed at the beginning of the installation
 # iso_late_command     -> move the default rc.local to rc.local.seedbank, replace it with an rc.local
 #                         which is a template and supports the '/etc/runonce.d directory see the 
 #                         rc_local template for the behaviour
-# pxe_overlay          -> the command which will be used at the end of an installation for downloading
+# pxe_overlay          -> the command(s) will be used at the end of an installation for downloading
 #                         and extracting the overlay archive
-# pxe_early_command    -> this command will be executed at the beginning of an installation
+# pxe_early_command    -> this command will be executed at the beginning of the installation
 #                         used for logging
 # pxe_late_command     -> see the description of the 'iso_late_command', additionaly it will
 #                         do a disable call to the seedBank daemon so it will disable the
@@ -22,6 +23,7 @@
 #                         boot of an installed machine
 commands:
   iso_overlay: ['cd /target', 'tar -xf ../cdrom/overlay.tar', 'sh /target/fix_perms.sh', 'rm /target/fix_perms.sh']
+  iso_early_command: []
   iso_late_command: [
     'mv /target/etc/rc.local /target/etc/rc.local.seedbank',
     'cp /cdrom/seedbank/etc/rc.local /target/etc',
@@ -29,6 +31,7 @@ commands:
     'cp -r /cdrom/manifests /target/seedbank',
     'chmod 0755 /target/etc/rc.local',
   ]
+  iso_mount_command: ['test -d /cdrom || mkdir /cdrom && mount -t iso9660 /dev/cdrom /cdrom']
   pxe_overlay: ['cd /target', 'wget http://${seed_host}:${seed_port}/overlay.tgz/${address} -O - | tar zxvf -']
   pxe_early_command: ['wget -q -O - http://${seed_host}:${seed_port}/install/${address}']
   pxe_late_command: [

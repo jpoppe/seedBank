@@ -9,7 +9,9 @@ seedBank Introduction:
     :maxdepth: 3
 
     quickstart
+    macosx
     troubleshooting
+    resources
 
 seedBank Core Documentation:
 

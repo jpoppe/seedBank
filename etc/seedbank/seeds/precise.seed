@@ -18,8 +18,9 @@
 #
 ###############################################################################
 
-### - Settings will loaded by kernel parameters when a netboot installation
-# is used
+### - Those settings will be ignored when doing a netboot installation
+#     and should be provided by kernel parameters (pxe variables and templates
+#     are used for this)
 d-i netcfg/get_hostname string ${host_name}
 d-i debian-installer/locale string en_US
 d-i keyboard-configuration/layout select USA
@@ -28,8 +29,8 @@ d-i keyboard-configuration/layoutcode string us
 
 ### - Localization, Keyboard
 d-i keyboard-configuration/modelcode string pc105
+d-i pkgsel/install-language-support boolean false
 
-### - Network
 d-i netcfg/choose_interface select auto
 d-i netcfg/wireless_wep string
 d-i netcfg/get_domain string ${dns_domain}
@@ -40,14 +41,14 @@ d-i mirror/http/hostname string ${ubuntu_mirror_host_name}
 d-i mirror/http/directory string ${ubuntu_mirror_directory}
 d-i mirror/http/proxy string ${apt_proxy}
 
-### - Skip automatic updates configuration
-pkgsel pkgsel/update-policy select none
+### - Automatic updates configuration
+pkgsel pkgsel/update-policy select ${ubuntu_update_policy}
 
 ### - Suite to install.
 d-i mirror/suite string precise
 
 ### - Date and Time
-d-i clock-setup/utc boolean true
+d-i clock-setup/utc boolean ${clock_utc}
 d-i time/zone string ${timezone}
 d-i clock-setup/ntp boolean true
 d-i clock-setup/ntp-server ${ntp_server}
@@ -65,6 +66,10 @@ d-i partman/confirm_nooverwrite boolean true
 d-i partman-lvm/device_remove_lvm boolean true
 d-i partman-lvm/confirm_nooverwrite boolean true
 d-i partman-lvm/device_remove_lvm_span boolean true
+
+### - Kernel
+d-i base-installer/kernel/override-image string ${ubuntu_kernel_override}
+d-i base-installer/kernel/headers boolean ${ubuntu_kernel_headers}
 
 ### - Accounts
 d-i user-setup/allow-password-weak boolean true
@@ -94,6 +99,7 @@ d-i debian-installer/add-kernel-opts string ${add_kernel_opts}
 
 ### - Finish
 d-i finish-install/reboot_in_progress note
+d-i debian-installer/exit/poweroff boolean ${power_off}
 d-i cdrom-detect/eject boolean true
 
 ### - Custom commands

@@ -16,11 +16,19 @@
 #                    disabling hosts after as successful installation.
 ### END INIT INFO
 
-NAME=seedbank_daemon
+NAME=seedbank
 PIDFILE=/var/run/${NAME}.pid
 DAEMON=/usr/bin/seedbank
-DAEMON_OPTS="daemon -s"
+DAEMON_OPTS="daemon --start"
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
+START_SEEDBANK=false
+
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+if [ $START_SEEDBANK != "true" ]; then
+	echo "the seedBank daemon service is disabled, enable START_SEEDBANK in /etc/default/$NAME"
+	exit 1
+fi
 
 check_process () {
 	if [ -f $PIDFILE ]; then 

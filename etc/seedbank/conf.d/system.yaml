@@ -37,16 +37,20 @@ logging:
 #                        be downloaded
 # netboots            -> the netboot images which should show up in the various
 #                        seedBank commands
-# isos                -> isos which should show up in the iso related commands
-#
-# ubuntu_iso_versions -> map codenames to version numbers, used for downloading installer ISOs
+# isos                -> isos which should show up in the iso related commands, debian-squeeze
+#                        points to the latest Debian stable release, squeeze could be replaced
+#                        by a version number for example: debian-6.0.4
+# debian_iso_current  -> the current Debian stable release
+# debian_iso_flavours -> map codenames to version numbers, used for downloading installer ISOs
+# ubuntu_iso_flavours -> map codenames to version numbers, used for downloading installer ISOs
 distributions:
   architectures: [amd64, i386]
   firmwares: [debian-squeeze]
   netboots: [debian-squeeze, ubuntu-oneiric, ubuntu-precise]
-  isos: [debian-squeeze-6.0.4, ubuntu-oneiric-alternate]
-  ubuntu_iso_versions:
-    oneiric: '11.10'
+  isos: [debian-squeeze, ubuntu-oneiric, ubuntu-precise]
+  debian_iso_current: squeeze
+  debian_iso_flavours: [mini, businesscard, netinst]
+  ubuntu_iso_flavours: [mini, alternate, desktop, server]
 
 # template files which are in the templates path
 # (default: /etc/seedbank/templates)
@@ -74,6 +78,8 @@ templates:
   pxe_debian: pxe_debian
   pxe_ubuntu: pxe_ubuntu
   debian_isolinux: debian_isolinux.cfg
+  debian_mini_isolinux: debian_mini_isolinux.cfg
   ubuntu_isolinux: ubuntu_isolinux.cfg
+  ubuntu_mini_isolinux: ubuntu_mini_isolinux.cfg
   rc_local: rc.local
   permission_script: permission_script
