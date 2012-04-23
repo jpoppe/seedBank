@@ -11,6 +11,7 @@ seedBank Introduction:
     quickstart
     macosx
     troubleshooting
+    resources
 
 seedBank Core Documentation:
 
