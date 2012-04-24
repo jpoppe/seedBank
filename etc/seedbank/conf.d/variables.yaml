@@ -21,6 +21,9 @@
 # NOTE: the early_command and late_command variables are mandatory and used
 # by seedBank internally, feel free to add custom commands, seedBank will
 # break if those variables are removed
+#
+# puppetlabs_repository -> adds the puppetlabs repository so latest puppet agent gets installed
+#                          mirror_allow_unauthenticated needs to be 'true' to work without key
 seed:
   early_command: []
   late_command: []
@@ -34,6 +37,7 @@ seed:
   ntp_server: ntp.xs4all.nl
   repository_0: 'deb http://192.168.122.1/debian/sn squeeze main'
   repository_0_key: 'http://192.168.122.1/debian/repository.key'
+  puppetlabs_repository: 'deb http://apt.puppetlabs.com squeeze main'
   timezone: Europe/Amsterdam
   ubuntu_mirror_directory: /ubuntu
   ubuntu_mirror_host_name: nl.archive.ubuntu.com
