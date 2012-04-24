@@ -64,3 +64,4 @@ pxe:
   locale: en_US
   template: pxehost
   theme: dark
+  puppet_master: 'puppet'
