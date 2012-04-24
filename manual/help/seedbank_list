@@ -2,11 +2,11 @@ usage: seedbank list [-h] [-a] [-n] [-i] [-s] [-c] [-o] [-p] [-P]
 
 optional arguments:
   -h, --help      show this help message and exit
-  -a, --all       List all resources
+  -a, --all       list all resources
   -n, --netboots  list releases which are available for netboot
                   installations, names starting with an asterisk are
                   ready to use
-                  netboot images are managed by the "seedbank manage"
+                  netboot images are managed by the "seedbank manage -n"
                   command
   -i, --isos      list ISOs which are used for building (unattended)
                   installation ISOs ISO names starting with an asterisk

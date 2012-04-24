@@ -76,11 +76,11 @@ def argument_parser():
         'manifests, configuration overrides, file overlays, pxelinux.cfg files'
         ', netboot images and ISOs', formatter_class=RawTextHelpFormatter)
     parser_list.add_argument('-a', '--all', action='store_true',
-        help='List all resources')
+        help='list all resources')
     parser_list.add_argument('-n', '--netboots', action='store_true',
         help='list releases which are available for netboot\ninstallations'
         ', names starting with an asterisk are\nready to use\nnetboot images '
-        'are managed by the "seedbank manage"\ncommand')
+        'are managed by the "seedbank manage -n"\ncommand')
     parser_list.add_argument('-i', '--isos', action='store_true',
         help='list ISOs which are used for building (unattended)\ninstallation '
         'ISOs ISO names starting with an asterisk\nare ready to use\nISOs '

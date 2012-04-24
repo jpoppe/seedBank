@@ -1,10 +1,10 @@
-============
-Introduction
-============
+=====================
+seedBank Introduction
+=====================
 
 seedBank is a simple and flexible tool to manage unattended Debian and Ubuntu netboot installations. It is based on Debian preseed files, so it will provide the cleanest Debian installations possible by just using the standard Debian tools. Since version 2.0.0 it also has support for modifying installer ISOs so the installer could do unattended installs.
 
-You could see it is a lightweight alternative to FAI_ (Fully Automatic Installation) or Cobbler_, but much simpler and less bloated. seedBank is focused on one task and that is installing systems as easy, quick and clean as possible. Configuration tools like Puppet or Chef should take it over after the install. 
+You could see seedBank as a lightweight alternative to FAI_ (Fully Automatic Installation) or Cobbler_, but much simpler and less bloated. seedBank is focused on one task, which is installing systems as easy, quick and clean as possible. Configuration tools like Puppet or Chef should take it over after the install. 
 
 .. _FAI: http://www.python.org
 .. _Cobbler: http://www.python.org
@@ -18,6 +18,17 @@ Media
 
 * Slides talk @ PuppetConf 2011: http://www.infrastructureanywhere.com/puppetconf2011_small.pdf
 * Talk about seedBank 1.0 and Infrastructure Anyhwerere @ PuppetConf 2011: http://youtu.be/cjPjiHcc5rw
+
+Resources
+=========
+
+* Homepage: http://www.infrastructureanywhere.com
+* Mailing List: https://groups.google.com/group/infrastructureanywhere
+* Changelog: https://github.com/jpoppe/seedBank/blob/master/CHANGES.txt
+* GitHub: http://github.com/jpoppe
+* Freshmeat: http://freshmeat.net/projects/seedbank
+* Documentation: http://www.infrastructureanywhere.com/documentation
+* Twitter: http://twitter.com/infraanywhere
 
 Features
 ========
@@ -42,17 +53,6 @@ Features
 - support for generating unattended installation ISOs
 - written in Python
 - and more..
-
-Resources
-=========
-
-* Homepage: http://www.infrastructureanywhere.com
-* Mailing List: https://groups.google.com/group/infrastructureanywhere
-* Changelog: https://github.com/jpoppe/seedBank/blob/master/CHANGES.txt
-* GitHub: http://github.com/jpoppe
-* Freshmeat: http://freshmeat.net/projects/seedbank
-* Documentation: http://www.infrastructureanywhere.com/documentation
-* Twitter: http://twitter.com/infraanywhere
 
 Requirements
 ============
