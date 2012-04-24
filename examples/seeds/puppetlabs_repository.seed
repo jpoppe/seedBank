@@ -4,6 +4,9 @@
 #
 # This seed file adds and configures the additional puppetlabs repository for
 # latest puppet agent to be installed.
+# APT will automatically install the newest puppet version, if this seed
+# file is added, instead of the old one from debian repository.
+# With this you can work with more features and less bugs!
 # Feel free to customize ;)
 #
 ################################################################################
