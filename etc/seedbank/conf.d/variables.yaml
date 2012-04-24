@@ -50,10 +50,22 @@ seed:
   power_off: 'false'
 
 # pxe template variables, feel free to add or modify the values, those
-# variables are used in the Debian and Ubuntu pxe template files (default:
-# /etc/seedbank/templates/pxe_debian and /etc/seedbank/templates/pxe_ubuntu)
+# variables are used in the file overlays and Debian and Ubuntu pxe template
+# files (default: /etc/seedbank/templates/pxe_debian and
+# /etc/seedbank/templates/pxe_ubuntu)
 #
 # see the pxe template files for more informations
+# 
+# console_charmap -> kernel parameter to set the charmap
+# console_layout -> kernel parameter to set the layout
+# country_chooser -> kernel parameter to select the country
+# debug_level -> kernel parameter to set the debug level of the Debian installer
+# extra -> additional kernel parameters
+# interface -> kernel parameter to set the default network interface
+# locale -> kernel parameter to set the default locale
+# template: pxehost
+# theme -> kernel parameter to set the installer colors
+# puppet_master -> this pxe variable is used in some of the file overlay examples
 pxe:
   console_charmap: UTF-8
   console_layout: us
