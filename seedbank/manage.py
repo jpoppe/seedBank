@@ -65,7 +65,10 @@ class Manage:
         if os.path.isdir(temp):
             utils.rmtree(temp)
         utils.make_dirs(temp)
+        #print(prefix, files, src, dst, name)
+        print target
         utils.untar_files(archive, files, temp)
+        return
         self._move(target)
         utils.rmtree(temp)
 
@@ -200,7 +203,7 @@ class Manage:
         """download, extract and patch netboot images"""
         distribution, release, architecture = name.split('-')
         src = '%s/%s/dists/%s/main/installer-%s/current/images/netboot/'\
-            'netboot.tar.gz' % (self.cfg['urls'][distribution], distribution,
+            'netboot.tar.gz' % (self.cfg[distribution]['url_main'], distribution,
             release, architecture)
         dst = os.path.join(self.cfg['paths']['archives'], name)
         prefix = os.path.join('./%s-installer' % distribution, architecture)
