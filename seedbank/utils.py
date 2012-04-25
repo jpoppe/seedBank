@@ -180,7 +180,7 @@ def _shell_escape(cmd):
         cmd = cmd.replace(char, '\%s' % char)
     return cmd
 
-def run(cmd, error=None, user=None, host=None):
+def run(cmd, user=None, host=None, error=None):
     """run a command locally or remote via SSH"""
     if host != 'localhost' and user and host:
         logging.info('%s@%s - running "%s"', user, host, cmd)
