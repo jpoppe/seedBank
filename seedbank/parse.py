@@ -141,7 +141,7 @@ class ParseArguments:
             if release in config['netboots']:
                 err = '"%s" is not available, run "seedbank manage -n "%s" to '\
                     'download an prepare the release' % args.release
-            raise self.exception(err)
+                raise self.exception(err)
 
         if args.macaddress:
             if len(args.macaddress) == 12:
