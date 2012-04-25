@@ -56,11 +56,11 @@ class Build:
         path = self.cfg['paths']['templates']
         dst = os.path.join(self.work_iso, 'isolinux/isolinux.cfg')
         if not os.path.isfile(dst):
-            template = distribution + '_mini_isolinux'
+            template = 'template_isolinux_mini'
             dst = os.path.join(self.work_iso, 'isolinux.cfg')
         else:
-            template = distribution + '_isolinux'
-        src = os.path.join(path, self.cfg['templates'][template])
+            template = 'template_isolinux'
+        src = os.path.join(path, self.cfg[distribution][template])
         utils.write_template(self.data, src, dst)
         src = os.path.join(path, self.cfg['templates']['rc_local'])
         dst = os.path.join(self.work_iso, 'seedbank/etc/rc.local')

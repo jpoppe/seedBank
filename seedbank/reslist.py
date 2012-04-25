@@ -88,14 +88,14 @@ class ListResources:
         """list local available and configured netboot images"""
         path = os.path.join(self.cfg['paths']['tftpboot'], 'seedbank')
         installed = self._list_dirs(path)
-        configured = self.cfg['distributions']['netboots']
+        configured = self.cfg['netboots']
         images = self._format_available(configured, installed)
         self._add(images, 'netboot images')
 
     def isos(self):
         """list local available and configured isos"""
         installed = self._list_files(self.cfg['paths']['isos'], '.iso')
-        configured = self.cfg['distributions']['isos']
+        configured = self.cfg['isos']
         images = self._format_available(configured, installed)
         self._add(images, 'ISOs')
 

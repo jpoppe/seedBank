@@ -16,6 +16,13 @@ paths:
   templates: /etc/seedbank/templates
   tftpboot: /var/lib/tftpboot
 
+# urls for downloading resources
+#
+# syslinux        -> tar archive of the syslinux release to use (used used by the
+#                    'seedbank manage --syslinux' command
+urls:
+  syslinux: 'http://www.kernel.org/pub/linux/utils/boot/syslinux/4.xx/syslinux-4.05.tar.gz'
+
 # logging configuration file and logger destination
 #
 # configuration -> the logging configuration files
@@ -25,61 +32,22 @@ logging:
   configuration: /etc/seedbank/logging.conf
   logger: default    
 
-# supported netboot images and a list of distributions which do not
-# "non free" firmwares integrated into the netboot images. ISOs should
-# include the version number
-#
-# architectures       -> the supported architectures, this will be applied for
-#                        Debian and Ubuntu
-# firmwares           -> recent Debian releases do not include support for 
-#                        proprietary firmwares, seedBank manage will automatically
-#                        patch the firmware into the netboot image when it will
-#                        be downloaded
-# netboots            -> the netboot images which should show up in the various
-#                        seedBank commands
-# isos                -> isos which should show up in the iso related commands, debian-squeeze
-#                        points to the latest Debian stable release, squeeze could be replaced
-#                        by a version number for example: debian-6.0.4
-# debian_iso_current  -> the current Debian stable release
-# debian_iso_flavours -> map codenames to version numbers, used for downloading installer ISOs
-# ubuntu_iso_flavours -> map codenames to version numbers, used for downloading installer ISOs
-distributions:
-  architectures: [amd64, i386]
-  firmwares: [debian-squeeze]
-  netboots: [debian-squeeze, ubuntu-oneiric, ubuntu-precise]
-  isos: [debian-squeeze, ubuntu-oneiric, ubuntu-precise]
-  debian_iso_current: squeeze
-  debian_iso_flavours: [mini, businesscard, netinst]
-  ubuntu_iso_flavours: [mini, alternate, desktop, server]
-
 # template files which are in the templates path
 # (default: /etc/seedbank/templates)
 #
-# puppet_manifest    -> this tem[late is used for generating scripts in the /etc/runonce.d directort which
-#                       will apply the Puppet manifests when they are selected
-# pxe_default        -> the default file in the pxelinux.cfg directory, this file describes the actions
-#                       which should be done when no machine specific pxelinux.cfg file is found
-# pxe_debian         -> this template will be used for generating a node pxelinux.cfg file when a Debian
-#                       machine will be enabled for installation by the 'seedbank pxe command'
-# pxe_ubuntu         -> this template will be used for generating a node pxelinux.cfg file when an Ubuntu
-#                       machine will be enabled for installation by the 'seedbank pxe command'
-# debian_isolinux    -> this template will replace the default isolinux.cfg file on a Debian installation ISO
-# ubuntu_isolinux    -> this template will replace the default isolinux.cfg file on an Ubuntu installation ISO
-# rc_local           -> this template constructs a temporary initrd file which will run once and run
-#                       by default the scripts in the /etc/runonce.d directory, and after it is done it
-#                       will run the 'orginal' initrd script and replace itself with the 'original'
-#                       initrd script
-# permission_script  -> from this template the 'permission script' will be generated based on
-#                       'permissions' files in the overlay directory which could be generated
-#                       by the 'seedbank manage command'
+# puppet_manifest   -> this tem[late is used for generating scripts in the /etc/runonce.d directort which
+#                      will apply the Puppet manifests when they are selected
+# pxe_default       -> the default file in the pxelinux.cfg directory, this file describes the actions
+#                      which should be done when no machine specific pxelinux.cfg file is found
+# rc_local          -> this template constructs a temporary initrd file which will run once and run
+#                      by default the scripts in the /etc/runonce.d directory, and after it is done it
+#                      will run the 'orginal' initrd script and replace itself with the 'original'
+#                      initrd script
+# permission_script -> from this template the 'permission script' will be generated based on
+#                      'permissions' files in the overlay directory which could be generated
+#                      by the 'seedbank manage command'
 templates:
   puppet_manifest: puppet_manifest
   pxe_default: pxe_default
-  pxe_debian: pxe_debian
-  pxe_ubuntu: pxe_ubuntu
-  debian_isolinux: debian_isolinux.cfg
-  debian_mini_isolinux: debian_mini_isolinux.cfg
-  ubuntu_isolinux: ubuntu_isolinux.cfg
-  ubuntu_mini_isolinux: ubuntu_mini_isolinux.cfg
   rc_local: rc.local
   permission_script: permission_script

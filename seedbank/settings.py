@@ -30,6 +30,22 @@ import re
 
 import utils
 
+def list_isos(cfg, distribution, isos):
+    """generate a list with available ISOs"""
+    for release in cfg[distribution]['isos']:
+        for flavour in cfg[distribution]['iso_flavours']:
+            for architecture in cfg[distribution]['architectures']:
+                name = '-'.join((distribution, release, architecture, flavour))
+                isos.append(name)
+    return isos
+
+def list_netboots(cfg, distribution, netboots):
+    """generate a list with available netboot images"""
+    for release in cfg[distribution]['netboots']:
+        for architecture in cfg[distribution]['architectures']:
+            name = '-'.join((distribution,  release, architecture))
+            netboots.append(name)
+    return netboots
 
 def parse_cfg():
     """validate the configuration"""
@@ -62,22 +78,16 @@ def parse_cfg():
     cfg = utils.yaml_read(files)
     cfg.update(settings)
 
-    netboots = []
-    for release in cfg['distributions']['netboots']:
-        for architecture in cfg['distributions']['architectures']:
-            netboots.append(release + '-' + architecture)
-    cfg['distributions']['netboots'] = netboots
-
+    distributions = ['debian', 'ubuntu']
     isos = []
-    for iso in cfg['distributions']['isos']:
-        iso_split = iso.split('-')
-        distribution, release = iso_split
-
-        for flavour in cfg['distributions'][distribution + '_iso_flavours']:
-            for architecture in cfg['distributions']['architectures']:
-                isos.append('%s-%s-%s-%s' % (distribution, release, architecture, flavour))
-    cfg['distributions']['isos'] = isos
-
+    netboots = []
+    for distribution in distributions:
+        if 'isos' in cfg[distribution]:
+            isos = list_isos(cfg, distribution, isos)
+        if 'netboots' in cfg[distribution]:
+            netboots = list_netboots(cfg, distribution, netboots)
+    cfg['netboots'] = netboots
+    cfg['isos'] = isos
     return cfg
 
 def merge_cfg(config):

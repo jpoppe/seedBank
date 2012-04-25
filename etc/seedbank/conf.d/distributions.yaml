@@ -1,0 +1,47 @@
+# supported netboot images and a list of distributions which do not
+# "non free" firmwares integrated into the netboot images. ISOs should
+# include the version number
+#
+# architectures          -> the supported architectures, this will be applied for
+#                           Debian and Ubuntu
+# firmwares              -> recent Debian releases do not include support for 
+#                           proprietary firmwares, seedBank manage will automatically
+#                           patch the firmware into the netboot image after the netboot
+#                           image has been downloaded
+# netboots               -> the netboot images which are available to seedBank
+# isos                   -> isos which are available to seedBank, squeeze points to the
+#                           latest Debian stable release, squeeze could be replaced
+#                           by a version number for example: '6.0.4'
+# iso_current            -> the current Debian stable release
+# iso_flavours           -> the different flavours of ISOs which are available in seedBank
+# template_pxe           -> this template will be used for generating a node pxelinux.cfg file when a
+#                           machine will be enabled for installation by the 'seedbank pxe command'
+# template_isolinux      -> this template will replace the default isolinux.cfg file on an installation ISO
+# template_isolinux_mini -> this template will replace the default isolinux.cfg file on a Debian or Ubuntu
+#                           mini installation ISO
+# debian                 -> main url of the mirror for downloading netboot images and mini ISOs
+# url_firmware           -> url which points to the Debian firmware archives
+# url_iso                -> url of the mirror for downloading installer ISOs
+debian:
+  architectures: [amd64, i386]
+  netboots: [squeeze]
+  isos: [squeeze]
+  iso_current: squeeze
+  iso_flavours: [mini, businesscard, netinst]
+  firmwares: [squeeze]
+  template_pxe: pxe_debian
+  template_isolinux: debian_isolinux.cfg
+  template_isolinux_mini: debian_mini_isolinux.cfg
+  url_main: 'http://ftp.debian.org'
+  url_iso: 'http://cdimage.debian.org/debian-cd'
+  url_firmware: 'http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/${release}/current/firmware.tar.gz'
+ubuntu:
+  architectures: [amd64, i386]
+  isos: [oneiric, precise]
+  netboots: [oneiric, precise]
+  iso_flavours: [mini, alternate, desktop, server]
+  template_pxe: pxe_ubuntu
+  template_isolinux: ubuntu_isolinux.cfg
+  template_isolinux_mini: ubuntu_mini_isolinux.cfg
+  url_main: 'http://archive.ubuntu.com'
+  url_iso: 'http://releases.ubuntu.com'

@@ -91,7 +91,7 @@ class GeneratePxe:
         self.pxe_variables.update(values)
 
         distribution = self.release.split('-')[0]
-        file_name = cfg['templates']['pxe_' + distribution]
+        file_name = cfg[distribution]['template_pxe']
         file_name = os.path.join(cfg['paths']['templates'], file_name)
         if not os.path.isfile(file_name):
             err = 'file "%s" does not exist (hint: check the templates '\
@@ -128,7 +128,7 @@ class GeneratePxe:
         for hook in cfg['hooks']['enable']:
             hook = utils.apply_template(hook, self.pxe_variables)
             logging.info('found enable hook "%s"', hook)
-            utils.run(hook)
+            utils.run(hook, error=True)
 
 
 class ExternalNodes(object):

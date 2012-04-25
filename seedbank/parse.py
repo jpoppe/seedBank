@@ -129,10 +129,8 @@ class ParseArguments:
         try:
             _, release, _ = args.release.split('-')
         except:
-            err = '"%s" is an unknown release (first run "seedbank '\
-                'manage -n <release>" to download and prepare the '\
-                'release, run "seedbank list -n" to list available '\
-                'releases' % args.release
+            err = '"%s" is an invalid release, run "seedbank list -n" to list '\
+                'available releases' % args.release
             raise self.exception(err)
 
         args, config = self._shared(args, release)
@@ -140,7 +138,7 @@ class ParseArguments:
         path = os.path.join(config['paths']['tftpboot'], 'seedbank',
             args.release)
         if not os.path.isdir(path):
-            if release in config['distributions']['netboots']:
+            if release in config['netboots']:
                 err = '"%s" is not available, run "seedbank manage -n "%s" to '\
                     'download an prepare the release' % args.release
             raise self.exception(err)
@@ -160,6 +158,9 @@ class ParseArguments:
         pxe_linux.state_remove()
         pxe_linux.write(pxe_linux.generate())
         pxe_linux.hook_enable()
+
+        logging.info('"%s" will be installed with "%s" after the next PXE boot',
+            args.fqdn, args.release)
         
     def iso(self, args):
         """validate the input and if no errors are found build an (unattended)
@@ -178,7 +179,7 @@ class ParseArguments:
 
         args, config = self._shared(args, release)
 
-        if args.release in config['distributions']['isos']:
+        if args.release in config['isos']:
             iso_file = os.path.join(config['paths']['isos'], args.release)
             iso_file += '.iso'
         else:
@@ -216,13 +217,14 @@ class ParseArguments:
         if args.overlay:
             build.add_overlay(overlay.dst)
         build.create()
+        logging.info('ISO "%s" has been created, and is ready to use', iso_dst)
 
     def manage(self, args):
         """validate the input and if no errors are found run the specified 
         seedbank manage command actions"""
         setup = manage.Manage(self.cfg)
         if args.netboot:
-            if args.netboot in self.cfg['distributions']['netboots']:
+            if args.netboot in self.cfg['netboots']:
                 setup.netboot(args.netboot)
             else:
                 err = '"%s" is not configured (use "seedbank list '\
@@ -230,7 +232,7 @@ class ParseArguments:
                     'images)' % args.netboot
                 raise self.exception(err)
         elif args.iso:
-            if args.iso in self.cfg['distributions']['isos']:
+            if args.iso in self.cfg['isos']:
                 setup.iso(args.iso)
             else:
                 err = '"%s" is not configured (use "seedbank list --isos" to '\
