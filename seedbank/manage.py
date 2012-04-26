@@ -39,11 +39,11 @@ class Manage:
         self.cfg = cfg
         self.temp = os.path.join(self.cfg['paths']['temp'], 'seedbank')
 
-    def _move(self, dst):
-        """search and move all files from a given directory"""
+    def copy_dir_contents(self, src, dst):
+        """find and copy all files from src to dst"""
         utils.make_dirs(dst)
-        files = (os.path.join(root, file_name) for root, _, files in
-            os.walk(self.temp) if files for file_name in files)
+        files = [os.path.join(root, file_name) for root, _, files in
+            os.walk(src) if files for file_name in files]
         for src in files:
             utils.file_copy(src, dst)
 
@@ -53,24 +53,21 @@ class Manage:
         dst = os.path.join(dst_path, src_file)
         if os.path.isfile(dst):
             logging.info('"%s" already exists, download skipped', dst)
-            return
-        utils.make_dirs(dst_path)
-        utils.download(src, dst)
+        else:
+            utils.make_dirs(dst_path)
+            utils.download(src, dst)
 
     def _extract(self, prefix, files, src, dst, target):
         """extract files to the seedbank temp directory and move those"""
         archive = os.path.join(dst, os.path.basename(src))
         files = (os.path.join(prefix, file_name) for file_name in files)
-        temp = os.path.join(self.temp, 'manage')
-        if os.path.isdir(temp):
-            utils.rmtree(temp)
-        utils.make_dirs(temp)
-        #print(prefix, files, src, dst, name)
-        print target
-        utils.untar_files(archive, files, temp)
-        return
-        self._move(target)
-        utils.rmtree(temp)
+        temp_manage = os.path.join(self.temp, 'manage')
+        if os.path.isdir(temp_manage):
+            utils.rmtree(temp_manage)
+        utils.make_dirs(temp_manage)
+        utils.untar_files(archive, files, temp_manage)
+        self.copy_dir_contents(temp_manage, target)
+        utils.rmtree(temp_manage)
 
     def _extract_debs(self, directory):
         """extract files from all debian packages in a directory"""
@@ -102,19 +99,19 @@ class Manage:
                     logging.info('usb storage support has been disabled in the '
                         'initrd image (fixes "root partition not found" error)')
 
-    def _debian_firmware(self, target):
+    def _debian_firmware(self, name):
         """download and integrate the debian non free firmware"""
-        distribution, release, _ = target.split('-')
-        path = 'firmware-' + distribution + '-' + release
+        distribution, release, _ = name.split('-')
+        path = '-'.join(('firmware', distribution, release))
         dst = os.path.join(self.cfg['paths']['archives'], path)
         temp_initrd = os.path.join(self.temp, 'initrd')
         temp_firmware = os.path.join(self.temp, 'firmware')
-        firmware = os.path.join(dst, 'firmware.tar.gz')
-        initrd = os.path.join(self.cfg['paths']['tftpboot'], 'seedbank', target,
+        archive = os.path.join(dst, 'firmware.tar.gz')
+        initrd = os.path.join(self.cfg['paths']['tftpboot'], 'seedbank', name,
             'initrd.gz')
-        url = self.cfg['urls']['debian_firmware'].replace('${release}', release)
+        url = self.cfg[distribution]['url_firmware'].replace('${release}', release)
         self._download(url, dst)
-        utils.untar(firmware, temp_firmware)
+        utils.untar(archive, temp_firmware)
         self._extract_debs(temp_firmware)
         utils.make_dirs(temp_initrd)
         utils.initrd_extract(temp_initrd, initrd)
@@ -208,12 +205,12 @@ class Manage:
         dst = os.path.join(self.cfg['paths']['archives'], name)
         prefix = os.path.join('./%s-installer' % distribution, architecture)
         files = ('initrd.gz', 'linux')
-        name = os.path.join(self.cfg['paths']['tftpboot'], 'seedbank', name)
+        target = os.path.join(self.cfg['paths']['tftpboot'], 'seedbank', name)
         self._download(src, dst)
-        self._extract(prefix, files, src, dst, name)
-        firmware = distribution + '-' + release
-        if firmware in self.cfg['distributions']['firmwares']:
-            self._debian_firmware(name)
+        self._extract(prefix, files, src, dst, target)
+        if 'firmwares' in self.cfg[distribution]:
+            if release in self.cfg[distribution]['firmwares']:
+                self._debian_firmware(name)
 
     def _remove_netboot(self, name):
         """remove a netboot image and if defined the related firmware files"""
