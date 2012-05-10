@@ -1,0 +1,77 @@
+#!/bin/bash
+
+echo "INFO: running Infrastructure Anywhere Network Configuration script for Physical Servers"
+echo "INFO: adds a bonding device (mode=1) with static ip - requires ifenslave(-2.6)"
+echo "INFO: adds VLANs to the bonding device - requires 'vlan' Package"
+echo "INFO: by Martin Seener"
+
+# Specify your systems interfaces file
+IFACES="/etc/network/interfaces"
+
+# Specify the .disabled and .enabled Infrastructure Anywhere's Puppet bootstrap script
+DIS_PUPPET_BOOTSTRAP="/etc/runonce.d/010_puppet_bootstrap.disabled"
+EN_PUPPET_BOOTSTRAP="/etc/runonce.d/010_puppet_bootstrap.enabled"
+
+# Extract the DHCP IP and Netmask and get the first parts of the Gateway (GW is always .1)
+IP=$(ifconfig | grep 'inet ' | grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}')
+NM=$(ifconfig | grep 'inet ' | grep -v '127.0.0.1' | cut -d: -f4)
+GW=$(ifconfig | grep 'inet ' | grep -v '127.0.0.1' | cut -d: -f3 | cut -d. -f1-3)
+
+# Definitions are separated from the file-write to be more easily extendable
+HEADER="# Network Interfaces created with IA-NC script by Martin Seener"
+EMPTYLINE="#"
+
+# Loopback Device
+LO_L1="auto lo"
+LO_L2="iface lo inet loopback"
+
+# Bonding active-backup Device with static IP
+BOND0_L1="auto bond0"
+BOND0_L2="iface bond0 inet static"
+BOND0_L3="address "$IP
+BOND0_L4="netmask "$NM
+BOND0_L5="gateway "$GW".1"
+BOND0_L6="bond_mode active-backup"
+BOND0_L7="bond_miimon 100"
+BOND0_L8="bond_downdelay 200"
+BOND0_L9="bond_updelay 200"
+BOND0_L10="slaves eth0 eth1"
+
+# Add the Tagged-VLAN Iface
+BOND0_100_L1="auto bond0.100"
+BOND0_100_L2="iface bond0.100 inet static"
+BOND0_100_L3="vlan_raw_device bond0"
+BOND0_100_L4="address 10.1.20.254"
+BOND0_100_L5="netmask "$NM
+
+
+# Write all together to the ifaces file
+echo $HEADER > $IFACES
+echo $EMPTYLINE >> $IFACES
+echo $LO_L1 >> $IFACES
+echo $LO_L2 >> $IFACES
+echo $EMPTYLINE >> $IFACES
+echo $BOND0_L1 >> $IFACES
+echo $BOND0_L2 >> $IFACES
+echo $BOND0_L3 >> $IFACES
+echo $BOND0_L4 >> $IFACES
+echo $BOND0_L5 >> $IFACES
+echo $BOND0_L6 >> $IFACES
+echo $BOND0_L7 >> $IFACES
+echo $BOND0_L8 >> $IFACES
+echo $BOND0_L9 >> $IFACES
+echo $BOND0_L10 >> $IFACES
+echo $EMPTYLINE >> $IFACES
+echo $BOND0_100_L1 >> $IFACES
+echo $BOND0_100_L2 >> $IFACES
+echo $BOND0_100_L3 >> $IFACES
+echo $BOND0_100_L4 >> $IFACES
+echo $BOND0_100_L5 >> $IFACES
+
+# Enable the Puppet bootstrap script
+mv $DIS_PUPPET_BOOTSTRAP $EN_PUPPET_BOOTSTRAP
+
+# Reboot to the changes to take effect
+reboot
+
+exit 0

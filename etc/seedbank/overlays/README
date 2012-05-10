@@ -1,1 +1,11 @@
 The examples here are used by Infrastructure Anywhere.
+
+Overlay Explanations
+====================
+
+minion_auto_puppet - only adds the Puppet bootstrap script
+                   - fires the Puppet agent after first boot
+m_ps_dif_bab_vlan_sip - Minion Overlay for physical Servers with at least 2 ethernet devices.
+                      - add's an active-backup (mode=1) bonding to eth0 and eth1 (untagged)
+                      - add's one tagged vlan definition on the bond0 iface
+                      - all with static ips gathered from dhcp
