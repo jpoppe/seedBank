@@ -23,6 +23,10 @@ DAEMON_OPTS="daemon --start"
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 START_SEEDBANK=false
 
+if [ ! -f $DAEMON ]; then
+	DAEMON=/usr/local/bin/seedbank
+fi
+
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
 if [ $START_SEEDBANK != "true" ]; then
