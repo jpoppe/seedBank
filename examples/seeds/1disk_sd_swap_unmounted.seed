@@ -1,0 +1,38 @@
+#
+# This example recipe shows how to create a partition without mounting the partition
+#
+# For more information see:
+# http://anonscm.debian.org/viewvc/d-i/trunk/installer/doc/devel/partman-auto-recipe.txt?revision=59002&view=co&pathrev=66261
+#
+# NOTE: unless you want to used seed variables dollar signs should be
+# escaped by a dollar sign since preseed files are treated as templates
+# in seedBank
+#
+d-i partman-auto/disk string /dev/vda
+d-i partman-auto/method string regular
+
+d-i partman-basicfilesystems/no_mount_point bool false
+ 
+d-i partman-auto/expert_recipe string \
+    1disk_vd_swap ::                  \
+        2048 4096 1000000000 ext4     \
+            $$primary{ }              \
+            $$bootable{ }             \
+            method{ format }          \
+            format{ }                 \
+            use_filesystem{ }         \
+            filesystem{ ext4 }        \
+            mountpoint{ / }           \
+        .                             \
+        512 512 512 ext4              \
+            $$primary{ }              \
+            method{ format }          \
+            format{ }                 \
+            use_filesystem{ }         \
+            filesystem{ ext4 }        \
+        .                             \
+        512 1024 4096 linux-swap      \
+            $$primary{ }              \
+            method{ swap }            \
+            format{ }                 \
+        .
