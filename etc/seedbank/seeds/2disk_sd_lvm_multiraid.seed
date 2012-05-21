@@ -1,0 +1,95 @@
+# For more information see:
+# http://anonscm.debian.org/viewvc/d-i/trunk/installer/doc/devel/partman-auto-recipe.txt?revision=59002&view=co&pathrev=66261
+#
+# NOTE: unless you want to used seed variables dollar signs should be
+# escaped by a dollar sign since preseed files are treated as templates
+# in seedBank
+
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman-lvm/confirm boolean true
+
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman-md/confirm boolean true
+d-i partman-md/confirm_nooverwrite boolean true
+d-i partman-basicfilesystems/no_mount_point yes
+
+d-i partman-auto/method string raid
+d-i partman-auto/disk string /dev/sda /dev/sdb
+d-i partman-auto-raid/recipe string 		\
+	1 2 0 ext2 /boot 			\
+		/dev/sda1#/dev/sdb1 		\
+	.					\
+	1 2 0 lvm - 				\
+		/dev/sda2#/dev/sdb2 		\
+	.
+
+d-i partman-auto-lvm/new_vg_name string vgsystem
+d-i partman-auto/expert_recipe string		\
+	multiraid  ::				\
+		256 256 256 raid		\
+			$$lvmignore{ }		\
+			$$primary{ }		\
+			method{ raid }		\
+		.				\
+		50 5000 500000000 raid		\
+			$$lvmignore{ }		\
+			$$primary{ }		\
+			method{ raid }		\
+		.				\
+		8192 8192 8192 ext4		\
+			$$defaultignore{ }	\
+			$$lvmok{ }		\
+			method{ format }	\
+			format{ }		\
+			use_filesystem{ }	\
+			filesystem{ ext4 }	\
+			mountpoint{ / }		\
+		.				\
+		8192 8192 8192 linux-swap	\
+			$$defaultignore{ }	\
+			$$lvmok{ }		\
+			method{ swap }		\
+			format{ }		\
+		.				\
+		8192 8192 8192 ext4		\
+			$$defaultignore{ }	\
+			$$lvmok{ }		\
+			method{ format }	\
+			format{ }		\
+			use_filesystem{ }	\
+			filesystem{ ext4 }	\
+			mountpoint{ /home }	\
+		.				\
+		8192 8192 8192 ext4		\
+			$$defaultignore{ }	\
+			$$lvmok{ }		\
+			method{ format }	\
+			format{ }		\
+			use_filesystem{ }	\
+			filesystem{ ext4 }	\
+			mountpoint{ /var }	\
+		.				\
+		8192 8192 8192 ext4		\
+			$$defaultignore{ }	\
+			$$lvmok{ }		\
+			method{ format }	\
+			format{ }		\
+			use_filesystem{ }	\
+			filesystem{ ext4 }	\
+			mountpoint{ /var/log }	\
+		.				\
+		8192 8192 8192 ext4		\
+			$$defaultignore{ }	\
+			$$lvmok{ }		\
+			method{ format }	\
+			format{ }		\
+			use_filesystem{ }	\
+			filesystem{ ext4 }	\
+			mountpoint{ /tmp }	\
+		.
+
+d-i grub-installer/bootdev string (hd0,0) (hd1,0)
