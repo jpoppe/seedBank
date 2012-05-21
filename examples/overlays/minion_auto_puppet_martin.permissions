@@ -20,5 +20,7 @@
 # The columns are tab separated!
 #
 # mode	uid	gid	path
+0644	0	0	/etc/runonce.d/010_puppet_bootstrap.enabled
 0755	0	0	/etc
 0755	0	0	/etc/puppet
+0755	0	0	/etc/runonce.d
