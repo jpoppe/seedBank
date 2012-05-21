@@ -1,0 +1,9 @@
+Overlay Explanations
+====================
+
+minion_auto_puppet_martin - only adds the Puppet bootstrap script
+                            fires the Puppet agent after first boot
+m_ps_dif_bab_vlan_sip     - Minion Overlay for physical Servers with at least 2 ethernet devices.
+                            adds an active-backup (mode=1) bonding to eth0 and eth1 (untagged)
+                            adds one tagged vlan definition on the bond0 iface
+                            all with static ips gathered from dhcp
