@@ -59,6 +59,7 @@ d-i user-setup/encrypt-home boolean false
 d-i partman-md/device_remove_md boolean true
 d-i partman-lvm/confirm boolean true
 d-i partman/confirm_write_new_label boolean true
+d-i partman/alignment string cylinder
 # commenting the two following lines could help for debugging disk recipes
 d-i partman/choose_partition select finish
 d-i partman/confirm boolean true
