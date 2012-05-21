@@ -22,8 +22,6 @@
 # by seedBank internally, feel free to add custom commands, seedBank will
 # break if those variables are removed
 #
-# puppetlabs_repository -> adds the puppetlabs repository so latest puppet agent gets installed
-#                          mirror_allow_unauthenticated needs to be 'true' to work without key
 seed:
   early_command: []
   late_command: []
@@ -33,7 +31,7 @@ seed:
   debian_task_sel: minimal
   apt_proxy: ''
   mirror_allow_unauthenticated: 'true'
-  debian_packages: openssh-server puppet debconf-utils lsb-release rsync vim less
+  debian_packages: openssh-server puppet debconf-utils lsb-release rsync vim less ifenslave-2.6 vlan
   ntp_server: ntp.xs4all.nl
   repository_0: 'deb http://192.168.122.1/debian/sn squeeze main'
   repository_0_key: 'http://192.168.122.1/debian/repository.key'
@@ -41,7 +39,7 @@ seed:
   ubuntu_mirror_directory: /ubuntu
   ubuntu_mirror_host_name: nl.archive.ubuntu.com
   ubuntu_task_sel: standard
-  ubuntu_packages: openssh-server puppet debconf-utils lsb-release rsync vim less
+  ubuntu_packages: openssh-server puppet debconf-utils lsb-release rsync vim less ifenslave-2.6 vlan
   ubuntu_kernel_override: linux-generic
   ubuntu_kernel_headers: 'true'
   ubuntu_update_policy: 'none'
