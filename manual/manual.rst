@@ -725,9 +725,9 @@ More information about some of the available tools
 * http://apt-proxy.sourceforge.net/
 * http://apt-mirror.sourceforge.net/
 
-=====================
+---------------------
 Third Party Resources
-=====================
+---------------------
 
 * http://syslinux.zytor.com/wiki/
 * http://wiki.debian.org/DebianInstaller/NetworkConsole
@@ -735,9 +735,9 @@ Third Party Resources
 * http://wiki.debian.org/Bonding
 * http://wiki.debian.org/DebianInstaller/NetbootFirmware
 
-================
+----------------
 Network Services
-================
+----------------
 
 Introduction
 ============
@@ -815,9 +815,9 @@ Various
  * http://wiki.debian.org/DHCP_Server
  * http://mindref.blogspot.com/2010/12/debian-dhcp-server.html
 
-===============
+---------------
 MAC OS X (Beta)
-===============
+---------------
 
 Introduction
 ============
@@ -899,8 +899,9 @@ Build and zip OS X packages
     cd ~/.macports/opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_tarballs_ports_archivers_gnutar/gnutar/work
     zip -r ~/gnutar-1.26.zip gnutar-1.26.pkg
 
+----------
 IA Related
-==========
+----------
 
 Install VirtualBox on Mac OS X
 
