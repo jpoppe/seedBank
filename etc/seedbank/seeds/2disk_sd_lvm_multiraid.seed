@@ -16,6 +16,7 @@ d-i partman/confirm_nooverwrite boolean true
 d-i partman-md/confirm boolean true
 d-i partman-md/confirm_nooverwrite boolean true
 d-i partman-basicfilesystems/no_mount_point yes
+d-i partman-basicmethods/method_only boolean false
 
 d-i partman-auto/method string raid
 d-i partman-auto/disk string /dev/sda /dev/sdb
@@ -90,6 +91,12 @@ d-i partman-auto/expert_recipe string		\
 			use_filesystem{ }	\
 			filesystem{ ext4 }	\
 			mountpoint{ /tmp }	\
-		.
+		.				\
+		64 1024 8192 ext4		\
+			$$lvmok{ }		\
+			lv_name{ ZZdummy }	\
+			method{ keep }		\
+		.				\
 
 d-i grub-installer/bootdev string (hd0,0) (hd1,0)
+d-i preseed/late_command string lvremove -f /dev/vgsystem/ZZdummy; ${late_command}
