@@ -137,14 +137,15 @@ class Manage:
         """download a Debian ISO"""
         distribution, release, architecture, flavour = name.split('-')
         if flavour == 'mini':
-            url = self.cfg['urls'][distribution]
+            url = self.cfg[distribution]['url_main']
             url = os.path.join(url, 'debian/dists', release, 'main/installer-' +
                 architecture, 'current/images/netboot/mini.iso')
         else:
-            if release == self.cfg['distributions']['debian_iso_current']:
+            if release == self.cfg[distribution]['iso_current']:
                 release = 'current'
-            url = self.cfg['urls'][distribution + '_iso']
+            url = self.cfg[distribution]['url_iso']
             url = os.path.join(url, release, architecture, 'iso-cd')
+            print (url)
             data = utils.scrape_tag(url, 'a')
             isos = [link for link in data if link.endswith('.iso')]
             iso_split = isos[0].split('-')
@@ -160,11 +161,11 @@ class Manage:
         alpha release when there is no stable release"""
         distribution, release, architecture, flavour = name.split('-')
         if flavour == 'mini':
-            url = self.cfg['urls'][distribution]
+            url = self.cfg[distribution]['url_main']
             url = os.path.join(url, 'ubuntu/dists', release, 'main/installer-' +
                 architecture, 'current/images/netboot/mini.iso')
         else:
-            url = self.cfg['urls'][distribution + '_iso']
+            url = self.cfg[distribution]['url_iso']
             url = os.path.join(url, release)
             data = utils.scrape_tag(url, 'a')
             isos = [link for link in data if link.endswith('.iso')]
