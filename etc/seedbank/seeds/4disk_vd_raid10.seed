@@ -1,0 +1,68 @@
+partman-base partman/exception_handler_note note
+d-i partman/default_filesystem string ext4
+d-i partman-md/device_remove_md boolean true
+d-i partman/alignment select cylinder
+d-i partman-auto/method string raid
+d-i partman-auto/disk string /dev/vda /dev/vdb /dev/vdc /dev/vdd
+
+# Note: For every disk a swap partition will be
+# created in this recipe
+d-i partman-auto/expert_recipe string \
+      multiraid ::                    \
+              2000 100 10000 raid     \
+                $$primary{ }          \
+                method{ raid }        \
+                format{ }             \
+              .                       \
+              1024 90 1024 swap       \
+                $$primary{ }          \
+                method{ swap }        \
+                format{ }             \
+              .                       \
+              10000 90 10000 raid     \
+                $$primary{ }          \
+                method{ raid }        \
+                format{ }             \
+              .                       \
+              2048 90 2048 raid       \
+                method{ raid }        \
+                format{ }             \
+              .                       \
+              5000 80 10000 raid      \
+                method{ raid }        \
+                format{ }             \
+              .                       \
+              5000 10 1000000 raid    \
+                method{ raid }        \
+                format{ }             \
+              .
+
+# Last you need to specify how the previously defined partitions will be
+# used in the RAID setup. Remember to use the correct partition numbers
+# for logical partitions. RAID levels 0, 1, 5, 6 and 10 are supported;
+# devices are separated using "#".
+# Parameters are:
+# <raidtype> <devcount> <sparecount> <fstype> <mountpoint>
+# <devices> <sparedevices>
+d-i partman-auto-raid/recipe string             \
+    10 4 1 ext4 /                               \
+        /dev/vda1#/dev/vdb1#/dev/vdc1#/dev/vdd1 \
+    .                                           \
+    10 4 1 ext4 /usr                            \
+        /dev/vda3#/dev/vdb3#/dev/vdc3#/dev/vdd3 \
+    .                                           \
+    10 4 1 ext4 /tmp                            \
+        /dev/vda5#/dev/vdb5#/dev/vdc5#/dev/vdd5 \
+    .                                           \
+    10 4 1 ext4 /var                            \
+        /dev/vda6#/dev/vdb6#/dev/vdc6#/dev/vdd6 \
+    .                                           \
+    10 4 1 ext4 /home                           \
+        /dev/vda7#/dev/vdb7#/dev/vdc7#/dev/vdd7 \
+    .
+
+d-i partman-md/confirm_nooverwrite boolean true
+d-i partman-md/confirm boolean true
+d-i partman/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
