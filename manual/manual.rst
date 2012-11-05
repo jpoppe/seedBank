@@ -408,7 +408,7 @@ Installation
 
 Install reprepro:
 
-    sudo apt-get install reprepro
+    sudo apt-get --assume-yes install reprepro
 
 GPG Configuration
 -----------------
@@ -417,15 +417,15 @@ All packages repositories should be signed with a (your) GPG key. To make proces
 
 Install the GNU GPG agent:
 
-    sudo apt-get install gnupg-agent
+    sudo apt-get --assume-yes install gnupg-agent
 
 List available GPG keys:
 
-    gpg --list-keys
+    sudo gpg --list-keys
 
 Generate a new GPG key if there is no key availble:
 
-    gpg --gen-key
+    sudo gpg --gen-key
 
 Add the following to *~/.profile* so gpg-agent will be invoked automatically when it is not running:
 
@@ -439,14 +439,14 @@ Add the following line to your *.bash_profile*:
 
 .. include:: manual/configs/gnugpg/.bash_profile
 
-Export the gpg key:
+Export the gpg key, replace 6A9E1B52 with the public ID of the key ID you just have generated:
 
     gpg --list-keys
-    gpg --export -a 6A9E1B52 > key.pub
+    gpg --export -a 1ACC76B5 > repository.pub
 
 Add the gpg key to the Debian or Ubuntu apt keyring:
 
-    sudo apt-key add key.pub
+    sudo apt-key add repository.pub
 
 Gather various GPG keys
 -----------------------
@@ -457,7 +457,7 @@ Get the GPG key for the Debian repository::
     wget http://ftp.us.debian.org/debian/dists/squeeze/Release
     wget http://ftp.us.debian.org/debian/dists/squeeze/Release.gpg
     gpg Release.gpg # enter: 'Release' as name of data file
-    gpg --keyserver subkeys.pgp.net --search-keys "55BE302B" # Enter '1'
+    gpg --keyserver subkeys.pgp.net --search-keys "473041FA" # Enter '1'
     rm Release.gpg Release
 
 Get the GPG key for the Ubuntu repository::
@@ -476,10 +476,9 @@ Run the following command to get the last 16 hex digits of the fingerprint::
  
     ::
 
-    pub:-:4096:1:9AA38DCD55BE302B:2009-01-27:2012-12-31::-:Debian Archive Automatic Signing Key (5.0/lenny) <ftpmaster@debian.org>::scSC:
-    pub:-:4096:1:9AA38DCD55BE302B:2009-01-27:2012-12-31::-:Debian Archive Automatic Signing Key (5.0/lenny) <ftpmaster@debian.org>::scSC:
+    pub:-:4096:1:AED4B06F473041FA:2010-08-27:2018-03-05::-:Debian Archive Automatic Signing Key (6.0/squeeze) <ftpmaster@debian.org>::scSC:
 
-In this case *9AA38DCD55BE302B* is the value to use for the reprepro *VerifyRelease* option in the conf/updates file(s).
+In this case *AED4B06F473041FA* is the value to use for the reprepro *VerifyRelease* option in the conf/updates file(s).
 
 Import the key to the GPG keyring and add it to the apt keyring::
 
@@ -497,28 +496,52 @@ Example:
 
     FilterFormula: Priority (==required)
 
-Create a Debian Squeeze mirror
-------------------------------
+Create a Debian Squeeze and Debian Squeeze updates mirror
+---------------------------------------------------------
 
 Create the mirror directory including a conf directory, all mirror data will be stored here, be sure there is enough disk space available since mirrors take quite some disk space:
 
-    mkdir -p /opt/repositories/debian/mirror/conf
+    mkdir -p /srv/repositories/debian/mirror/conf
 
 Create the "conf/distributions" configuration file:
 
-    vi /opt/repositories/debian/mirror/conf/distributions
+    vi /srv/repositories/debian/mirror/conf/distributions
 
 .. include:: manual/configs/reprepro/debian/distributions
 
 Create the "conf/updates" configuration file:
 
-    vi /opt/repositories/debian/mirror/conf/updates
+    vi /srv/repositories/debian/mirror/conf/updates
 
 .. include:: manual/configs/reprepro/debian/updates
 
 Sync or update the mirror:
 
-    cd /opt/repositories/debian/mirror
+    cd /srv/repositories/debian/mirror
+    reprepro -V update
+
+Create a Debian Squeeze security mirror
+---------------------------------------
+
+Create the security directory including a conf directory, all mirror data will be stored here, be sure there is enough disk space available since mirrors take quite some disk space:
+
+    mkdir -p /srv/repositories/debian/security/conf
+
+Create the "conf/distributions" configuration file:
+
+    vi /srv/repositories/debian/security/conf/distributions
+
+.. include:: manual/configs/reprepro/debian-security/distributions
+
+Create the "conf/updates" configuration file:
+
+    vi /srv/repositories/debian/security/conf/updates
+
+.. include:: manual/configs/reprepro/debian-security/updates
+
+Sync or update the mirror:
+
+    cd /srv/repositories/debian/security
     reprepro -V update
 
 Create a Debian Squeeze proposed updates mirror
@@ -526,23 +549,23 @@ Create a Debian Squeeze proposed updates mirror
 
 Create the mirror directory including a conf directory, all mirror data will be stored here, be sure there is enough disk space available since mirrors take quite some disk space:
 
-    mkdir -p /opt/repositories/debian/proposed-updates/conf
+    mkdir -p /srv/repositories/debian/proposed-updates/conf
 
 Create the "conf/distributions" configuration file:
 
-    vi /opt/repositories/debian/proposed-updates/conf/distributions
+    vi /srv/repositories/debian/proposed-updates/conf/distributions
 
 .. include:: manual/configs/reprepro/debian-proposed/distributions
 
 Create the "conf/updates" configuration file::
 
-    vi /opt/repositories/debian/proposed-updates/conf/updates
+    vi /srv/repositories/debian/proposed-updates/conf/updates
 
 .. include:: manual/configs/reprepro/debian-proposed/updates
 
 Sync and update the mirror::
 
-    cd /opt/repositories/debian/proposed-updates
+    cd /srv/repositories/debian/proposed-updates
     reprepro -V update
 
 Create a Debian Squeeze backports mirror
@@ -550,47 +573,47 @@ Create a Debian Squeeze backports mirror
 
 Create the mirror directory including a conf directory, all mirror data will be stored here, be sure there is enough disk space available since mirrors take quite some disk space:
 
-    mkdir -p /opt/repositories/debian/backports/conf
+    mkdir -p /srv/repositories/debian/backports/conf
 
 Create the "conf/distributions" configuration file:
 
-    vi /opt/repositories/debian/backports/conf/distributions
+    vi /srv/repositories/debian/backports/conf/distributions
 
 .. include:: manual/configs/reprepro/debian-backports/distributions
 
 Create the "conf/updates" configuration file:
 
-    vi /opt/repositories/debian/backports/conf/updates
+    vi /srv/repositories/debian/backports/conf/updates
 
 .. include:: manual/configs/reprepro/debian-backports/updates
 
 Sync/Update the mirror:
 
-    cd /opt/repositories/debian/backports
+    cd /srv/repositories/debian/backports
     reprepro -V update
 
 Create a Ubuntu Natty mirror
--------------------------------
+----------------------------
 
 Create a directory including a conf directory which will contain the mirror(s):
 
-    mkdir -p /opt/repositories/ubuntu/mirror/conf
+    mkdir -p /srv/repositories/ubuntu/mirror/conf
 
 Create the "conf/distributions" configuration file:
 
-    vi /opt/repositories/ubuntu/mirror/conf/distributions
+    vi /srv/repositories/ubuntu/mirror/conf/distributions
 
 .. include:: manual/configs/reprepro/ubuntu/distributions
 
 Create the "conf/updates" configuration file:
 
-    vi /opt/repositories/ubuntu/mirror/conf/updates
+    vi /srv/repositories/ubuntu/mirror/conf/updates
 
 .. include:: manual/configs/reprepro/ubuntu/updates
 
 Sync or update the mirror:
 
-    cd /opt/repositories/ubuntu/mirror
+    cd /srv/repositories/ubuntu/mirror
     reprepro -V update
 
 Create a custom repository
@@ -598,11 +621,11 @@ Create a custom repository
 
 Create the directory structure::
 
-    sudo mkdir -p /opt/repositories/debian/custom/conf
+    sudo mkdir -p /srv/repositories/debian/custom/conf
   
 Create the configuration file::
 
-    sudo vi /opt/repositories/debian/custom/conf/distributions
+    sudo vi /srv/repositories/debian/custom/conf/distributions
 
 ::
 
@@ -616,15 +639,15 @@ Create the configuration file::
 
 Create the options file::
 
-    vi /opt/repositories/debian/custom/conf/options
+    vi /srv/repositories/debian/custom/conf/options
 
 ::
 
-    basedir /opt/repositories/debian/custom
+    basedir /srv/repositories/debian/custom
   
 Add a package to the repository::
 
-    cd /opt/repositories/debian/custom
+    cd /srv/repositories/debian/custom
     reprepro includedeb custom ~/seedbank_0.8.0_all.deb
 
 Various reprepro commands
@@ -632,17 +655,17 @@ Various reprepro commands
 
 List all available packages for Debian Squeeze in the custom repository::
 
-    reprepro -b /opt/repositories/debian/custom list squeeze
-    cd /opt/repositories/debian/custom
+    reprepro -b /srv/repositories/debian/custom list squeeze
+    cd /srv/repositories/debian/custom
     reprepro list squeeze
   
 Add a Debian package to the custom repository::
 
-    reprepro -Vb /opt/repositories/debian/custom includedeb squeeze ~/seedbank_0.8.0_all.deb
+    reprepro -Vb /srv/repositories/debian/custom includedeb squeeze ~/seedbank_0.8.0_all.deb
 
 Remove the *seedbank* package from the custom repository::
 
-    reprepro -Vb /opt/repositories/debian/custom remove squeeze seedbank
+    reprepro -Vb /srv/repositories/debian/custom remove squeeze seedbank
 
 nginx
 -----
@@ -671,7 +694,7 @@ Create a virtual host::
         error_log  /var/log/nginx/packages-error.log;
 
         location / {
-            root /opt/repositories;
+            root /srv/repositories;
             index index.html;
         }
     

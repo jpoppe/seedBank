@@ -6,5 +6,5 @@ Components: main contrib non-free
 UDebComponents: main
 Update: - debian-squeeze-proposed-updates
 Contents: .gz
-Log: /opt/repositories/debian/proposed/logs/proposed-updates.log
+Log: /srv/repositories/debian/proposed/logs/proposed-updates.log
 SignWith: <your public GPG key>

@@ -1,31 +1,21 @@
 Origin: Debian
 Codename: squeeze
 Description: Official Debian Squeeze mirror
-Architectures: i386 amd64 source
+Architectures: amd64 source
 Components: main contrib non-free
 UDebComponents: main
 Contents: .gz
 Update: - debian-squeeze
-Log: /opt/repositories/debian/mirror/logs/mirror.log
+Log: /srv/repositories/debian/mirror/logs/mirror.log
 SignWith: <your public GPG key>
 
 Origin: Debian
 Codename: squeeze-updates
 Description: Official Debian Squeeze mirror
-Architectures: i386 amd64 source
+Architectures: amd64 source
 Components: main contrib non-free
 UDebComponents: main
 Contents: .gz
 Update: - debian-squeeze-updates
-Log: /opt/repositories/debian/mirror/logs/mirror.log
-SignWith: <your public GPG key>
-
-Origin: Debian
-Codename: squeeze-security
-Description: Official Debian Squeeze mirror
-Architectures: i386 amd64 source
-Components: main contrib non-free
-Contents: .gz
-Update: - debian-squeeze-security
-Log: /opt/repositories/debian/mirror/logs/mirror.log
+Log: /srv/repositories/debian/mirror/logs/mirror.log
 SignWith: <your public GPG key>

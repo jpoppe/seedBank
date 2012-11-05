@@ -5,5 +5,5 @@ Architectures: amd64 source
 Components: main contrib non-free
 Contents: .gz
 Update: - squeeze-backports
-Log: /opt/repositories/debian/backports/logs/backports.log
+Log: /srv/repositories/debian/backports/logs/backports.log
 SignWith: <your GPG key here>

@@ -1,0 +1,9 @@
+Origin: Debian
+Codename: squeeze-security
+Description: Official Debian Squeeze mirror
+Architectures: amd64 source
+Components: main contrib non-free
+Contents: .gz
+Update: - debian-squeeze-security
+Log: /srv/repositories/debian/security/logs/mirror.log
+SignWith: <your public GPG key>
