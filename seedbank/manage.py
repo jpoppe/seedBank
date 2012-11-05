@@ -145,7 +145,6 @@ class Manage:
                 release = 'current'
             url = self.cfg[distribution]['url_iso']
             url = os.path.join(url, release, architecture, 'iso-cd')
-            print (url)
             data = utils.scrape_tag(url, 'a')
             isos = [link for link in data if link.endswith('.iso')]
             iso_split = isos[0].split('-')

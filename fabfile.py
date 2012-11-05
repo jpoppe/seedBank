@@ -4,7 +4,8 @@ from fabric.api import env, local, run, put, settings
 import os
 import sys
 
-env.hosts = ['overlord001.a.c.m.e']
+if not env.hosts:
+    env.hosts = ['overlord001.a.c.m.e']
 #env.hosts = ['overlord001.h.o.m.e']
 env.user = 'root'
 application = 'seedbank'
@@ -60,6 +61,7 @@ def test_remote():
     run('apt-get --force-yes --assume-yes purge %s' % application)
     run('rm -rf /etc/%s' % application)
     run('dpkg -i %s' % deb_file)
+    run('apt-get --force-yes --assume-yes -f install' % application)
 
 def test_seedslave():
     build()
