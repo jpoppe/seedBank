@@ -1,8 +1,5 @@
 seed:
-  add_kernel_opts: ''
-  debian_mirrorhostname: 192.168.0.1
-  debian_mirrordirectory: /debian/mirror
+  debian_mirror_host_name: 192.168.0.1
+  debian_mirror_directory: /debian/mirror
   ntp_server: ntp.xs4all.nl
   timezone: Europe/Amsterdam
-  country+chooser: NL
-  locale: en_US
