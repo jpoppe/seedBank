@@ -31,7 +31,11 @@ fi
 
 if [ $START_SEEDBANK != "true" ]; then
 	echo "the seedBank daemon service is disabled, enable START_SEEDBANK in /etc/default/$NAME"
-	exit 1
+	if [ ${1} = "stop" ]; then
+		exit 0
+	else
+		exit 1
+	fi
 fi
 
 check_process () {
