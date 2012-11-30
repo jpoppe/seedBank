@@ -53,7 +53,7 @@ class SeedPimp:
         self.target = target
 
     def _merge_seeds(self, seeds, values):
-        """merge the main seed file with the recipe(s) and additional seeds 
+        """merge the main seed file with the recipe(s) and additional seeds
         return it as a string"""
         result = ''
         for seed in seeds:
@@ -97,7 +97,7 @@ class SeedPimp:
                 dst = os.path.join(path, 'puppet_manifest_%s.enabled' %
                     manifest)
                 utils.write_template(values, src, dst)
-        
+
         values['early_command'] += cmd_early
         values['early_command'] = commands_merge(values['early_command'],
             values)
