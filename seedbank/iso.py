@@ -24,6 +24,7 @@ __status__ = 'production'
 import os
 import sys
 
+import manage
 import utils
 
 
@@ -51,6 +52,16 @@ class Build:
         utils.run('bsdtar -C "%s" -xf "%s"' % (self.work_iso, self.iso_file))
         utils.run('chmod -R u+w "%s"' % self.work_iso)
 
+    def non_free_firmware(self, release):
+        """patch the Debian non free firmware in the ISO"""
+        name = '-'.join(release.split('-')[:-1])
+        distribution, release, _ = name.split('-')
+        if 'firmwares' in self.cfg[distribution]:
+            if release in self.cfg[distribution]['firmwares']:
+                target = os.path.join(self.work_initrd, 'lib/firmware')
+                setup = manage.Manage(self.cfg)
+                setup._add_firmware(name, target)
+
     def add_templates(self, distribution):
         """process and add the rc.local and isolinux templates"""
         path = self.cfg['paths']['templates']
@@ -67,9 +78,12 @@ class Build:
         utils.write_template(self.data, src, dst)
 
     def add_preseed(self, contents):
-        """add the seed file to the intrd image"""
+        """copy the preseed file to the intrd image"""
         dst = os.path.join(self.work_initrd, 'preseed.cfg')
         utils.file_write(dst, contents)
+
+    def rebuild_initrd(self):
+        """rebuild the initrd image"""
         path_amd = os.path.join(self.work_iso, 'install.amd')
         path_i386 = os.path.join(self.work_iso, 'install.386')
         path_ubuntu = os.path.join(self.work_iso, 'install')

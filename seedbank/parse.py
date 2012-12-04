@@ -101,7 +101,7 @@ class ParseArguments:
         if not '.' in args.fqdn:
             raise self.exception('"%s" is not a fully qualified domain name' %
                 args.fqdn)
-            
+
         if not args.seed:
             args.seed = release
         args.seeds = [args.seed] + args.additional
@@ -161,7 +161,7 @@ class ParseArguments:
 
         logging.info('"%s" will be installed with "%s" after the next PXE boot',
             args.fqdn, args.release)
-        
+
     def iso(self, args):
         """validate the input and if no errors are found build an (unattended)
         installation ISO from a regular install ISO"""
@@ -178,7 +178,6 @@ class ParseArguments:
             raise self.exception('"%s" is not a valid release' % args.release)
 
         args, config = self._shared(args, release)
-
         if args.release in config['isos']:
             iso_file = os.path.join(config['paths']['isos'], args.release)
             iso_file += '.iso'
@@ -208,7 +207,7 @@ class ParseArguments:
             overlay.prepare(template_cfg['seed'])
             permissions = pimp.OverlayPermissions(self.cfg)
             permissions.script(overlay.dst, args.overlay, '/target')
- 
+
         seed = pimp.SeedPimp(template_cfg, 'iso')
         preseed = seed.pimp(args.seeds, args.overlay, args.puppet)
         build.add_preseed(preseed)
@@ -216,6 +215,8 @@ class ParseArguments:
         build.add_templates(distribution)
         if args.overlay:
             build.add_overlay(overlay.dst)
+        build.non_free_firmware(args.release)
+        build.rebuild_initrd()
         build.create()
         logging.info('ISO "%s" has been created, and is ready to use', iso_dst)
 

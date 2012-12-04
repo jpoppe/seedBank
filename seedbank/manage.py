@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 # Copyright 2009-2012 Jasper Poppe <jgpoppe@gmail.com>
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #    http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -71,9 +71,10 @@ class Manage:
 
     def _extract_debs(self, directory):
         """extract files from all debian packages in a directory"""
+        pattern = self.cfg['debian']['firmware_filter']
         os.chdir(directory)
         for file_name in os.listdir(directory):
-            if fnmatch.fnmatch(file_name, '*.deb'):
+            if fnmatch.fnmatch(file_name, pattern):
                 result = utils.call(['dpkg', '-x', file_name, 'temp'])
                 if result:
                     err = 'failed to extract package "%s"' % file_name
@@ -100,26 +101,30 @@ class Manage:
                         'initrd image (fixes "root partition not found" error)')
 
     def _debian_firmware(self, name):
-        """download and integrate the debian non free firmware"""
-        distribution, release, _ = name.split('-')
-        path = '-'.join(('firmware', distribution, release))
-        dst = os.path.join(self.cfg['paths']['archives'], path)
+        """integrate Debian non free firmware"""
         temp_initrd = os.path.join(self.temp, 'initrd')
-        temp_firmware = os.path.join(self.temp, 'firmware')
-        archive = os.path.join(dst, 'firmware.tar.gz')
         initrd = os.path.join(self.cfg['paths']['tftpboot'], 'seedbank', name,
             'initrd.gz')
-        url = self.cfg[distribution]['url_firmware'].replace('${release}', release)
-        self._download(url, dst)
-        utils.untar(archive, temp_firmware)
-        self._extract_debs(temp_firmware)
         utils.make_dirs(temp_initrd)
         utils.initrd_extract(temp_initrd, initrd)
-        src = os.path.join(temp_firmware, 'temp', 'lib/firmware')
         dst = os.path.join(self.temp, 'initrd/lib/firmware')
-        utils.file_move(src, dst)
+        self._add_firmware(name, dst)
         self._disable_usb(temp_initrd)
         utils.initrd_create(temp_initrd, initrd)
+
+    def _add_firmware(self, name, dst):
+        """download, extract and copy Debian non free firmware"""
+        distribution, release, _ = name.split('-')
+        path = '-'.join(('firmware', distribution, release))
+        archive_dst = os.path.join(self.cfg['paths']['archives'], path)
+        temp_firmware = os.path.join(self.temp, 'firmware')
+        archive = os.path.join(archive_dst, 'firmware.tar.gz')
+        url = self.cfg[distribution]['url_firmware'].replace('${release}', release)
+        self._download(url, archive_dst)
+        utils.untar(archive, temp_firmware)
+        self._extract_debs(temp_firmware)
+        src = os.path.join(temp_firmware, 'temp', 'lib/firmware')
+        utils.file_move(src, dst)
 
     def syslinux(self):
         """download syslinux and extract required files"""
@@ -181,7 +186,7 @@ class Manage:
             iso_file = iso_file + '.iso'
             url = os.path.join(url, iso_file)
         return url
-     
+
     def iso(self, name):
         """download ISOs"""
         dst = os.path.join(self.cfg['paths']['isos'], name + '.iso')

@@ -4,10 +4,13 @@
 #
 # architectures          -> the supported architectures, this will be applied for
 #                           Debian and Ubuntu
-# firmwares              -> recent Debian releases do not include support for 
+# firmwares              -> recent Debian releases do not include support for
 #                           proprietary firmwares, seedBank manage will automatically
 #                           patch the firmware into the netboot image after the netboot
 #                           image has been downloaded
+# firmware_filter        -> set this value to select only specific firmware e.g.:
+#                           'firmware-bnx*.deb' for all 'bnx2' firmwares
+#                           '*.deb' for all non free firmwares
 # netboots               -> the netboot images which are available to seedBank
 # isos                   -> isos which are available to seedBank, squeeze points to the
 #                           latest Debian stable release, squeeze could be replaced
@@ -29,6 +32,7 @@ debian:
   iso_current: squeeze
   iso_flavours: [mini, businesscard, netinst]
   firmwares: [squeeze]
+  firmware_filter: '*.deb'
   template_pxe: pxe_debian
   template_isolinux: debian_isolinux.cfg
   template_isolinux_mini: debian_mini_isolinux.cfg
