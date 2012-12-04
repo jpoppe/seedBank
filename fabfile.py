@@ -6,13 +6,11 @@ import sys
 
 if not env.hosts:
     env.hosts = ['overlord001.a.c.m.e']
-#env.hosts = ['overlord001.h.o.m.e']
 env.user = 'root'
 application = 'seedbank'
 version = '2.0.0rc7'
 deb_file = 'seedbank_%s_all.deb' % version
 repository = '/home/www/repositories/debian/sn'
-puppet = '~/git/ecg-puppet-staging/modules/xx/platform/xx_overlord/templates/etc/seedbank'
 
 fab_path = os.path.dirname(os.path.realpath(__file__))
 if not os.path.dirname(os.path.realpath(__file__)) == os.getcwd():
@@ -33,7 +31,7 @@ def build():
 
 def repo_add():
     local('reprepro -Vb %s includedeb squeeze ~/builds/%s' % (repository, deb_file))
-    
+
 def repo_remove():
     with settings(warn_only=True):
         local('reprepro -Vb %s remove squeeze %s' % (repository, application))
@@ -41,8 +39,8 @@ def repo_remove():
 def localhost():
     local('sudo rm -rf /etc/seedbank')
     local('sudo ./setup.py install; sudo rm -rf build/')
-    local('sudo ln -s ~/git/ecg-puppet-staging /etc/seedbank/overlays/iso_overlord/root/')
-    local('sudo ln -s ~/git/ecg-puppet-staging /etc/seedbank/overlays/iso_overlord_vbox/root/')
+    local('sudo ln -s ~/git/ebuddy/puppet_main /etc/seedbank/overlays/iso_overlord/root/')
+    local('sudo ln -s ~/git/ebuddy/puppet_main /etc/seedbank/overlays/iso_overlord_vbox/root/')
     build()
     repo_remove()
     repo_add()
@@ -72,8 +70,3 @@ def test_seedslave():
     run('dpkg -i %s' % deb_file)
     run('cp /root/settings.py /etc/seedbank')
     run('/etc/init.d/%s start' % application)
-
-def update_puppet():
-    puppet_conf = os.path.join(puppet, 'conf.d')
-    local('cp ~/git/seedbank/etc/seedbank/settings.yaml %s' % puppet)
-    local('cp ~/git/seedbank/etc/seedbank/conf.d/* %s' % puppet_conf)
