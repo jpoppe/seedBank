@@ -650,6 +650,10 @@ Add a package to the repository::
     cd /srv/repositories/debian/custom
     reprepro includedeb custom ~/seedbank_0.8.0_all.deb
 
+Add the repository to the apt sources
+
+    sudo bash -c 'echo "deb http://192.168.0.1/debian/custom squeeze main" > /etc/apt/sources.list.d/custom.list'
+
 Various reprepro commands
 -------------------------
 
