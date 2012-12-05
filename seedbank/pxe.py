@@ -133,7 +133,7 @@ class GeneratePxe:
 
 class ExternalNodes(object):
     """use external nodes for getting configuration details"""
-    
+
     def __init__(self, provider, values):
         """initialize variables"""
         self.provider = provider
@@ -152,7 +152,7 @@ class ExternalNodes(object):
         if result:
             return dict([('external_' + k, v) for k, v in result.items()])
         else:
-            print ('warning: no external node information found')
+            logging.warning('no external node information found')
 
     def _gather_script(self):
         """get node information via a lookup script"""
