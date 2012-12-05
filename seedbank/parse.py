@@ -88,7 +88,6 @@ class ParseArguments:
                 defaults[key] = overrides[key]
         return defaults
 
-
     def _shared(self, args, release):
         """process shared arguments between the pxe and iso commands"""
         if args.config:
