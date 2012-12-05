@@ -147,16 +147,24 @@ def override(args, overrides):
     args_dict = vars(args)
     for key, value in overrides['args'].items():
         if key in positionals:
-            logging.warning('positional arguments can not be overriden please '
-                'remove "%s" from config "%s"', key, args.config)
+            logging.warning('positional arguments can not be overriden remove '
+                '"%s" from config "%s"', key, args.config)
         else:
-            if type(args_dict[key]) == list:
+            if key == 'variables':
+                if type(value) == dict:
+                    value = [(name, data) for name, data in value.items()]
+            if not value:
+                pass
+            elif type(args_dict[key]) == list:
                 value = args_dict[key] + value
-            else:
+                setattr(args, key, value)
+            elif getattr(args, key):
                 logging.warning('option "%s" has been defined on the command '
-                    'line and in the config override, will use value "%s" from '
-                    'the config override "%s"', key, value, args.config)
-            setattr(args, key, value)
+                    'line and in the config override file, will use value "%s" '
+                    'from the config override file', key, value)
+                setattr(args, key, value)
+            else:
+                setattr(args, key, value)
     return args
 
 def pxe_variables(cfg, address):
