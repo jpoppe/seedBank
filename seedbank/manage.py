@@ -111,6 +111,7 @@ class Manage:
         self._add_firmware(name, dst)
         self._disable_usb(temp_initrd)
         utils.initrd_create(temp_initrd, initrd)
+        utils.rmtree(temp_initrd)
 
     def _add_firmware(self, name, dst):
         """download, extract and copy Debian non free firmware"""
@@ -119,12 +120,14 @@ class Manage:
         archive_dst = os.path.join(self.cfg['paths']['archives'], path)
         temp_firmware = os.path.join(self.temp, 'firmware')
         archive = os.path.join(archive_dst, 'firmware.tar.gz')
-        url = self.cfg[distribution]['url_firmware'].replace('${release}', release)
+        url = self.cfg[distribution]['url_firmware'].replace('${release}',
+            release)
         self._download(url, archive_dst)
         utils.untar(archive, temp_firmware)
         self._extract_debs(temp_firmware)
         src = os.path.join(temp_firmware, 'temp', 'lib/firmware')
         utils.file_move(src, dst)
+        utils.rmtree(temp_firmware)
 
     def syslinux(self):
         """download syslinux and extract required files"""
