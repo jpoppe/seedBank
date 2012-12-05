@@ -39,22 +39,22 @@ download it once. In this example the Debian Squeeze AMD64 mini ISO will be used
     seedbank manage --help
     seedbank manage -i debian-squeeze-amd64-mini
 
-Build the ISO with the **seedbank iso --aditional-seeds <additional_seed> <host_name> <iso_name> <ouput>** command, and save the ISO as *squeeze001.iso*. If you do not specify the additional-seed the installer will require manual input for disk partitioning, be sure to match the disk recipe with the configuration of the node to be installed::
+Build the ISO with the **seedbank iso --aditional-seeds <additional_seed> <host_name> <iso_name> <ouput>** command, by default the ISO will be saved a <fqdn>.iso, in case of this example this will be *squeeze001.domain.iso*. If you do not specify the additional-seed the installer will require manual input for disk partitioning, be sure to match the disk recipe with the configuration of the node to be installed::
 
     seedbank iso --help
     seedbank list --seeds
 
 For SCSI/SATA disks::
 
-    seedbank iso -a 1disk_sd_one_partition squeeze001.domain debian-squeeze-amd64-mini squeeze001.iso
+    seedbank iso -a 1disk_sd_one_partition squeeze001.domain debian-squeeze-amd64-mini
 
 For IDE disks::
 
-    seedbank iso -a 1disk_hd_one_partition squeeze001.domain debian-squeeze-amd64-mini squeeze001.iso
+    seedbank iso -a 1disk_hd_one_partition squeeze001.domain debian-squeeze-amd64-mini
 
 For Virtual disks (Used by some virtualization disk controller drivers)::
 
-    seedbank iso -a 1disk_vd_one_partition squeeze001.domain debian-squeeze-amd64-mini squeeze001.iso
+    seedbank iso -a 1disk_vd_one_partition squeeze001.domain debian-squeeze-amd64-mini
 
 seedBank PXE
 ============

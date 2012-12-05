@@ -199,7 +199,11 @@ class ParseArguments:
                 'ISO is not available (run "seedbank manage -i %s" to download '
                 'the ISO)' % (args.release, args.release))
 
-        iso_dst = os.path.abspath(args.output)
+        if args.isofile:
+            iso_dst = os.path.abspath(args.isofile)
+        else:
+            iso_dst = os.path.join(os.getcwd(), '%s.iso' % args.fqdn)
+
         if os.path.isfile(iso_dst):
             logging.warning('"%s" already exists, will overwrite', iso_dst)
 

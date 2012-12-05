@@ -150,7 +150,8 @@ def argument_parser():
 
     parser_iso = subparsers.add_parser('iso', parents=[parser_shared],
         help='build an (unattended) installation ISO')
-    parser_iso.add_argument('output', help='file name of the generated ISO')
+    parser_iso.add_argument('-i', '--isofile', help='file name and location '
+        'of the generated ISO (default: ./<fqdn>.iso')
     parser_iso.add_argument('-v', '--variables', nargs=2, action='append',
         metavar=('KEY', 'VALUE'),
         default=[], help='add (or overrides) one or more seed and or overlay '
