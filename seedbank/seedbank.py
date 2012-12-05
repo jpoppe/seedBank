@@ -122,8 +122,8 @@ def argument_parser():
         'distribution, e.g: squeeze or precise)')
     parser_shared.add_argument('-a', '--additional', action='append',
         default=[], metavar='SEED', help='append additional seed files to the '
-        'default seed file like  disk recipes, repositories or other '
-        'additional (custom) seeds')
+        'default seed file like disk recipes, repositories or other additional '
+        '(custom) seeds')
     parser_shared.add_argument('fqdn', help='fully qualified domain name of '
         'the node to install')
     parser_shared.add_argument('release', help='release name')
@@ -132,7 +132,7 @@ def argument_parser():
         'manifest(s) to apply after the installation')
     parser_shared.add_argument('-c', '--config', default=None, help='override '
         'template (pxe and seed) settings')
-  
+
     parser_pxe = subparsers.add_parser('pxe', parents=[parser_shared],
         help='manage netboot installations, prepare a pxelinux.cfg '
         'file with all the settings required for a netboot installation')
@@ -198,9 +198,9 @@ def argument_parser():
     if len(sys.argv) == 2:
         if sys.argv[1] == 'list':
             parser_list.print_help()
-        if sys.argv[1] == 'manage':
+        elif sys.argv[1] == 'manage':
             parser_manage.print_help()
-        if sys.argv[1] == 'daemon':
+        elif sys.argv[1] == 'daemon':
             parser_daemon.print_help()
     else:
         args.func(args)
