@@ -22,6 +22,12 @@
 # by seedBank internally, feel free to add custom commands, seedBank will
 # break if those variables are removed
 #
+# NOTE: if you want to use static configuration for PXE based installations
+# you will need to add the killall.sh script to the early command and specify
+# e.g.: early_command: ['/bin/killall.sh', '/bin/netcfg']
+# the related seed variables, for more info see:
+# /etc/seedbank/seeds/network.seed
+#
 seed:
   early_command: []
   late_command: []
@@ -55,8 +61,8 @@ seed:
 # files (default: /etc/seedbank/templates/pxe_debian and
 # /etc/seedbank/templates/pxe_ubuntu)
 #
-# see the pxe template files for more informations
-# 
+# see the pxe template files for more information
+#
 # console_charmap -> kernel parameter to set the charmap
 # console_layout -> kernel parameter to set the layout
 # country_chooser -> kernel parameter to select the country
