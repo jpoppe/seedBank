@@ -88,8 +88,9 @@ class ParseArguments:
                 defaults[key] = overrides[key]
         return defaults
 
-    def _shared(self, args, release):
+    def _shared(self, args, release_type):
         """process shared arguments between the pxe and iso commands"""
+
         if args.config:
             yaml_file = os.path.join(self.cfg['paths']['configs'], args.config)
             yaml_file += '.yaml'
@@ -99,6 +100,18 @@ class ParseArguments:
             config = self._merge_config(self.cfg, overrides)
         else:
             config = self.cfg
+
+        if not args.release:
+            args.release = self.cfg['default_release'][release_type]
+        else:
+            args.release = args.release
+
+        try:
+            release = args.release.split('-')[1]
+        except (ValueError, IndexError):
+            raise self.exception('"%s" is not a valid release, use the '
+                '"seedbank list" command to list available releases'
+                % args.release)
 
         if args.overlay:
             path = os.path.join(self.cfg['paths']['overlays'], args.overlay)
@@ -136,22 +149,18 @@ class ParseArguments:
 
     def pxe(self, args):
         """process the pxe command"""
-        try:
-            _, release, _ = args.release.split('-')
-        except:
-            err = '"%s" is an invalid release, run "seedbank list -n" to list '\
-                'available releases' % args.release
-            raise self.exception(err)
+        args, config = self._shared(args, 'pxe')
+        release = args.release
 
-        args, config = self._shared(args, release)
-
-        path = os.path.join(config['paths']['tftpboot'], 'seedbank',
-            args.release)
+        path = os.path.join(config['paths']['tftpboot'], 'seedbank', release)
         if not os.path.isdir(path):
             if release in config['netboots']:
-                err = '"%s" is not available, run "seedbank manage -n "%s" to '\
-                    'download an prepare the release' % args.release
-                raise self.exception(err)
+                err = '"%s" is not available, run "seedbank manage -n %s" to '\
+                    'download and prepare the release' % (release, release)
+            else:
+                err = '"%s" is not a valid release, run "seedbank list -n" to '\
+                    'list valid releases ' % release
+            raise self.exception(err)
 
         if args.macaddress:
             if len(args.macaddress) == 12:
@@ -182,12 +191,7 @@ class ParseArguments:
         if not 'puppet' in args:
             args.puppet = []
 
-        try:
-            release = args.release.split('-')[1]
-        except ValueError:
-            raise self.exception('"%s" is not a valid release' % args.release)
-
-        args, config = self._shared(args, release)
+        args, config = self._shared(args, 'iso')
         if args.release in config['isos']:
             iso_file = os.path.join(config['paths']['isos'], args.release)
             iso_file += '.iso'

@@ -26,11 +26,21 @@ urls:
 # logging configuration file and logger destination
 #
 # configuration -> the logging configuration files
-# logger        -> the default logging target which should be configured
+# logger        -> the default logging target which is configured
 #                  in the logging configuration file
 logging:
   configuration: /etc/seedbank/logging.conf
-  logger: default    
+  logger: default
+
+# default pxe/iso release selection
+#
+# iso    -> the default ISO (release) which will be used when no release
+#           has been specified with the 'seedbank iso' command
+# pxe    -> the default pxe netboot image (release) which will be used
+#           when no release has been specified with the 'seedbank pxe' command
+default_release:
+  iso: debian-squeeze-amd64-mini
+  pxe: debian-squeeze-amd64
 
 # template files which are in the templates path
 # (default: /etc/seedbank/templates)

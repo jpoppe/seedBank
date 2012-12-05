@@ -143,17 +143,20 @@ def template(fqdn, overlay, config, variables):
 
 def override(args, overrides):
     """override optional arguments with arguments from the config file"""
-    positionals = ('fqdn', 'release', 'output')
     args_dict = vars(args)
     for key, value in overrides['args'].items():
-        if key in positionals:
+        if key == 'fqdn':
             logging.warning('positional arguments can not be overriden remove '
                 '"%s" from config "%s"', key, args.config)
         else:
             if key == 'variables':
                 if type(value) == dict:
                     value = [(name, data) for name, data in value.items()]
-            if not value:
+
+            if key not in args_dict:
+                raise utils.FatalException('argument "%s" specified in the '
+                    'config override is not a valid argument' % key)
+            elif not value:
                 pass
             elif type(args_dict[key]) == list:
                 value = args_dict[key] + value

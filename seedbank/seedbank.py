@@ -126,7 +126,6 @@ def argument_parser():
         '(custom) seeds')
     parser_shared.add_argument('fqdn', help='fully qualified domain name of '
         'the node to install')
-    parser_shared.add_argument('release', help='release name')
     parser_shared.add_argument('-p', '--puppet', action='append',
         metavar='MANIFEST', default=[], help='choose one or more Puppet '
         'manifest(s) to apply after the installation')
@@ -136,6 +135,8 @@ def argument_parser():
     parser_pxe = subparsers.add_parser('pxe', parents=[parser_shared],
         help='manage netboot installations, prepare a pxelinux.cfg '
         'file with all the settings required for a netboot installation')
+    parser_pxe.add_argument('-r', '--release', help='release name (default: '
+        'settings -> default_release -> pxe)')
     parser_pxe.add_argument('-m', '--macaddress',
         help='use a MAC address instead of a to hexidecimal converted IP '
         'address for the pxelinux.cfg configuration file name, the advantage '
@@ -150,8 +151,10 @@ def argument_parser():
 
     parser_iso = subparsers.add_parser('iso', parents=[parser_shared],
         help='build an (unattended) installation ISO')
+    parser_iso.add_argument('-r', '--release', help='release name (default: '
+        'settings -> default_release -> iso)')
     parser_iso.add_argument('-i', '--isofile', help='file name and location '
-        'of the generated ISO (default: ./<fqdn>.iso')
+        'of the generated ISO (default: ./<fqdn>.iso)')
     parser_iso.add_argument('-v', '--variables', nargs=2, action='append',
         metavar=('KEY', 'VALUE'),
         default=[], help='add (or overrides) one or more seed and or overlay '
@@ -161,7 +164,7 @@ def argument_parser():
 
     parser_manage = subparsers.add_parser('manage', help='download and '
         'manage netboot images, syslinux files and ISOs')
-    group = parser_manage.add_mutually_exclusive_group() 
+    group = parser_manage.add_mutually_exclusive_group()
     group.add_argument('-s', '--syslinux', action='store_true',
         help='download the syslinux archive and extract the pxelinux.0, '
         'menu.c32 and vesamenu.c32 files and place those in the tftpboot '
