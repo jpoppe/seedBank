@@ -9,9 +9,10 @@
 #
 # enable  -> those command(s) will run after a system has been enabled for
 #            installation by the 'seedbank pxe' command
+#            e.g.: ['puppet cert --clean ${host_name}.${dns_domain}']
 # disable -> those command(s) will run after an installation is done and
 #            the machine will notify the seedBank daemon by requesting
 #            the disable url
 hooks:
-  enable: ['puppet cert --clean ${host_name}.${dns_domain}']
+  enable: []
   disable: []
