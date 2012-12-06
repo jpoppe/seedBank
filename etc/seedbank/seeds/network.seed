@@ -1,0 +1,13 @@
+### - Static network configuration, use with the killall.sh script and
+# early_command if you want to make it work with pxe based installations
+# for more information see:
+# http://d-i.alioth.debian.org/manual/en.amd64/apbs04.html#preseed-network
+
+d-i netcfg/disable_dhcp boolean true
+d-i netcfg/dhcp_failed note
+d-i netcfg/dhcp_options select Configure network manually
+d-i netcfg/get_nameservers string ${name_servers}
+d-i netcfg/get_ipaddress string ${ip_address}
+d-i netcfg/get_netmask string ${netmask}
+d-i netcfg/get_gateway string ${gateway}
+d-i netcfg/confirm_static boolean true
