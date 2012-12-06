@@ -46,15 +46,15 @@ Build the ISO with the **seedbank iso --aditional-seeds <additional_seed> <host_
 
 For SCSI/SATA disks::
 
-    seedbank iso -a 1disk_sd_one_partition squeeze001.domain debian-squeeze-amd64-mini
+    seedbank iso -a 1disk_sd_one_partition -r debian-squeeze-amd64-mini squeeze001.domain
 
 For IDE disks::
 
-    seedbank iso -a 1disk_hd_one_partition squeeze001.domain debian-squeeze-amd64-mini
+    seedbank iso -a 1disk_hd_one_partition -r debian-squeeze-amd64-mini squeeze001.domain
 
 For Virtual disks (Used by some virtualization disk controller drivers)::
 
-    seedbank iso -a 1disk_vd_one_partition squeeze001.domain debian-squeeze-amd64-mini
+    seedbank iso -a 1disk_vd_one_partition -r debian-squeeze-amd64-mini squeeze001.domain
 
 seedBank PXE
 ============
@@ -148,15 +148,15 @@ Run the following command on the seedBank server after reading the explanation b
 
 For SCSI/SATA disks::
 
-    sudo seedbank pxe -a 1disk_sd_one_partition seednode001.intern.local debian-squeeze-i386
+    sudo seedbank pxe -a 1disk_sd_one_partition -r debian-squeeze-i38 6seednode001.intern.local
 
 For IDE disks::
 
-    sudo seedbank pxe -a 1disk_hd_one_partition seednode001.intern.local debian-squeeze-i386
+    sudo seedbank pxe -a 1disk_hd_one_partition -r debian-squeeze-i386 seednode001.intern.local debian-squeeze-i386
 
 For Virtual disks (Used by some virtualization disk controller drivers)::
 
-    sudo seedbank pxe -a 1disk_vd_one_partition seednode001.intern.local debian-squeeze-i386
+    sudo seedbank pxe -a 1disk_vd_one_partition -r debian-squeeze-i386 seednode001.intern.local
 
 Explanation:
 
@@ -166,7 +166,7 @@ The -a option specifies an additional seed file which will be appended at the en
 
 The seed file which will be used is chosen automatically, it takes the second part of the chosen distribution, so in this case the second part of *debian-squeeze-i386* is squeeze. seedBank will now use */etc/seedbank/seeds/squeeze.seed* as the main preseed file. This behaviour can be overridden with the -s (--seed) option. So if you want to use another main preseed file, for example seednode001.seed instead of squeeze.seed run the following command::
 
-    sudo seedbank pxe -a 1disk_sd_one_partition -s seednode001 seednode001.intern.local debian-squeeze-amd64
+    sudo seedbank pxe -a 1disk_sd_one_partition -s seednode001 -r debian-squeeze-amd64 seednode001.intern.local
 
 The seedBank command will generate */var/lib/tftpboot/pxelinux.cfg/C0A80014*. The filename is actually the IP address converted to hexidecimal, 192.168.0.20 in hexidecimal is C0A80014. This file contains information which is used by the node as soon it boots via PXE. 
 
@@ -218,7 +218,7 @@ Now you can customize the generated permissions file, see the permissions file f
 
 Since we have downloaded the required files and have the custom file overlay in place we generate the pxelinux configuration file for the  node we want to install::
 
-    sudo seedbank pxe -m  -o custom_overlay -a 1disk_sd_one_partition -p example -v custom custom_variable ubuntu001.intern.local ubuntu-precise-amd64
+    sudo seedbank pxe -m  -o custom_overlay -a 1disk_sd_one_partition -p example -v custom custom_variable -r ubuntu-precise-amd64 ubuntu001.intern.local
 
 Explanation of the command:
 
@@ -229,13 +229,19 @@ Explanation of the command:
 - -a 1disk_sd_one_partition -> specify an additional seed file to append to the main seed file, in this case we spefify a disk recipe, so the install will be done fully unattended, this will also WIPE ALL DATA DURING THE INSTALLATION ON THE TARGET MACHINE (Since we did not specify the main seed file with the -s (--seed) option seedbank will automatically use the preseed with the name of the distribution we want to install, in this case it will use precise.seed)
 - -p example -> run the example Puppet Manifest (/etc/seedbank/manifests/example.pp) during the first boot after the installation.
 - -v specify additional variables which will be stored in the generated pxelinux configuration file
+- -r ubuntu-precise-amd64 -> the release to install, the default release to use could be configured in '/etc/seedbank/conf.d/system.yaml' in the 'default_release' section
 - ubuntu001.intern.local -> the fully qualified domain name of the node to install
-- ubuntu-precise-amd64 -> the release to install
 
 Advanced Example 2
 ==================
 
-Describe the use of config overrides.
+All seed and PXE variables can be overridden can be overriden with a config override file. Command line arguments can also be overridden with a config override file. For an example see /etc/seedbank/configs/iso_foo.foobar.com.yaml.
+
+To create an ISO named '/tmp/foo.foobar.com.iso' run the following command::
+
+    sudo seedbank iso -c iso_foo.foobar.com
+
+Config overrides could also be used for PXE netboot installations.
 
 seedBank Commands
 =================
@@ -283,15 +289,17 @@ Download the syslinux archive and put the files required for a netboot installat
 
 Prepare an installation for Debian Squeeze amd64 with the minimal required options (DNS should be configured properly since it will gather the IP address via a DNS lookup)::
 
-    seedbank pxe minion001.a.c.m.e debian-squeeze-amd64
+    seedbank pxe minion001.a.c.m.e
+
+NOTE: Since no release has been specified in this example seedBank will look for the default release which is normally configured in the '/etc/seedbank/conf.d/system.yaml' file in the 'default_release' section. By default this value is for pxe installations 'debian-squeeze-amd64'.
 
 NOTE: if the default configuration (seed files) are used the installation will require user input for partitioning the disks, to do a fully unattended installation a disk recipe should be added to the command::
 
-    seedbank pxe -a 1disk_sd_one_partition minion001.a.c.m.e debian-squeeze-amd64
+    seedbank pxe -a 1disk_sd_one_partition minion001.a.c.m.e
 
 Prepare an installation for Ubuntu Precise with a custom disk layout, run the Puppet network manifest after the installation and specify some custom PXE variable which could be used in the file overlay templates::
 
-    seedbank pxe -a 1disk_sd_one_partition -p network -o minion minion001.a.c.m.e ubuntu-natty-amd64
+    seedbank pxe -a 1disk_sd_one_partition -p network -o minion -r ubuntu-natty-amd64 minion001.a.c.m.e
 
 ---------------
 Troubleshooting
@@ -307,7 +315,7 @@ Logging
 
 seedBank logs quite some information by default.
 
-The default log file is /var/log/seedbank.log and the default log level is INFO, change this to the DEBUG level to get debug information.
+The default log file is /var/log/seedbank.log and the default log level is INFO, change this to the DEBUG level to get debug information::
 
     vi /etc/seedbank/logging.conf
 
@@ -376,7 +384,7 @@ The DNS server works with the */etc/hosts* file, it appends the configured domai
     127.0.0.1       localhost
     192.168.20.1    seedbank001
     192.168.20.101  seed001
-    192.168.20.102  seed002    
+    192.168.20.102  seed002
     192.168.20.103  seed003
 
 Restart dnsmasq::
@@ -473,7 +481,7 @@ Get the GPG key for the Ubuntu repository::
 Run the following command to get the last 16 hex digits of the fingerprint::
 
     gpg --with-colons --list-key
- 
+
     ::
 
     pub:-:4096:1:AED4B06F473041FA:2010-08-27:2018-03-05::-:Debian Archive Automatic Signing Key (6.0/squeeze) <ftpmaster@debian.org>::scSC:
@@ -492,7 +500,7 @@ It is possible to create partially mirrors with reprepro.
 
 The trick is the *FilterFormula* parameter in the *conf/updates* file.
 
-Example:
+Example::
 
     FilterFormula: Priority (==required)
 
@@ -595,17 +603,17 @@ Sync/Update the mirror:
 Create a Ubuntu Natty mirror
 ----------------------------
 
-Create a directory including a conf directory which will contain the mirror(s):
+Create a directory including a conf directory which will contain the mirror(s)::
 
     mkdir -p /srv/repositories/ubuntu/mirror/conf
 
-Create the "conf/distributions" configuration file:
+Create the "conf/distributions" configuration file::
 
     vi /srv/repositories/ubuntu/mirror/conf/distributions
 
 .. include:: manual/configs/reprepro/ubuntu/distributions
 
-Create the "conf/updates" configuration file:
+Create the "conf/updates" configuration file::
 
     vi /srv/repositories/ubuntu/mirror/conf/updates
 
@@ -622,7 +630,7 @@ Create a custom repository
 Create the directory structure::
 
     sudo mkdir -p /srv/repositories/debian/custom/conf
-  
+
 Create the configuration file::
 
     sudo vi /srv/repositories/debian/custom/conf/distributions
@@ -644,13 +652,13 @@ Create the options file::
 ::
 
     basedir /srv/repositories/debian/custom
-  
+
 Add a package to the repository::
 
     cd /srv/repositories/debian/custom
     reprepro includedeb custom ~/seedbank_0.8.0_all.deb
 
-Add the repository to the apt sources
+Add the repository to the apt sources::
 
     sudo bash -c 'echo "deb http://192.168.0.1/debian/custom squeeze main" > /etc/apt/sources.list.d/custom.list'
 
@@ -662,7 +670,7 @@ List all available packages for Debian Squeeze in the custom repository::
     reprepro -b /srv/repositories/debian/custom list squeeze
     cd /srv/repositories/debian/custom
     reprepro list squeeze
-  
+
 Add a Debian package to the custom repository::
 
     reprepro -Vb /srv/repositories/debian/custom includedeb squeeze ~/seedbank_0.8.0_all.deb
@@ -701,10 +709,10 @@ Create a virtual host::
             root /srv/repositories;
             index index.html;
         }
-    
+
     }
 
-Enable the virtual host:
+Enable the virtual host::
 
     sudo ln -s /etc/nginx/sites-available/packages /etc/nginx/sites-enabled/
     sudo /etc/init.d/nginx restart
@@ -715,7 +723,7 @@ Resources
 Official
 
 * http://mirrorer.alioth.debian.org/
-* http://nginx.org/ 
+* http://nginx.org/
 * http://www.gnupg.org/
 
 Lists with official Mirrors
@@ -734,7 +742,7 @@ Reprepro
 GnuPG
 
 * http://www.gentoo.org/doc/en/gnupg-user.xml
-* http://irtfweb.ifa.hawaii.edu/~lockhart/gpg/gpg-cs.htm 
+* http://irtfweb.ifa.hawaii.edu/~lockhart/gpg/gpg-cs.htm
 
 Other mirror tools
 ==================

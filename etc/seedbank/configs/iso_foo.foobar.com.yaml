@@ -1,0 +1,23 @@
+args:
+  fqdn: foo.foobar.com
+  release: debian-squeeze-amd64-mini
+  isofile: /tmp/foo.foobar.com.iso
+  overlay: iso_overlord
+  additional: [1disk_sda_one_partition, network]
+  variables:
+    ip_address: 192.168.0.1
+    netmask: 255.255.255.0
+    name_servers: 192.168.0.1
+    gateway: 192.168.0.1
+    puppet_module_paths:
+      "/root/puppet/modules/shared:\
+      /root/puppet/modules/collections:\
+      /root/puppet/modules/dwh/configs:\
+      /root/puppet/modules/xx/configs"
+    puppet_site_pp: /root/puppet/manifests/site.pp
+seed:
+  early_command: []
+  debian_mirror_host_name: 192.168.0.1
+  debian_mirror_directory: /debian/mirror
+debian:
+  firmware_filter: 'firmware-bnx*.deb'
