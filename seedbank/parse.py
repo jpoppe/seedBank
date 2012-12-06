@@ -121,7 +121,11 @@ class ParseArguments:
                 raise self.exception('file overlay directory "%s" does not '
                     'exist' % path)
 
-        if not '.' in args.fqdn:
+        if not args.fqdn:
+            raise self.exception('you will need to specify a fully qualified '
+                'domain name on the command line or in the args section of a '
+                'config override file')
+        elif not '.' in args.fqdn:
             raise self.exception('"%s" is not a fully qualified domain name' %
                 args.fqdn)
 

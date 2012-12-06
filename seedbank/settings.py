@@ -145,29 +145,28 @@ def override(args, overrides):
     """override optional arguments with arguments from the config file"""
     args_dict = vars(args)
     for key, value in overrides['args'].items():
-        if key == 'fqdn':
-            logging.warning('positional arguments can not be overriden remove '
-                '"%s" from config "%s"', key, args.config)
-        else:
-            if key == 'variables':
-                if type(value) == dict:
-                    value = [(name, data) for name, data in value.items()]
+        if key == 'config':
+            raise utils.FatalException('argument "%s" specified in the config '
+                'override could not be used because it needs to be specified '
+                'on the command line' % key)
+        if key == 'variables':
+            if type(value) == dict:
+                value = [(name, data) for name, data in value.items()]
 
-            if key not in args_dict:
-                raise utils.FatalException('argument "%s" specified in the '
-                    'config override is not a valid argument' % key)
-            elif not value:
-                pass
-            elif type(args_dict[key]) == list:
-                value = args_dict[key] + value
-                setattr(args, key, value)
-            elif getattr(args, key):
-                logging.warning('option "%s" has been defined on the command '
-                    'line and in the config override file, will use value "%s" '
-                    'from the config override file', key, value)
-                setattr(args, key, value)
-            else:
-                setattr(args, key, value)
+        if key not in args_dict:
+            raise utils.FatalException('argument "%s" specified in the config '
+                'override is not a valid argument' % key)
+        elif not value:
+            pass
+        elif type(args_dict[key]) == list:
+            value = args_dict[key] + value
+            setattr(args, key, value)
+        elif getattr(args, key):
+            raise utils.FatalException('argument "%s" has been defined on the '
+                'command line and in the config override, omit one of those'
+                % key)
+        else:
+            setattr(args, key, value)
     return args
 
 def pxe_variables(cfg, address):

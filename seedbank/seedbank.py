@@ -124,13 +124,14 @@ def argument_parser():
         default=[], metavar='SEED', help='append additional seed files to the '
         'default seed file like disk recipes, repositories or other additional '
         '(custom) seeds')
-    parser_shared.add_argument('fqdn', help='fully qualified domain name of '
-        'the node to install')
+    parser_shared.add_argument('fqdn', nargs='?', help='fully qualified domain '
+        'name of the node to install')
     parser_shared.add_argument('-p', '--puppet', action='append',
         metavar='MANIFEST', default=[], help='choose one or more Puppet '
         'manifest(s) to apply after the installation')
     parser_shared.add_argument('-c', '--config', default=None, help='override '
-        'template (pxe and seed) settings')
+        'template (pxe and seed) settings and set command line arguments,'
+        'could also be used for creating machine profiles')
 
     parser_pxe = subparsers.add_parser('pxe', parents=[parser_shared],
         help='manage netboot installations, prepare a pxelinux.cfg '
@@ -202,6 +203,10 @@ def argument_parser():
     if len(sys.argv) == 2:
         if sys.argv[1] == 'list':
             parser_list.print_help()
+        if sys.argv[1] == 'pxe':
+            parser_pxe.print_help()
+        if sys.argv[1] == 'iso':
+            parser_iso.print_help()
         elif sys.argv[1] == 'manage':
             parser_manage.print_help()
         elif sys.argv[1] == 'daemon':
