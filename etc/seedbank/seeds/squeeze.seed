@@ -3,10 +3,10 @@
 # seedBank Debian Squeeze preseed file
 # created by Jasper Poppe <jgpoppe@gmail.com>
 #
-# This is seed file does a minimal Debian Squeeze installation, 
+# This is seed file does a minimal Debian Squeeze installation,
 # feel free to customize ;)
 #
-# For much more options and explanation see: 
+# For much more options and explanation see:
 #  http://www.debian.org/releases/squeeze/example-preseed.txt
 #  http://d-i.alioth.debian.org/tmp/en.i386/apbs04.html
 #
@@ -47,7 +47,7 @@ d-i network-console/password password seed123
 d-i network-console/password-again password seed123
 d-i network-console/start note
 
-### - Mirror 
+### - Mirror
 d-i mirror/country string manual
 d-i mirror/http/hostname string ${debian_mirror_host_name}
 d-i mirror/http/directory string ${debian_mirror_directory}
@@ -108,7 +108,7 @@ d-i grub-installer/only_debian boolean true
 d-i grub-installer/with_other_os boolean true
 d-i debian-installer/add-kernel-opts string ${add_kernel_opts}
 
-### - Finish 
+### - Finish
 d-i finish-install/reboot_in_progress note
 d-i debian-installer/exit/poweroff boolean ${power_off}
 d-i cdrom-detect/eject boolean true
