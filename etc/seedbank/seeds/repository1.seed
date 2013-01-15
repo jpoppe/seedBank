@@ -1,0 +1,13 @@
+################################################################################
+#
+# seedBank repository preseed snippet created by Jasper Poppe <jgpoppe@gmail.com>
+#
+# This seed file adds and configures an additional repository,
+# feel free to customize ;)
+#
+################################################################################
+
+### - Add custom repository
+d-i apt-setup/local1/repository string ${repository_1}
+d-i apt-setup/local1/comment string Custom Repository
+d-i apt-setup/local1/key string ${repository_1_key}
