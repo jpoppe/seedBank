@@ -5,6 +5,7 @@
 # escaped by a dollar sign since preseed files are treated as templates
 # in seedBank
 
+d-i partman-md/confirm_nochanges boolean true
 d-i partman-lvm/device_remove_lvm boolean true
 d-i partman-md/device_remove_md boolean true
 d-i partman-lvm/confirm boolean true

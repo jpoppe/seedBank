@@ -1,3 +1,4 @@
+d-i partman-md/confirm_nochanges boolean true
 d-i partman/default_filesystem string ext4
 d-i partman-md/device_remove_md boolean true
 d-i partman/alignment select cylinder
