@@ -38,6 +38,13 @@ seed:
   apt_proxy: ''
   mirror_allow_unauthenticated: 'true'
   debian_packages: openssh-server puppet debconf-utils lsb-release rsync vim less ifenslave-2.6 vlan
+  locale: en_US.UTF-8
+  country: NL
+  language: en
+  keymap: us
+  keymap_policy: us
+  console_password: seed123
+  keyboard_variant: USA
   ntp_server: ntp.xs4all.nl
   repository_0: 'deb http://192.168.122.1/debian/sn squeeze main'
   repository_0_key: 'http://192.168.122.1/debian/repository.key'
@@ -56,7 +63,7 @@ seed:
   clock_utc: 'true'
   power_off: 'false'
 
-# pxe template variables, feel free to add or modify the values, those
+# pxe template variables, feel free to add (or modify) the values, those
 # variables are used in the file overlays and Debian and Ubuntu pxe template
 # files (default: /etc/seedbank/templates/pxe_debian and
 # /etc/seedbank/templates/pxe_ubuntu)
@@ -83,4 +90,17 @@ pxe:
   locale: en_US
   template: pxehost
   theme: dark
-  puppet_master: 'puppet'
+  puppet_master: puppet
+
+# iso template variables, feel free to add or modify the values, those
+# variables are used in the file overlays and Debian and Ubuntu iso template
+# files (default: /etc/seedbank/templates/debian_isolinux.cfg,
+# /etc/seedbank/templates/debian_mini_isolinux.cfg,
+# /etc/seedbank/templates/ubuntu_isolinux.cfg,
+# /etc/seedbank/templates/ubuntu_mini_isolinux.cfg)
+#
+# see the iso template files for more information
+#
+# extra -> additional kernel parameters
+iso:
+  extra: ''
