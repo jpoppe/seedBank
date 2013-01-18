@@ -7,10 +7,13 @@ iface lo inet loopback
 
 # The primary network interface
 auto eth0
-iface eth0 inet dhcp
+iface eth0 inet static
+  address ${ip_address_0}
+  netmask ${netmask_0}
+  gateway ${gateway_0}
 
 # The secondary network interface
 auto eth1
 iface eth1 inet static
-  address ${ip_address}
-  netmask 255.255.255.0
+  address ${ip_address_1}
+  netmask ${netmask_1}
