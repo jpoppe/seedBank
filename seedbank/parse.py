@@ -113,7 +113,7 @@ class ParseArguments:
                 '"seedbank list" command to list available releases'
                 % args.release)
 
-        if args.overlay:
+        if 'overlay' in args and args.overlay:
             path = os.path.join(self.cfg['paths']['overlays'], args.overlay)
             if os.path.isdir(path):
                 args.path = path
@@ -207,7 +207,7 @@ class ParseArguments:
                 'ISO is not available (run "seedbank manage -i %s" to download '
                 'the ISO)' % (args.release, args.release))
 
-        if args.isofile:
+        if 'isofile' in args and args.isofile:
             iso_dst = os.path.abspath(args.isofile)
         else:
             iso_dst = os.path.join(os.getcwd(), '%s.iso' % args.fqdn)
@@ -240,7 +240,12 @@ class ParseArguments:
         build.non_free_firmware(args.release)
         build.rebuild_initrd()
         build.create()
-        logging.info('ISO "%s" has been created, and is ready to use', iso_dst)
+        logging.info('ISO "%s" has been created', iso_dst)
+        for hook in self.cfg['hooks_iso']['enable']:
+            #hook = utils.apply_template(hook, self.pxe_variables)
+            logging.info('found enable hook "%s"', hook)
+            utils.run(hook, error=True)
+
 
     def manage(self, args):
         """validate the input and if no errors are found run the specified 
