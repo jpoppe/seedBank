@@ -1,13 +1,11 @@
-#!/usr/bin/env python
-
 # Copyright 2009-2012 Jasper Poppe <jgpoppe@gmail.com>
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #    http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +36,7 @@ cfg = settings.parse_cfg()
 
 class GeneratePxe:
     """manage and generate pxe files"""
-    
+
     def __init__(self, args):
         """set arguments as class variables"""
         self.seeds = args.seeds
@@ -125,7 +123,7 @@ class GeneratePxe:
     def hook_enable(self):
         """apply PXE variables on the configured enable hook(s) and run the
         hook(s)"""
-        for hook in cfg['hooks']['enable']:
+        for hook in cfg['hooks_pxe']['enable']:
             hook = utils.apply_template(hook, self.pxe_variables)
             logging.info('found enable hook "%s"', hook)
             utils.run(hook, error=True)
