@@ -1,13 +1,9 @@
-echo "info: running IA Puppet bootstrap scripts"
+echo "info: running Puppet bootstrap scripts"
 
+su - root -c "gpg --import /etc/puppet/hiera-gpg.key"
+su - puppet -s /bin/bash -c "gpg --import /etc/puppet/hiera-gpg.key"
+rm /etc/puppet/hiera-gpg.key
 apt-get update
-puppet apply --modulepath ${puppet_module_paths} --no-daemonize --onetime ${puppet_site_pp} | tee -a /var/log/bootstrap_puppet.log
-sleep 7
-puppet agent --test | tee -a /var/log/bootstrap_puppet.log
-/etc/init.d/puppetmaster restart
-/etc/init.d/nginx restart
-sleep 5
-puppet agent --test | tee -a /var/log/bootstrap_puppet.log
-sleep 3
-/etc/init.d/puppet stop
+puppet apply --modulepath ${puppet_module_paths} --no-daemonize --onetime ${puppet_site_pp} --hiera_config=${hiera_config} --data_binding_terminus=hiera 2>&1 | tee -a /var/log/bootstrap_puppet.log
+puppet agent --test 2>&1 | tee -a /var/log/bootstrap_puppet.log
 touch /var/cache/chicken_done
