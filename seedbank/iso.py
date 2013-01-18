@@ -34,7 +34,6 @@ class Build:
 
     def __init__(self, cfg, iso_file, fqdn, dst):
         """prepare the data dictionary"""
-        self.data = {}
         self.cfg = cfg
         work_path = os.path.join(cfg['paths']['temp'], 'seedbank', fqdn, 'iso')
         self.work_path = work_path
@@ -42,6 +41,7 @@ class Build:
         self.work_iso = os.path.join(work_path, 'iso')
         self.iso_file = iso_file
         self.iso_dst = dst
+        self.data = cfg['iso']
         self.data['architecture'] = None
 
     def prepare(self):
