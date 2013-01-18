@@ -2,16 +2,16 @@
 seedBank Introduction
 =====================
 
-seedBank is a simple and flexible tool to manage unattended Debian and Ubuntu netboot installations. It is based on Debian preseed files, so it will provide the cleanest Debian installations possible by just using the standard Debian tools. Since version 2.0.0 it also has support for modifying installer ISOs so the installer could do unattended installs.
+seedBank is a simple and flexible tool to manage unattended Debian and Ubuntu netboot installations. It is based on Debian preseed files, so it will provide the cleanest Debian installations possible by just using the standard Debian tools. Since version 2.0.0 it also has support for modifying installer ISOs so you could generate ISO's which are able to do unattended installations.
 
-You could see seedBank as a lightweight alternative to FAI_ (Fully Automatic Installation) or Cobbler_, but much simpler and less bloated. seedBank is focused on one task, which is installing systems as easy, quick and clean as possible. Configuration tools like Puppet or Chef should take it over after the install. 
+You could see seedBank as a lightweight alternative to FAI_ (Fully Automatic Installation) or Cobbler_, but much simpler and less bloated. seedBank is focused on one task, which is installing systems as easy, quick and clean as possible. Configuration tools like Puppet or Chef can take it over and configure the system after the installation has been completed.
 
-.. _FAI: http://www.python.org
-.. _Cobbler: http://www.python.org
+.. _FAI: http://fai-project.org/
+.. _Cobbler: https://fedorahosted.org/cobbler/
 
-seedBank 'installs' are done via Debian or Ubuntu preseed files. Seeding is an important part of the Debian system and is basically used to configure anything. Preseed files are available for a long time but they are hard to manage and not flexible. This is where seedBank comes to be the helping hand.
+seedBank 'installs' are done via Debian or Ubuntu preseed files. Seeding is an important part of the Debian system and is basically used to configure anything. Preseed files are available for a long time but they are hard to manage and not flexible. This is where seedBank comes as the helping hand.
 
-seedBank development started in August 2009 and has been open sourced at PuppetConf 2011 Portland.
+seedBank development started in August 2009 and has been open sourced to the world at PuppetConf 2011 Portland.
 
 Media
 =====
