@@ -23,14 +23,14 @@
 ### - Those settings will be ignored when doing a netboot installation
 #     and should be provided by kernel parameters (pxe variables and templates
 #     are used for this)
-d-i debian-installer/locale string en_US.UTF-8
+d-i debian-installer/locale string ${locale}
 
 ### - Localization, Keyboard
-d-i debian-installer/locale string en_US
-d-i console-keymaps-at/keymap select us
-d-i console-data/keymap/policy select us
-d-i debian-installer/language string en
-d-i debian-installer/country string NL
+d-i console-keymaps-at/keymap select ${keymap}
+d-i console-data/keymap/policy select ${keymap_policy}
+d-i debian-installer/language string ${language}
+d-i debian-installer/country string ${country}
+d-i keyboard-configuration/variant select ${keyboard_variant}
 # Optionally specify additional locales to be generated.
 #d-i localechooser/supported-locales en_US.UTF-8, nl_NL.UTF-8
 
@@ -41,10 +41,13 @@ d-i netcfg/get_domain string ${dns_domain}
 d-i netcfg/wireless_wep string
 d-i hw-detect/load_firmware boolean true
 
+### - Required when installing additional kernel(s)
+d-i linux-base/disk-id-convert-auto boolean true
+
 ### - Enable SSH during installation (username = installer)
 d-i anna/choose_modules string network-console
-d-i network-console/password password seed123
-d-i network-console/password-again password seed123
+d-i network-console/password password ${console_password}
+d-i network-console/password-again password ${console_password}
 d-i network-console/start note
 
 ### - Mirror
