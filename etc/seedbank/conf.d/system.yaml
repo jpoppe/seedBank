@@ -14,7 +14,7 @@ paths:
   status: /var/lib/seedbank/status
   temp: /tmp
   templates: /etc/seedbank/templates
-  tftpboot: /var/lib/tftpboot
+  tftpboot: /srv/tftp
 
 # urls for downloading resources
 #
