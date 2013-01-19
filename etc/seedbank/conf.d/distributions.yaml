@@ -36,9 +36,9 @@ debian:
   template_pxe: pxe_debian
   template_isolinux: debian_isolinux.cfg
   template_isolinux_mini: debian_mini_isolinux.cfg
-  url_main: 'http://ftp.debian.org'
-  url_iso: 'http://cdimage.debian.org/debian-cd'
-  url_firmware: 'http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/${release}/current/firmware.tar.gz'
+  url_main: http://ftp.debian.org
+  url_iso: http://cdimage.debian.org/debian-cd
+  url_firmware: http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/${release}/current/firmware.tar.gz
 ubuntu:
   architectures: [amd64, i386]
   isos: [oneiric, precise, quantal]
@@ -47,5 +47,5 @@ ubuntu:
   template_pxe: pxe_ubuntu
   template_isolinux: ubuntu_isolinux.cfg
   template_isolinux_mini: ubuntu_mini_isolinux.cfg
-  url_main: 'http://archive.ubuntu.com'
-  url_iso: 'http://releases.ubuntu.com'
+  url_main: http://archive.ubuntu.com
+  url_iso: http://releases.ubuntu.com
