@@ -1,17 +1,19 @@
 # seedBank example configuration created by Jasper Poppe <jgpoppe@gmail.com>
 #
 # NOTE: the seedBank daemon needs to be restarted after changing this file
-# 
+#
 # NOTE: seedBank will look in the following order to find this settings file
 # ./settings.conf -> ~/.seedbank/settings.conf -> /etc/seedbank/settings.conf
 #
-# seed_host          -> used as a variable in other settings, fill in the hostname or IP 
-#                       address of the server which is running seedBank
-# bottle_listen      -> the IP address the seedBank daemon should listen to, if you
-#                       leave it empty the seedBank daemon will listen to all interfaces
+# seed_host          -> used as a variable in other settings, fill in the
+#                       hostname or IP address of the server which is running
+#                       seedBank
+# bottle_listen      -> the IP address the seedBank daemon should listen to, if
+#                       you leave it empty the seedBank daemon will listen to
+#                       all interfaces
 # bottle_port        -> the port the seedBank daemon will listen to
-# bottle_server      -> WSGIref server to use with Bottle, for more information see the
-#                       Bottle homepage: http://bottlepy.org/
+# bottle_server      -> WSGIref server to use with Bottle, for more information
+#                       see the Bottle homepage: http://bottlepy.org/
 # configuration_path -> path with the seedBank settings files
 #
 settings:

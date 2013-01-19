@@ -7,13 +7,14 @@
 # to install an Ubuntu desktop environment change the values of
 # ubuntu_tasksel to 'standard, ubuntu-desktop'
 # You can choose to install any combination of the following tasks:
-# standard ubuntu-desktop kubuntu-desktop edubuntu-desktop xubuntu-desktop dns-server lamp-server
+# standard ubuntu-desktop kubuntu-desktop edubuntu-desktop xubuntu-desktop
+# dns-server lamp-server
 #
 # HINT: those settings can be overridden by using override yaml files in the
 # seedBank configs directory. (default: /etc/seedbank/configs)
 #
-# NOTE: the following reserved variables will be generated automatically and will
-# be ignored when those will are defined here:
+# NOTE: the following reserved variables are automatially generated and will be
+# ignored
 # fqdn
 # host_name
 # dns_domain
@@ -71,15 +72,18 @@ seed:
 # see the pxe template files for more information
 #
 # console_charmap -> kernel parameter to set the charmap
-# console_layout -> kernel parameter to set the layout
+# console_layout  -> kernel parameter to set the layout
 # country_chooser -> kernel parameter to select the country
-# debug_level -> kernel parameter to set the debug level of the Debian installer
-# extra -> additional kernel parameters
-# interface -> kernel parameter to set the default network interface
-# locale -> kernel parameter to set the default locale
-# template: pxehost
-# theme -> kernel parameter to set the installer colors
-# puppet_master -> this pxe variable is used in some of the file overlay examples
+# debug_level     -> kernel parameter to set the debug level of the Debian
+#                    installer
+# extra           -> additional kernel parameters
+# interface       -> kernel parameter to set the default network interface
+# locale          -> kernel parameter to set the default locale
+# template        -> template which will be used for generating the
+#                    pxelinix.cfg host configuration file
+# theme           -> kernel parameter to set the installer colors
+# puppet_master   -> this pxe variable is used in some of the file overlay
+#                    examples
 pxe:
   console_charmap: UTF-8
   console_layout: us
