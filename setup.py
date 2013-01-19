@@ -37,7 +37,7 @@ setup(
     url='http://www.infrastructureanywhere.com',
     packages=['seedbank'],
     scripts=get_scripts('bin'),
-    data_files = get_data_files('etc') + get_docs('manual') + ['README.rst'],
+    data_files = get_data_files('etc') + get_data_files('var') + get_docs('manual') + ['README.rst'],
     requires = 'yaml',
     license='GPL',
     platforms='UNIX',
