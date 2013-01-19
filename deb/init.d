@@ -47,7 +47,7 @@ check_process () {
 		fi
 	else
 		retval=1
-	fi		
+	fi
 }
 
 case ${1} in
