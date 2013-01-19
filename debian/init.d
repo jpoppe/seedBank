@@ -10,10 +10,10 @@
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: The seedBank daemon
-# Description:       seedBank daemon is used by seedBank installations 
-#                    for supplying the needed files, templates, 
-#                    manifests, recipes, etc.. It is also used for 
-#                    disabling hosts after as successful installation.
+# Description:       seedBank daemon is used by seedBank netboot
+#                    installations. It supplied the required files,
+#                    templates, manifests, recipes, etc.. It is has
+#                    a built in API based on bottle.
 ### END INIT INFO
 
 NAME=seedbank
@@ -31,11 +31,7 @@ fi
 
 if [ $START_SEEDBANK != "true" ]; then
 	echo "the seedBank daemon service is disabled, enable START_SEEDBANK in /etc/default/$NAME"
-	if [ ${1} = "stop" ]; then
-		exit 0
-	else
-		exit 1
-	fi
+	exit 0
 fi
 
 check_process () {
