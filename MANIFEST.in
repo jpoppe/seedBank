@@ -1,5 +1,5 @@
 include *.txt
+include *.rst
 recursive-include etc *
 recursive-include manual *
-recursive-include debian *
-recursive-include addons *
+recursive-include var *
