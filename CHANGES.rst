@@ -2,7 +2,7 @@
 seedBank Changelog
 ==================
 
-v2.0.0 04/??/2012 (Jasper Poppe)
+v2.0.0 ??/??/2013 (Jasper Poppe)
 ================================
 
 seedbank general
@@ -24,6 +24,7 @@ seedbank general
 * switched from optparse to argparse
 * improved documentation
 * added Mac OS X compatibility for creating ISOs
+* improved debian packaging
 
 seedbank daemon
 
