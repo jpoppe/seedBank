@@ -21,7 +21,7 @@ paths:
 # syslinux -> tar archive of the syslinux release to use (used used by the
 #             'seedbank manage --syslinux' command
 urls:
-  syslinux: 'http://www.kernel.org/pub/linux/utils/boot/syslinux/4.xx/syslinux-4.06.tar.gz'
+  syslinux: 'http://www.kernel.org/pub/linux/utils/boot/syslinux/4.xx/syslinux-4.07.tar.gz'
 
 # logging configuration file and logger destination
 #

@@ -29,6 +29,7 @@ Resources
 * Freshmeat: http://freshmeat.net/projects/seedbank
 * Documentation: http://www.infrastructureanywhere.com/documentation
 * Twitter: http://twitter.com/infraanywhere
+* XING: https://www.xing.com/communities/groups/infrastructure-anywhere-strich-seedbank-05ad-1008537
 
 Features
 ========
@@ -68,7 +69,7 @@ License
 
 seedBank has been released under the Apache 2.0 license
 
-Copyright 2009-2012 (c) Jasper Poppe <jgpoppe@gmail.com>
+Copyright 2009-2015 (c) Jasper Poppe <jgpoppe@gmail.com>
 
 Disclaimer
 ==========
