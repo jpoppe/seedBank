@@ -27,11 +27,11 @@
 # url_iso                -> url of the mirror for downloading installer ISOs
 debian:
   architectures: [amd64, i386]
-  netboots: [squeeze]
-  isos: [squeeze]
-  iso_current: squeeze
+  netboots: [squeeze, wheezy, jessie]
+  isos: [squeeze, wheezy, jessie]
+  iso_current: jessie
   iso_flavours: [mini, businesscard, netinst]
-  firmwares: [squeeze]
+  firmwares: [squeeze, wheezy, jessie]
   firmware_filter: '*.deb'
   template_pxe: pxe_debian
   template_isolinux: debian_isolinux.cfg

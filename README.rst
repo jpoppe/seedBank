@@ -25,10 +25,10 @@ Resources
 * Homepage: http://www.infrastructureanywhere.com
 * Mailing List: https://groups.google.com/group/infrastructureanywhere
 * Changelog: https://github.com/jpoppe/seedBank/blob/master/CHANGES.txt
-* GitHub: http://github.com/jpoppe
+* GitHub: https://github.com/jpoppe
 * Freshmeat: http://freshmeat.net/projects/seedbank
 * Documentation: http://www.infrastructureanywhere.com/documentation
-* Twitter: http://twitter.com/infraanywhere
+* Twitter: https://twitter.com/infraanywhere
 * XING: https://www.xing.com/communities/groups/infrastructure-anywhere-strich-seedbank-05ad-1008537
 
 Features
