@@ -79,6 +79,7 @@ seed:
 # extra           -> additional kernel parameters
 # interface       -> kernel parameter to set the default network interface
 # locale          -> kernel parameter to set the default locale
+# keymap          -> kernel parameter to set the default keymap
 # template        -> template which will be used for generating the
 #                    pxelinix.cfg host configuration file
 # theme           -> kernel parameter to set the installer colors
@@ -92,6 +93,7 @@ pxe:
   extra: netcfg/dhcp_timeout=60 debian-installer/allow_unauthenticated=true
   interface: eth0
   locale: en_US
+  keymap: us
   template: pxehost
   theme: dark
   puppet_master: puppet
