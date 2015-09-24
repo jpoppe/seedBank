@@ -1,11 +1,11 @@
 [main]
 logdir=/var/log/puppet
-vardir=/var/lib/puppet
-ssldir=/var/lib/puppet/ssl
-rundir=/var/run/puppet
+vardir=/opt/puppetlabs/puppet/cache
+ssldir=$$confdir/ssl
+rundir=/var/run/puppetlabs
 factpath=$$vardir/lib/facter
 templatedir=$$confdir/templates
-runinterval=1800
+runinterval=300
 configtimeout=120
 splay=false
 splaylimit=1800
@@ -17,4 +17,3 @@ report_server=${puppet_master}
 report=true
 thin_storeconfigs=false
 environment=production
-
