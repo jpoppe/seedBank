@@ -1,0 +1,16 @@
+################################################################################
+#
+# seedBank repository preseed snippet created by Martin Seener <martin@seener.de>
+#
+# This seed file adds and configures the additional puppetlabs repository for
+# latest puppet-agent to be installed.
+# APT will automatically install the newest puppet version, if this seed
+# file is added, instead of the old one from debian repository.
+# With this you can work with more features and less bugs!
+# Feel free to customize ;)
+#
+################################################################################
+
+### - Add puppetlabs pc1 repository for debian jessie
+d-i apt-setup/local0/repository string deb http://apt.puppetlabs.com jessie PC1
+d-i apt-setup/local0/comment string Puppetlabs PC1 Repository for Debian Jessie

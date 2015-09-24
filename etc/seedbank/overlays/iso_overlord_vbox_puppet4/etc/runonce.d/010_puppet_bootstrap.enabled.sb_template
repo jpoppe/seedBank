@@ -1,0 +1,13 @@
+echo "info: running IA Puppet 4 bootstrap scripts"
+
+apt-get update
+/opt/puppetlabs/bin/puppet apply --modulepath ${puppet_module_paths} --no-daemonize --onetime ${puppet_site_pp} | tee -a /var/log/bootstrap_puppet.log
+sleep 7
+/opt/puppetlabs/bin/puppet agent --test | tee -a /var/log/bootstrap_puppet.log
+/etc/init.d/puppetmaster restart
+/etc/init.d/nginx restart
+sleep 5
+/opt/puppetlabs/bin/puppet agent --test | tee -a /var/log/bootstrap_puppet.log
+sleep 3
+/etc/init.d/puppet stop
+touch /var/cache/chicken_done

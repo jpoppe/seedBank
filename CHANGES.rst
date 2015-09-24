@@ -2,8 +2,8 @@
 seedBank Changelog
 ==================
 
-v2.0.0 ??/??/2013 (Jasper Poppe)
-================================
+v2.0.0 ??/??/2015 (Jasper Poppe & Martin Seener)
+================================================
 
 seedbank general
 
@@ -25,6 +25,8 @@ seedbank general
 * improved documentation
 * added Mac OS X compatibility for creating ISOs
 * improved debian packaging
+* Debian Wheezy and Jessie support
+* Puppet 4 support
 
 seedbank daemon
 

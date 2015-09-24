@@ -1,0 +1,1 @@
+curl "http://${seed_host}:${seed_port}/log?message=${fqdn}%20is%20ready"
