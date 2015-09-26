@@ -34,10 +34,10 @@ Run the **seedbank list --isos** command to list the names of the available ISOs
 Choose the name of the ISO you want to use as a base for creating the
 unattended installation ISO. Run 'seedbank manage --iso <iso_name>' to download
 the install ISO. This ISO will be cached for future use so you only have to be
-download it once. In this example the Debian Squeeze AMD64 mini ISO will be used. The advantage of the mini ISOs is that it is really small to download, the disadvantage is that all the packages which are needed for the installation will be downloaded from a mirror::
+download it once. In this example the Debian Jessie AMD64 mini ISO will be used. The advantage of the mini ISOs is that it is really small to download, the disadvantage is that all the packages which are needed for the installation will be downloaded from a mirror::
 
     seedbank manage --help
-    seedbank manage -i debian-squeeze-amd64-mini
+    seedbank manage -i debian-jessie-amd64-mini
 
 Build the ISO with the **seedbank iso --aditional-seeds <additional_seed> <host_name> <iso_name> <ouput>** command, by default the ISO will be saved a <fqdn>.iso, in case of this example this will be *squeeze001.domain.iso*. If you do not specify the additional-seed the installer will require manual input for disk partitioning, be sure to match the disk recipe with the configuration of the node to be installed::
 
@@ -46,15 +46,15 @@ Build the ISO with the **seedbank iso --aditional-seeds <additional_seed> <host_
 
 For SCSI/SATA disks::
 
-    seedbank iso -a 1disk_sd_one_partition -r debian-squeeze-amd64-mini squeeze001.domain
+    seedbank iso -a 1disk_sd_one_partition -r debian-jessie-amd64-mini jessie001.domain
 
 For IDE disks::
 
-    seedbank iso -a 1disk_hd_one_partition -r debian-squeeze-amd64-mini squeeze001.domain
+    seedbank iso -a 1disk_hd_one_partition -r debian-jessie-amd64-mini jessie001.domain
 
 For Virtual disks (Used by some virtualization disk controller drivers)::
 
-    seedbank iso -a 1disk_vd_one_partition -r debian-squeeze-amd64-mini squeeze001.domain
+    seedbank iso -a 1disk_vd_one_partition -r debian-jessie-amd64-mini jessie001.domain
 
 seedBank PXE
 ============
@@ -135,9 +135,9 @@ Download and install the required syslinux files to */var/lib/tftpboot* (Only ne
     seedbank manage --help
     sudo seedbank manage -s
 
-Download the Debian Squeeze netboot image tar archive and extract it to the right place (Only need to be done once)::
+Download the Debian Jessie netboot image tar archive and extract it to the right place (Only need to be done once)::
 
-    sudo seedbank manage -n debian-squeeze-amd64
+    sudo seedbank manage -n debian-jessie-amd64
 
 Generate the pxelinux configuration file
 ----------------------------------------
@@ -148,15 +148,15 @@ Run the following command on the seedBank server after reading the explanation b
 
 For SCSI/SATA disks::
 
-    sudo seedbank pxe -a 1disk_sd_one_partition -r debian-squeeze-i38 6seednode001.intern.local
+    sudo seedbank pxe -a 1disk_sd_one_partition -r debian-jessie-amd64 seednode001.intern.local
 
 For IDE disks::
 
-    sudo seedbank pxe -a 1disk_hd_one_partition -r debian-squeeze-i386 seednode001.intern.local debian-squeeze-i386
+    sudo seedbank pxe -a 1disk_hd_one_partition -r debian-jessie-amd64 seednode001.intern.local debian-jessie-amd64
 
 For Virtual disks (Used by some virtualization disk controller drivers)::
 
-    sudo seedbank pxe -a 1disk_vd_one_partition -r debian-squeeze-i386 seednode001.intern.local
+    sudo seedbank pxe -a 1disk_vd_one_partition -r debian-jessie-amd64 seednode001.intern.local
 
 Explanation:
 
@@ -164,9 +164,9 @@ This command will generate the pxelinux configuration for the host we want to in
 
 The -a option specifies an additional seed file which will be appended at the end of the chosen preseed file, disk recipes are also preseed files so this option will use the disk recipe which is located at */etc/seedbank/seeds/1disk_xd_one_partition.seed*.
 
-The seed file which will be used is chosen automatically, it takes the second part of the chosen distribution, so in this case the second part of *debian-squeeze-i386* is squeeze. seedBank will now use */etc/seedbank/seeds/squeeze.seed* as the main preseed file. This behaviour can be overridden with the -s (--seed) option. So if you want to use another main preseed file, for example seednode001.seed instead of squeeze.seed run the following command::
+The seed file which will be used is chosen automatically, it takes the second part of the chosen distribution, so in this case the second part of *debian-jessie-amd64* is jessie. seedBank will now use */etc/seedbank/seeds/jessie.seed* as the main preseed file. This behaviour can be overridden with the -s (--seed) option. So if you want to use another main preseed file, for example seednode001.seed instead of jessie.seed run the following command::
 
-    sudo seedbank pxe -a 1disk_sd_one_partition -s seednode001 -r debian-squeeze-amd64 seednode001.intern.local
+    sudo seedbank pxe -a 1disk_sd_one_partition -s seednode001 -r debian-jessie-amd64 seednode001.intern.local
 
 The seedBank command will generate */var/lib/tftpboot/pxelinux.cfg/C0A80014*. The filename is actually the IP address converted to hexidecimal, 192.168.0.20 in hexidecimal is C0A80014. This file contains information which is used by the node as soon it boots via PXE. 
 
@@ -282,16 +282,16 @@ Manage Command
 Examples
 --------
 
-Download the syslinux archive and put the files required for a netboot installation in the right place. Download the Debian Squeeze AMD64 netboot image and put it in the right place::
+Download the syslinux archive and put the files required for a netboot installation in the right place. Download the Debian Jessie AMD64 netboot image and put it in the right place::
 
     seedbank manage
     seedbank manage --syslinux
 
-Prepare an installation for Debian Squeeze amd64 with the minimal required options (DNS should be configured properly since it will gather the IP address via a DNS lookup)::
+Prepare an installation for Debian Jessie amd64 with the minimal required options (DNS should be configured properly since it will gather the IP address via a DNS lookup)::
 
     seedbank pxe minion001.a.c.m.e
 
-NOTE: Since no release has been specified in this example seedBank will look for the default release which is normally configured in the '/etc/seedbank/conf.d/system.yaml' file in the 'default_release' section. By default this value is for pxe installations 'debian-squeeze-amd64'.
+NOTE: Since no release has been specified in this example seedBank will look for the default release which is normally configured in the '/etc/seedbank/conf.d/system.yaml' file in the 'default_release' section. By default this value is for pxe installations 'debian-jessie-amd64'.
 
 NOTE: if the default configuration (seed files) are used the installation will require user input for partitioning the disks, to do a fully unattended installation a disk recipe should be added to the command::
 

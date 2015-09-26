@@ -1,0 +1,6 @@
+# NOTE: uncomment the sleep 60 line if there are issues with Facter for determining
+# the network interfaces to slow
+#sleep 60
+
+export RUBYLIB=/seedbank/lib
+/opt/puppetlabs/bin/puppet apply --clientbucketdir /var/lib/puppet/clientbucket --debug /seedbank/${manifest}.pp | tee -a /tmp/seedbank-bootstrap.log

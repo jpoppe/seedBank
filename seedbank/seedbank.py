@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2009-2012 Jasper Poppe <jgpoppe@gmail.com>
+# Copyright 2009-2015 Jasper Poppe <jgpoppe@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ more?
 """
 
 __author__ = 'Jasper Poppe <jgpoppe@gmail.com>'
-__copyright__ = 'Copyright (c) 2009-2012 Jasper Poppe'
+__copyright__ = 'Copyright (c) 2009-2015 Jasper Poppe'
 __credits__ = ''
 __license__ = 'Apache License, Version 2.0'
 __version__ = '2.0.0rc7'
@@ -64,7 +64,7 @@ def argument_parser():
     parse_arg = parse.ParseArguments(cfg)
 
     parser = argparse.ArgumentParser(description='seedBank - Debian/Ubuntu '
-        'netboot installations the way it is meant to be... (c) 2009-2012 '
+        'netboot installations the way it is meant to be... (c) 2009-2015 '
         'Jasper Poppe <jgpoppe@gmail.com>', epilog='for more information '
         'visit: http://www.infrastructureanywhere.com',
         fromfile_prefix_chars='@')

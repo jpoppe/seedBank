@@ -1,0 +1,9 @@
+echo "info: running Puppet 4 bootstrap scripts"
+
+su - root -c "gpg --import /etc/puppetlabs/puppet/hiera-gpg.key"
+su - puppet -s /bin/bash -c "gpg --import /etc/puppetlabs/puppet/hiera-gpg.key"
+rm /etc/puppetlabs/puppet/hiera-gpg.key
+apt-get update
+/opt/puppetlabs/bin/puppet apply --modulepath ${puppet_module_paths} --no-daemonize --onetime ${puppet_site_pp} --hiera_config=${hiera_config} --data_binding_terminus=hiera 2>&1 | tee -a /var/log/bootstrap_puppet.log
+/opt/puppetlabs/bin/puppet agent --test 2>&1 | tee -a /var/log/bootstrap_puppet.log
+touch /var/cache/chicken_done
