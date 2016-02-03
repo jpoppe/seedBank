@@ -41,8 +41,8 @@ debian:
   url_firmware: http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/${release}/current/firmware.tar.gz
 ubuntu:
   architectures: [amd64, i386]
-  isos: [oneiric, precise, quantal]
-  netboots: [oneiric, precise, quantal]
+  isos: [oneiric, precise, quantal, trusty]
+  netboots: [oneiric, precise, quantal, trusty]
   iso_flavours: [mini, alternate, desktop, server]
   template_pxe: pxe_ubuntu
   template_isolinux: ubuntu_isolinux.cfg
