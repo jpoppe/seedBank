@@ -1,0 +1,108 @@
+###############################################################################
+#
+# seedBank Ubuntu Trusty Tahr preseed file
+# created by Jasper Poppe <jgpoppe@gmail.com>
+#
+# This seed file does a minimal Ubuntu Trusty Tahr installation,
+# feel free to customize ;)
+#
+# For much more options and explanation and documentation see:
+#  https://help.ubuntu.com/lts/installation-guide/example-preseed.txt
+#  https://help.ubuntu.com/lts/installation-guide/i386/apbs02.html
+#  https://help.ubuntu.com/lts/installation-guide/i386/apbs04.html
+#
+# To get a list of every possible question that could be asked during an
+# install, do an installation and run these commands:
+#  debconf-get-selections --installer > file
+#  debconf-get-selections >> file
+#
+###############################################################################
+
+### - Those settings will be ignored when doing a netboot installation
+#     and should be provided by kernel parameters (pxe variables and templates
+#     are used for this)
+d-i netcfg/get_hostname string ${host_name}
+d-i debian-installer/locale string en_US
+d-i keyboard-configuration/layout select USA
+d-i keyboard-configuration/variantcode string euro
+d-i keyboard-configuration/layoutcode string us
+
+### - Localization, Keyboard
+d-i keyboard-configuration/modelcode string pc105
+d-i pkgsel/install-language-support boolean false
+
+d-i netcfg/choose_interface select auto
+d-i netcfg/wireless_wep string
+d-i netcfg/get_domain string ${dns_domain}
+
+### - Mirror
+d-i mirror/country string manual
+d-i mirror/http/hostname string ${ubuntu_mirror_host_name}
+d-i mirror/http/directory string ${ubuntu_mirror_directory}
+d-i mirror/http/proxy string ${apt_proxy}
+
+### - Automatic updates configuration
+pkgsel pkgsel/update-policy select ${ubuntu_update_policy}
+
+### - Suite to install.
+d-i mirror/suite string trusty
+
+### - Date and Time
+d-i clock-setup/utc boolean ${clock_utc}
+d-i time/zone string ${timezone}
+d-i clock-setup/ntp boolean true
+d-i clock-setup/ntp-server ${ntp_server}
+
+### - Partitioning
+d-i user-setup/encrypt-home boolean false
+d-i partman-md/device_remove_md boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman/confirm_write_new_label boolean true
+d-i partman/alignment string cylinder
+# commenting the two following lines could help for debugging disk recipes
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman-auto/purge_lvm_from_device boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-lvm/device_remove_lvm_span boolean true
+
+### - Kernel
+d-i base-installer/kernel/override-image string ${ubuntu_kernel_override}
+d-i base-installer/kernel/headers boolean ${ubuntu_kernel_headers}
+
+### - Accounts
+d-i user-setup/allow-password-weak boolean true
+d-i passwd/root-login boolean false
+d-i passwd/make-user boolean true
+d-i passwd/user-fullname string ${user_full_name}
+d-i passwd/username string ${user}
+d-i passwd/user-password password ${user_password}
+d-i passwd/user-password-again password ${user_password}
+
+### - Apt
+d-i apt-setup/services-select multiselect security
+d-i apt-setup/restricted boolean true
+d-i apt-setup/universe boolean true
+d-i apt-setup/backports boolean true
+d-i apt-setup/partner boolean true
+d-i apt-setup/extras boolean true
+
+### - Package selection
+tasksel tasksel/first multiselect ${ubuntu_task_sel}
+d-i pkgsel/include string ${ubuntu_packages}
+
+### - Grub
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+d-i debian-installer/add-kernel-opts string ${add_kernel_opts}
+
+### - Finish
+d-i finish-install/reboot_in_progress note
+d-i debian-installer/exit/poweroff boolean ${power_off}
+d-i cdrom-detect/eject boolean true
+
+### - Custom commands
+d-i preseed/early_command string ${early_command}
+d-i preseed/late_command string ${late_command}
