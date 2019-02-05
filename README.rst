@@ -1,3 +1,11 @@
+=======
+WARNING
+=======
+
+This project is still used by some people/organization, still I have chosen to Archive it since I didn't manage Debian/Ubuntu machines for the last couple of years and there at this point of time quite some alternatives available.
+
+Thanks for all your support!
+
 =====================
 seedBank Introduction
 =====================
